@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -24,6 +25,9 @@ public class Member {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false, unique = true)
+    private String password;
+
     @CreationTimestamp
     private LocalDateTime registration;
 
@@ -40,6 +44,10 @@ public class Member {
     @OneToMany(mappedBy = "member")
     @EqualsAndHashCode.Exclude
     Set<Solution> solutions;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private Set<String> roles = new HashSet<>();
 
     @Override
     public String toString() {
