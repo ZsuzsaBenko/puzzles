@@ -31,7 +31,7 @@ public class Member {
     @CreationTimestamp
     private LocalDateTime registration;
 
-    private Integer score = 0;
+    private Integer score;
 
     @OneToMany(mappedBy = "member")
     @EqualsAndHashCode.Exclude
