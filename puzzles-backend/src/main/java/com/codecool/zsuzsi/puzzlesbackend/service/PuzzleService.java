@@ -22,8 +22,8 @@ public class PuzzleService {
     private final SolutionRepository solutionRepository;
 
 
-    public Puzzle getById(Puzzle puzzle) {
-        return puzzleRepository.findById(puzzle.getId()).orElse(null);
+    public Puzzle getById(Long id) {
+        return puzzleRepository.findById(id).orElse(null);
     }
 
     public List<Puzzle> getAllPuzzles() {

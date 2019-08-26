@@ -34,9 +34,9 @@ public class PuzzleController {
         return puzzleService.getAllPuzzlesByCategory(category);
     }
 
-    @PostMapping("/{id}")
-    public Puzzle getPuzzle(@PathVariable("id") Puzzle puzzle) {
-        return puzzleService.getById(puzzle);
+    @GetMapping("/all/{id}")
+    public Puzzle getPuzzle(@PathVariable("id") Long id) {
+        return puzzleService.getById(id);
     }
 
 
