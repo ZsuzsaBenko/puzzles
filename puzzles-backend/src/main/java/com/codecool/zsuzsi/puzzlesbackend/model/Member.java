@@ -1,5 +1,6 @@
 package com.codecool.zsuzsi.puzzlesbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -35,6 +36,7 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     @EqualsAndHashCode.Exclude
+    @JsonBackReference(value = "member")
     Set<Puzzle> puzzles;
 
     @OneToMany(mappedBy = "member")

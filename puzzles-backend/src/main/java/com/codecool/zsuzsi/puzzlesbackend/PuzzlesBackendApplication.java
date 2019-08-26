@@ -62,7 +62,7 @@ public class PuzzlesBackendApplication {
                     .category(Category.MATH_PUZZLE)
                     .title("Béka")
                     .instruction("Válaszolj egy számmal!")
-                    .puzzleItem("Egy béka beleesett egy 12 méter mély kútba. Fel tudott ugrani 3 métert, de mindegyik ugrásnál vissza is eett 2 métert. Hányat kellett ugrania, hogy kijusson a kútból?")
+                    .puzzleItem("Egy béka beleesett egy 12 méter mély kútba. Fel tudott ugrani 3 métert, de mindegyik ugrásnál vissza is esett 2 métert. Hányat kellett ugrania, hogy kijusson a kútból?")
                     .answer("10")
                     .level(Level.EASY)
                     .member(admin)
