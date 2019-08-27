@@ -4,6 +4,7 @@ import com.codecool.zsuzsi.puzzlesbackend.model.Category;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
 import com.codecool.zsuzsi.puzzlesbackend.model.Solution;
+import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class PuzzleService {
 
     private final PuzzleRepository puzzleRepository;
     private final SolutionRepository solutionRepository;
+    private final MemberRepository memberRepository;
 
 
     public Puzzle getById(Long id) {
@@ -35,7 +37,8 @@ public class PuzzleService {
     }
 
     public List<Puzzle> getUnsolvedPuzzleFromEachCategory(Member member) {
-        List<Puzzle> solvedPuzzles = this.getSolvedPuzzles(member);
+        Member loggedInMember = memberRepository.findByEmail(member.getEmail()).orElse(null);
+        List<Puzzle> solvedPuzzles = this.getSolvedPuzzles(loggedInMember);
 
         List<Puzzle> unsolvedPuzzles = new ArrayList<>();
         for (Category category : Category.values()) {
@@ -51,5 +54,30 @@ public class PuzzleService {
             solvedPuzzles.add(solution.getPuzzle());
         }
         return solvedPuzzles;
+    }
+
+    public Puzzle addNewPuzzle(Puzzle puzzle) {
+        Member loggedInMember = memberRepository.findByEmail(puzzle.getMember().getEmail()).orElse(null);
+        puzzle.setMember(loggedInMember);
+        return puzzleRepository.save(puzzle);
+    }
+
+    public List<Puzzle> getSortedPuzzles(String criteria) {
+        switch (criteria) {
+            case "titleASC":
+                return puzzleRepository.findAllByOrderByTitleAsc();
+            case "titleDESC":
+                return puzzleRepository.findAllByOrderByTitleDesc();
+            case "levelASC":
+                return puzzleRepository.findAllByOrderByLevelAsc();
+            case "levelDESC":
+                return puzzleRepository.findAllByOrderByLevelDesc();
+            case "ratingASC":
+                return puzzleRepository.findAllByOrderByRatingAsc();
+            case "ratingDESC":
+                return puzzleRepository.findAllByOrderByRatingDesc();
+            default:
+                return puzzleRepository.findAllByOrderByDateTimeDesc();
+        }
     }
 }

@@ -1,17 +1,17 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
 import com.codecool.zsuzsi.puzzlesbackend.model.Level;
+import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
 import com.codecool.zsuzsi.puzzlesbackend.model.Solution;
+import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,12 +20,18 @@ public class SolutionService {
 
     private final SolutionRepository solutionRepository;
     private final PuzzleRepository puzzleRepository;
+    private final MemberRepository memberRepository;
 
     public Solution saveSolution(Solution solution) {
-        solutionRepository.save(solution);
         Puzzle solvedPuzzle = puzzleRepository.findById(solution.getPuzzle().getId()).orElse(null);
+        Member member = memberRepository.findByEmail(solution.getMember().getEmail()).orElse(null);
+        solution.setPuzzle(solvedPuzzle);
+        solution.setMember(member);
+        solutionRepository.save(solution);
+
         this.updateRating(solvedPuzzle);
         this.updateLevel(solvedPuzzle);
+
         return null;
     }
 

@@ -4,10 +4,7 @@ import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,5 +20,10 @@ public class MemberController {
     @GetMapping("/leaderboard")
     public List<Member> getLeaderBoard() {
         return memberService.getLeaderBoard();
+    }
+
+    @PostMapping("/profile")
+    public Member getProfile(@RequestBody Member member) {
+        return memberService.getLoggedInMember(member);
     }
 }

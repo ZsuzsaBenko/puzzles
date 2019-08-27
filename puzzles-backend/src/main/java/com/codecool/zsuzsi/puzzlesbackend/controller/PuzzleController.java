@@ -39,6 +39,13 @@ public class PuzzleController {
         return puzzleService.getById(id);
     }
 
+    @GetMapping("/sort/{criteria}")
+    public List<Puzzle> getSortedPuzzles(@PathVariable("criteria") String criteria) {
+        return puzzleService.getSortedPuzzles(criteria);
+    }
 
-
+    @PostMapping("/add")
+    public Puzzle addNewPuzzle(@RequestBody Puzzle puzzle) {
+        return puzzleService.addNewPuzzle(puzzle);
+    }
 }
