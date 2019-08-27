@@ -38,6 +38,10 @@ public class MemberService {
         }
     }
 
+    public Member getLoggedInMember(Member member) {
+        return this.memberRepository.findByEmail(member.getEmail()).orElse(null);
+    }
+    
     public List<Member> getLeaderBoard() {
         return memberRepository.findTop20ByOrderByScoreDesc();
     }
