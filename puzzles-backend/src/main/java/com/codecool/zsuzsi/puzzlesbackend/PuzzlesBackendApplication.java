@@ -1,11 +1,10 @@
 package com.codecool.zsuzsi.puzzlesbackend;
 
-import com.codecool.zsuzsi.puzzlesbackend.model.Category;
-import com.codecool.zsuzsi.puzzlesbackend.model.Level;
-import com.codecool.zsuzsi.puzzlesbackend.model.Member;
-import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
+import com.codecool.zsuzsi.puzzlesbackend.model.*;
+import com.codecool.zsuzsi.puzzlesbackend.repository.CommentRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
+import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -13,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -25,6 +25,11 @@ public class PuzzlesBackendApplication {
     @Autowired
     private PuzzleRepository puzzleRepository;
 
+    @Autowired
+    private SolutionRepository solutionRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(PuzzlesBackendApplication.class, args);
@@ -47,6 +52,23 @@ public class PuzzlesBackendApplication {
                     .build();
             memberRepository.save(admin);
 
+            Member user1 = Member.builder()
+                    .username("Anna")
+                    .password(password)
+                    .email("anna@anna.hu")
+                    .roles(Set.of("USER"))
+                    .score(0)
+                    .build();
+            memberRepository.save(user1);
+
+            Member user2 = Member.builder()
+                    .username("Péter")
+                    .password(password)
+                    .email("peter@peter.hu")
+                    .roles(Set.of("USER"))
+                    .score(0)
+                    .build();
+            memberRepository.save(user2);
 
             Puzzle puzzle1 = Puzzle.builder()
                     .category(Category.RIDDLE)
@@ -98,7 +120,114 @@ public class PuzzlesBackendApplication {
                     .member(admin)
                     .build();
 
-            puzzleRepository.saveAll(Arrays.asList(puzzle1, puzzle2, puzzle3, puzzle4, puzzle5));
+            Puzzle puzzle6 = Puzzle.builder()
+                    .category(Category.RIDDLE)
+                    .title("Találós kérdés")
+                    .instruction("Válaszolj egy szóval!")
+                    .puzzleItem("Aki készíti, annak nem kell. Aki megveszi, az nem használja. Aki használja, nem tud róla. Mi az?")
+                    .answer("koporsó")
+                    .level(Level.EASY)
+                    .member(user1)
+                    .build();
+
+            Puzzle puzzle7 = Puzzle.builder()
+                    .category(Category.MATH_PUZZLE)
+                    .title("Zoknik")
+                    .instruction("Válaszolj egy számmal!")
+                    .puzzleItem("A fiókban van 14 barna zoknid, 14 kék zoknid és 14 fekete zoknid. Hány zoknit kell kivenned (csukott szemmel), hogy biztosan legyen köztük két azonos színű?")
+                    .answer("4")
+                    .level(Level.EASY)
+                    .member(user2)
+                    .build();
+
+            Puzzle puzzle8 = Puzzle.builder()
+                    .category(Category.WORD_PUZZLE)
+                    .title("Szótagoló")
+                    .instruction("Milyen szótag egészíti ki mindkét szót?")
+                    .puzzleItem("sár- ? -dó")
+                    .answer("mos")
+                    .level(Level.EASY)
+                    .member(user1)
+                    .build();
+
+            Puzzle puzzle9 = Puzzle.builder()
+                    .category(Category.CIPHER)
+                    .title("Titkos közmondás")
+                    .instruction("Fejtsd meg a titkosírással írt közmondást! Minde betű az abc egy másik betűjének felel meg, véletlenszerűen. Egy kis segítség: e = 'h', a = 'l', t = 'ű', l = 'k', n = 'd'")
+                    .puzzleItem("lqx épsdlq uhzéhű ps, élml hsxq öhkh.")
+                    .answer("Aki másnak vermet ás, amga esik bele")
+                    .level(Level.MEDIUM)
+                    .member(user2)
+                    .build();
+
+            Puzzle puzzle10 = Puzzle.builder()
+                    .category(Category.PICTURE_PUZZLE)
+                    .title("Négyzetek")
+                    .instruction("Hány négyzet van a képen?")
+                    .puzzleItem("squares40.png")
+                    .answer("40")
+                    .level(Level.MEDIUM)
+                    .member(user1)
+                    .build();
+
+            puzzleRepository.saveAll(Arrays.asList(puzzle1, puzzle2, puzzle3, puzzle4, puzzle5, puzzle6, puzzle7, puzzle8, puzzle9, puzzle10));
+
+            Solution solution1 = Solution.builder()
+                    .member(user1)
+                    .puzzle(puzzle1)
+                    .rating(4)
+                    .seconds(21)
+                    .submissionTime(LocalDateTime.now())
+                    .build();
+
+            Solution solution2 = Solution.builder()
+                    .member(user2)
+                    .puzzle(puzzle1)
+                    .rating(5)
+                    .seconds(35)
+                    .submissionTime(LocalDateTime.now())
+                    .build();
+
+            Solution solution3 = Solution.builder()
+                    .member(user1)
+                    .puzzle(puzzle2)
+                    .rating(5)
+                    .seconds(62)
+                    .submissionTime(LocalDateTime.now())
+                    .build();
+
+            Solution solution4 = Solution.builder()
+                    .member(user2)
+                    .puzzle(puzzle2)
+                    .rating(5)
+                    .seconds(71)
+                    .submissionTime(LocalDateTime.now())
+                    .build();
+
+            solutionRepository.saveAll(Arrays.asList(solution1, solution2, solution3, solution4));
+
+            Comment comment1 = Comment.builder()
+                    .member(user1)
+                    .puzzle(puzzle1)
+                    .message("Ez nagyon könnyű!")
+                    .submissionTime(LocalDateTime.now())
+                    .build();
+
+            Comment comment2 = Comment.builder()
+                    .member(user2)
+                    .puzzle(puzzle1)
+                    .message("Szerintem becsapós.")
+                    .submissionTime(LocalDateTime.now())
+                    .build();
+
+            Comment comment3 = Comment.builder()
+                    .member(user1)
+                    .puzzle(puzzle1)
+                    .message("Dehogy!")
+                    .submissionTime(LocalDateTime.now())
+                    .build();
+
+            commentRepository.saveAll(Arrays.asList(comment1, comment2, comment3));
         };
     }
 

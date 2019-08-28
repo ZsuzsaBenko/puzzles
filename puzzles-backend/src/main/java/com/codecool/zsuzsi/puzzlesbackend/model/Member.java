@@ -26,7 +26,7 @@ public class Member {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String password;
 
     @CreationTimestamp
@@ -36,15 +36,17 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     @EqualsAndHashCode.Exclude
-    @JsonBackReference(value = "member")
+    @JsonBackReference(value = "puzzles")
     Set<Puzzle> puzzles;
 
     @OneToMany(mappedBy = "member")
     @EqualsAndHashCode.Exclude
+    @JsonBackReference(value = "comments")
     Set<Comment> comments;
 
     @OneToMany(mappedBy = "member")
     @EqualsAndHashCode.Exclude
+    @JsonBackReference(value = "solutions")
     Set<Solution> solutions;
 
     @ElementCollection(fetch = FetchType.EAGER)

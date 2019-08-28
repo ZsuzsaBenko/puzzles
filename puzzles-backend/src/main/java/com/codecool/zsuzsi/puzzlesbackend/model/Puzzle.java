@@ -1,5 +1,6 @@
 package com.codecool.zsuzsi.puzzlesbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -48,10 +49,12 @@ public class Puzzle {
 
     @OneToMany(mappedBy = "puzzle")
     @EqualsAndHashCode.Exclude
+    @JsonBackReference(value = "comments")
     private Set<Comment> comments;
 
     @OneToMany(mappedBy = "puzzle")
     @EqualsAndHashCode.Exclude
+    @JsonBackReference(value = "solutions")
     private Set<Solution> solutions;
 
     @Override

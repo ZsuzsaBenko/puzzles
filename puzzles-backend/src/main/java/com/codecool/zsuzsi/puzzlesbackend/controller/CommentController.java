@@ -1,6 +1,7 @@
 package com.codecool.zsuzsi.puzzlesbackend.controller;
 
 import com.codecool.zsuzsi.puzzlesbackend.model.Comment;
+import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,12 @@ public class CommentController {
 
     @GetMapping("/{puzzle-id}")
     public List<Comment> getAllComments(@PathVariable("puzzle-id") Long id ) {
-        return commentService.getAllComments(id);
+        return commentService.getAllCommentsOfPuzzle(id);
+    }
+
+    @PostMapping("/member")
+    public List<Comment> getCommentsOfMember(@RequestBody Member member) {
+        return commentService.getAllCommentsOfMember(member);
     }
 
     @PostMapping("/add")

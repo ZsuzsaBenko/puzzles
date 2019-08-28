@@ -29,6 +29,11 @@ public class PuzzleController {
         return puzzleService.getUnsolvedPuzzleFromEachCategory(member);
     }
 
+    @PostMapping("/member")
+    public List<Puzzle> getAllPuzzlesOfMember(@RequestBody  Member member) {
+        return puzzleService.getAllPuzzlesOfMember(member);
+    }
+
     @GetMapping("/{category}")
     public List<Puzzle> getPuzzlesByCategory(@PathVariable("category") Category category) {
         return puzzleService.getAllPuzzlesByCategory(category);

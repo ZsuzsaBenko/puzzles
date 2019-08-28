@@ -36,6 +36,11 @@ public class PuzzleService {
         return puzzleRepository.findAllByCategory(category);
     }
 
+    public List<Puzzle> getAllPuzzlesOfMember(Member member) {
+        Member loggedInMember = memberRepository.findByEmail(member.getEmail()).orElse(null);
+        return puzzleRepository.findAllByMember(loggedInMember);
+    }
+
     public List<Puzzle> getUnsolvedPuzzleFromEachCategory(Member member) {
         Member loggedInMember = memberRepository.findByEmail(member.getEmail()).orElse(null);
         List<Puzzle> solvedPuzzles = this.getSolvedPuzzles(loggedInMember);

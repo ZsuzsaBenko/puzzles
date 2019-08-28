@@ -21,9 +21,14 @@ public class CommentService {
     private final PuzzleRepository puzzleRepository;
     private final MemberRepository memberRepository;
 
-    public List<Comment> getAllComments(Long id) {
+    public List<Comment> getAllCommentsOfPuzzle(Long id) {
         Puzzle puzzle = puzzleRepository.findById(id).orElse(null);
         return commentRepository.findAllByPuzzle(puzzle);
+    }
+
+    public List<Comment> getAllCommentsOfMember(Member member) {
+        Member loggedInMember = memberRepository.findByEmail(member.getEmail()).orElse(null);
+        return commentRepository.findAllByMember(loggedInMember);
     }
 
     public Comment addNewComment(Comment comment) {

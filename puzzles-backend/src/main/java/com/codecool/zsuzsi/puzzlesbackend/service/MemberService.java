@@ -1,7 +1,9 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
+import com.codecool.zsuzsi.puzzlesbackend.model.Solution;
 import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
+import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -19,6 +21,7 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final MemberRepository memberRepository;
+    private final SolutionRepository solutionRepository;
 
     public Member register(Member member) {
         Optional<Member> existingMember = memberRepository.findByEmail(member.getEmail());
