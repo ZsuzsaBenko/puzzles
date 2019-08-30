@@ -20,6 +20,7 @@ public class PuzzleService {
 
     private static final int HELPER_LETTER_NUMBER_MEDIUM = 5;
     private static final int HELPER_LETTER_NUMBER_HARD = 3;
+    private final CipherMaker cipherMaker;
     private final PuzzleRepository puzzleRepository;
     private final SolutionRepository solutionRepository;
 
@@ -90,16 +91,16 @@ public class PuzzleService {
     private void buildCipherPuzzle(Puzzle puzzle) {
         if (puzzle.getLevel().equals(Level.EASY)) {
             puzzle.setInstruction("Fejtsd meg a titkosírást! Az abc minden betűjét \"arréb toltuk\" valamennyivel.");
-            String puzzleItem = CipherMaker.createShiftCipher(puzzle.getAnswer(), 5);
+            String puzzleItem = cipherMaker.createShiftCipher(puzzle.getAnswer(), 5);
             puzzle.setPuzzleItem(puzzleItem);
         }
         else {
             Map<String, Map<String, String>> puzzleWithHelp;
             if (puzzle.getLevel().equals(Level.MEDIUM)) {
-                puzzleWithHelp = CipherMaker.createRandomCipher(puzzle.getAnswer(),
+                puzzleWithHelp = cipherMaker.createRandomCipher(puzzle.getAnswer(),
                         HELPER_LETTER_NUMBER_MEDIUM);
             } else {
-                puzzleWithHelp = CipherMaker.createRandomCipher(puzzle.getAnswer(),
+                puzzleWithHelp = cipherMaker.createRandomCipher(puzzle.getAnswer(),
                         HELPER_LETTER_NUMBER_HARD);
             }
 
