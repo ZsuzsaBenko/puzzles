@@ -2,6 +2,7 @@ package com.codecool.zsuzsi.puzzlesbackend.controller;
 
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.Solution;
+import com.codecool.zsuzsi.puzzlesbackend.service.MemberService;
 import com.codecool.zsuzsi.puzzlesbackend.service.SolutionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,14 +18,18 @@ import java.util.List;
 public class SolutionController {
 
     private final SolutionService solutionService;
+    private final MemberService memberService;
 
-    @PostMapping("/save")
-    public Solution saveSolution(@RequestBody Solution solution) {
-        return solutionService.saveSolution(solution);
+    @GetMapping("/member")
+    public List<Solution> getAllSolutionsByMember(@RequestHeader("Authorization") String token) {
+        Member member = memberService.getMemberFromToken(token);
+        return solutionService.getAllSolutionsByMember(member);
     }
 
-    @PostMapping("all/member")
-    public List<Solution> getAllSolutionsOfMember(@RequestBody Member member) {
-        return solutionService.getAllSolutionsOfMember(member);
+    @PostMapping("/save")
+    public Solution saveSolution(@RequestBody Solution solution,
+                                 @RequestHeader("Authorization") String token) {
+        Member member = memberService.getMemberFromToken(token);
+        return solutionService.saveSolution(solution, member);
     }
 }

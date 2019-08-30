@@ -28,14 +28,12 @@ public class SolutionService {
     private final MemberRepository memberRepository;
 
 
-    public List<Solution> getAllSolutionsOfMember(Member member) {
-        Member loggedInMember = memberRepository.findByEmail(member.getEmail()).orElse(null);
-        return solutionRepository.findAllByMember(loggedInMember);
+    public List<Solution> getAllSolutionsByMember(Member member) {
+        return solutionRepository.findAllByMember(member);
     }
 
-    public Solution saveSolution(Solution solution) {
+    public Solution saveSolution(Solution solution, Member member) {
         Puzzle solvedPuzzle = puzzleRepository.findById(solution.getPuzzle().getId()).orElse(null);
-        Member member = memberRepository.findByEmail(solution.getMember().getEmail()).orElse(null);
         solution.setPuzzle(solvedPuzzle);
         solution.setMember(member);
         solutionRepository.save(solution);

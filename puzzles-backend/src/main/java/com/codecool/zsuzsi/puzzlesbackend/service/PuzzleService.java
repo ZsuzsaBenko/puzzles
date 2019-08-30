@@ -4,7 +4,6 @@ import com.codecool.zsuzsi.puzzlesbackend.model.Category;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
 import com.codecool.zsuzsi.puzzlesbackend.model.Solution;
-import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ public class PuzzleService {
 
     private final PuzzleRepository puzzleRepository;
     private final SolutionRepository solutionRepository;
-    private final MemberRepository memberRepository;
 
 
     public Puzzle getById(Long id) {
@@ -36,35 +34,17 @@ public class PuzzleService {
         return puzzleRepository.findAllByCategory(category);
     }
 
-    public List<Puzzle> getAllPuzzlesOfMember(Member member) {
-        Member loggedInMember = memberRepository.findByEmail(member.getEmail()).orElse(null);
-        return puzzleRepository.findAllByMember(loggedInMember);
+    public List<Puzzle> getAllPuzzlesByMember(Member member) {
+        return puzzleRepository.findAllByMember(member);
     }
 
     public List<Puzzle> getUnsolvedPuzzleFromEachCategory(Member member) {
-        Member loggedInMember = memberRepository.findByEmail(member.getEmail()).orElse(null);
-        List<Puzzle> solvedPuzzles = this.getSolvedPuzzles(loggedInMember);
-
+        List<Puzzle> solvedPuzzles = this.getSolvedPuzzles(member);
         List<Puzzle> unsolvedPuzzles = new ArrayList<>();
         for (Category category : Category.values()) {
             unsolvedPuzzles.add(puzzleRepository.findUnsolved(solvedPuzzles, category).get(0));
         }
         return unsolvedPuzzles;
-    }
-
-    private List<Puzzle> getSolvedPuzzles(Member member) {
-        List<Solution> solutionsByMember = solutionRepository.findAllByMember(member);
-        List<Puzzle> solvedPuzzles = new ArrayList<>();
-        for (Solution solution : solutionsByMember) {
-            solvedPuzzles.add(solution.getPuzzle());
-        }
-        return solvedPuzzles;
-    }
-
-    public Puzzle addNewPuzzle(Puzzle puzzle) {
-        Member loggedInMember = memberRepository.findByEmail(puzzle.getMember().getEmail()).orElse(null);
-        puzzle.setMember(loggedInMember);
-        return puzzleRepository.save(puzzle);
     }
 
     public List<Puzzle> getSortedPuzzles(String criteria) {
@@ -84,5 +64,19 @@ public class PuzzleService {
             default:
                 return puzzleRepository.findAllByOrderByDateTimeDesc();
         }
+    }
+
+    public Puzzle addNewPuzzle(Puzzle puzzle, Member member) {
+        puzzle.setMember(member);
+        return puzzleRepository.save(puzzle);
+    }
+
+    private List<Puzzle> getSolvedPuzzles(Member member) {
+        List<Solution> solutionsByMember = solutionRepository.findAllByMember(member);
+        List<Puzzle> solvedPuzzles = new ArrayList<>();
+        for (Solution solution : solutionsByMember) {
+            solvedPuzzles.add(solution.getPuzzle());
+        }
+        return solvedPuzzles;
     }
 }

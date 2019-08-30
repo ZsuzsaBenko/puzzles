@@ -3,6 +3,7 @@ package com.codecool.zsuzsi.puzzlesbackend.controller;
 import com.codecool.zsuzsi.puzzlesbackend.model.Category;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
+import com.codecool.zsuzsi.puzzlesbackend.service.MemberService;
 import com.codecool.zsuzsi.puzzlesbackend.service.PuzzleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,20 +19,23 @@ import java.util.List;
 public class PuzzleController {
 
     private final PuzzleService puzzleService;
+    private final MemberService memberService;
 
     @GetMapping("/all")
-    public List<Puzzle> getPuzzles() {
+    public List<Puzzle> getAllPuzzles() {
         return puzzleService.getAllPuzzles();
     }
 
-    @PostMapping("/random")
-    public List<Puzzle> getUnsolvedPuzzleFromEachCategory(@RequestBody Member member) {
+    @GetMapping("/random")
+    public List<Puzzle> getUnsolvedPuzzleFromEachCategory(@RequestHeader("Authorization") String token) {
+        Member member = memberService.getMemberFromToken(token);
         return puzzleService.getUnsolvedPuzzleFromEachCategory(member);
     }
 
-    @PostMapping("/member")
-    public List<Puzzle> getAllPuzzlesOfMember(@RequestBody  Member member) {
-        return puzzleService.getAllPuzzlesOfMember(member);
+    @GetMapping("/member")
+    public List<Puzzle> getAllPuzzlesByMember(@RequestHeader("Authorization") String token) {
+        Member member = memberService.getMemberFromToken(token);
+        return puzzleService.getAllPuzzlesByMember(member);
     }
 
     @GetMapping("/{category}")
@@ -50,7 +54,9 @@ public class PuzzleController {
     }
 
     @PostMapping("/add")
-    public Puzzle addNewPuzzle(@RequestBody Puzzle puzzle) {
-        return puzzleService.addNewPuzzle(puzzle);
+    public Puzzle addNewPuzzle(@RequestBody Puzzle puzzle,
+                               @RequestHeader("Authorization") String token) {
+        Member member = memberService.getMemberFromToken(token);
+        return puzzleService.addNewPuzzle(puzzle, member);
     }
 }

@@ -1,9 +1,8 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
-import com.codecool.zsuzsi.puzzlesbackend.model.Solution;
 import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
-import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
+import com.codecool.zsuzsi.puzzlesbackend.security.JwtTokenServices;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -21,7 +20,7 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final MemberRepository memberRepository;
-    private final SolutionRepository solutionRepository;
+    private final JwtTokenServices jwtTokenServices;
 
     public Member register(Member member) {
         Optional<Member> existingMember = memberRepository.findByEmail(member.getEmail());
@@ -40,11 +39,13 @@ public class MemberService {
             return null;
         }
     }
-
-    public Member getLoggedInMember(Member member) {
-        return this.memberRepository.findByEmail(member.getEmail()).orElse(null);
-    }
     
+    public Member getMemberFromToken(String token) {
+        token = token.substring(7);
+        String email = jwtTokenServices.getEmailFromToken(token);
+        return memberRepository.findByEmail(email).orElse(null);
+    }
+
     public List<Member> getLeaderBoard() {
         return memberRepository.findTop20ByOrderByScoreDesc();
     }

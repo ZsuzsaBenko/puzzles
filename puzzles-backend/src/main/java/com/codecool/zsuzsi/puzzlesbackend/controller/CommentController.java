@@ -3,6 +3,7 @@ package com.codecool.zsuzsi.puzzlesbackend.controller;
 import com.codecool.zsuzsi.puzzlesbackend.model.Comment;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.service.CommentService;
+import com.codecool.zsuzsi.puzzlesbackend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -17,19 +18,23 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
+    private final MemberService memberService;
 
     @GetMapping("/{puzzle-id}")
-    public List<Comment> getAllComments(@PathVariable("puzzle-id") Long id ) {
-        return commentService.getAllCommentsOfPuzzle(id);
+    public List<Comment> getAllCommentsByPuzzle(@PathVariable("puzzle-id") Long id ) {
+        return commentService.getAllCommentsByPuzzle(id);
     }
 
-    @PostMapping("/member")
-    public List<Comment> getCommentsOfMember(@RequestBody Member member) {
-        return commentService.getAllCommentsOfMember(member);
+    @GetMapping("/member")
+    public List<Comment> getCommentsByMember(@RequestHeader("Authorization") String token) {
+        Member member = memberService.getMemberFromToken(token);
+        return commentService.getAllCommentsByMember(member);
     }
 
     @PostMapping("/add")
-    public Comment addNewComment(@RequestBody Comment comment) {
-        return commentService.addNewComment(comment);
+    public Comment addNewComment(@RequestBody Comment comment,
+                                 @RequestHeader("Authorization") String token) {
+        Member member = memberService.getMemberFromToken(token);
+        return commentService.addNewComment(comment, member);
     }
 }

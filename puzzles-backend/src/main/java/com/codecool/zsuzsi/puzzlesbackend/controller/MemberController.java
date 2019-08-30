@@ -22,8 +22,8 @@ public class MemberController {
         return memberService.getLeaderBoard();
     }
 
-    @PostMapping("/profile")
-    public Member getProfile(@RequestBody Member member) {
-        return memberService.getLoggedInMember(member);
+    @GetMapping("/profile")
+    public Member getMyProfile(@RequestHeader("Authorization") String token) {
+        return memberService.getMemberFromToken(token);
     }
 }
