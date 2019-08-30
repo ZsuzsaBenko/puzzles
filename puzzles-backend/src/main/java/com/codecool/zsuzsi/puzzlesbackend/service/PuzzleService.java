@@ -1,23 +1,25 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
-import com.codecool.zsuzsi.puzzlesbackend.model.Category;
-import com.codecool.zsuzsi.puzzlesbackend.model.Member;
-import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
-import com.codecool.zsuzsi.puzzlesbackend.model.Solution;
+import com.codecool.zsuzsi.puzzlesbackend.model.*;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
+import com.codecool.zsuzsi.puzzlesbackend.util.CipherMaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class PuzzleService {
 
+    private static final int HELPER_LETTER_NUMBER_MEDIUM = 5;
+    private static final int HELPER_LETTER_NUMBER_HARD = 3;
     private final PuzzleRepository puzzleRepository;
     private final SolutionRepository solutionRepository;
 
@@ -68,6 +70,11 @@ public class PuzzleService {
 
     public Puzzle addNewPuzzle(Puzzle puzzle, Member member) {
         puzzle.setMember(member);
+
+        if (puzzle.getCategory().equals(Category.CIPHER)) {
+            buildCipherPuzzle(puzzle);
+        }
+
         return puzzleRepository.save(puzzle);
     }
 
@@ -78,5 +85,36 @@ public class PuzzleService {
             solvedPuzzles.add(solution.getPuzzle());
         }
         return solvedPuzzles;
+    }
+
+    private void buildCipherPuzzle(Puzzle puzzle) {
+        if (puzzle.getLevel().equals(Level.EASY)) {
+            puzzle.setInstruction("Fejtsd meg a titkosírást! Az abc minden betűjét \"arréb toltuk\" valamennyivel.");
+            String puzzleItem = CipherMaker.createShiftCipher(puzzle.getAnswer(), 5);
+            puzzle.setPuzzleItem(puzzleItem);
+        }
+        else {
+            Map<String, Map<String, String>> puzzleWithHelp;
+            if (puzzle.getLevel().equals(Level.MEDIUM)) {
+                puzzleWithHelp = CipherMaker.createRandomCipher(puzzle.getAnswer(),
+                        HELPER_LETTER_NUMBER_MEDIUM);
+            } else {
+                puzzleWithHelp = CipherMaker.createRandomCipher(puzzle.getAnswer(),
+                        HELPER_LETTER_NUMBER_HARD);
+            }
+
+            String puzzleItem = "";
+            Map<String, String> help = new HashMap<>();
+
+            for (String item : puzzleWithHelp.keySet()) {
+                puzzleItem = item;
+                help = puzzleWithHelp.get(item);
+            }
+
+            puzzle.setPuzzleItem(puzzleItem);
+            puzzle.setInstruction("Fejtsd meg a titkosírást! Az abc minden betűje egy másik betűnek felel meg, " +
+                    "teljesen véletlenszerűen. Egy kis segítség: " + help + ". Az egyenlőségjel bal oldalán " +
+                    "az eredeti betű áll, a jobb oldalon a titkosírásban használt megfelelője.");
+        }
     }
 }
