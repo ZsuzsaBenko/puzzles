@@ -28,6 +28,7 @@ li:first-child {
   font-size: 30px;
   color: #00b300;
   vertical-align: middle;
+  transition: color 1s;
 }
 
 .fas:hover {
