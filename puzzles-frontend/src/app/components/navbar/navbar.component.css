@@ -19,7 +19,7 @@ li {
   margin: 0 25px;
 }
 
-li:first-child {
+#logo {
   float: left;
   color: #00b300;
 }
@@ -35,3 +35,45 @@ li:first-child {
   cursor: pointer;
   color: #f0fff0;
 }
+
+.fa-caret-down {
+  margin-left: 5px;
+  font-size: 15px;
+}
+
+.dropdown a:hover .fa-caret-down {
+  color: #f0fff0;
+}
+
+.dropdown-menu {
+  background-color: #f0fff0;
+  color: #00b300;
+  cursor: pointer;
+  padding: 0;
+  line-height: 45px;
+}
+.dropdown-menu a span {
+  display: block;
+  width: 100%;
+  border-bottom: 1px solid #00b300;
+}
+
+.dropdown-menu a:last-child span{
+  border-bottom: none;
+}
+
+.dropdown-menu a:hover {
+  background-color: #00b300;
+  color: #333333;
+}
+
+.dropdown-menu .fas {
+  margin-right: 10px;
+  color: #00b300;
+}
+
+.dropdown-menu a:hover .fas {
+  color: #333333;
+}
+
+

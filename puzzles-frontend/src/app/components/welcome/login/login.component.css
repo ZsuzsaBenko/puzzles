@@ -8,9 +8,11 @@ input {
   padding: 5px;
   transition: background-color, border-radius 1s, 0.2s;
   font-size: 18px;
+  text-align: center;
 }
 
 label {
+  font-size: 18px;
   margin-top: 20px;
 }
 

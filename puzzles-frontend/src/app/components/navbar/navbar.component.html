@@ -5,10 +5,36 @@
     </div>
     <div class="d-none d-md-block col-md-12">
       <ul>
-        <li>Géniusz</li>
-        <li><a><i class="fas fa-user"></i></a></li>
-        <li><a><i class="fas fa-puzzle-piece"></i></a></li>
-        <li><a><i class="fas fa-home"></i></a></li>
+        <li id="logo">Géniusz</li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user"></i>
+            <i class="fas fa-caret-down"></i>
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item"><span><i class="fas fa-user-circle"></i>Profilom</span></a>
+            <a class="dropdown-item"><span><i class="fas fa-sign-out-alt"></i>Kijelentkezés</span></a>
+          </div>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-puzzle-piece"></i>
+            <i class="fas fa-caret-down"></i>
+            <div class="dropdown-menu">
+              <a class="dropdown-item"><span><i class="fas fa-question"></i>Fejtörők, találós kérdések</span></a>
+              <a class="dropdown-item"><span><i class="fas fa-square-root-alt"></i>Matematikai feladványok</span></a>
+              <a class="dropdown-item"><span><i class="fas fa-dice"></i>Képrejtvények</span></a>
+              <a class="dropdown-item"><span><i class="fas fa-font"></i>Nyelvi játékok</span></a>
+              <a class="dropdown-item"><span><i class="fas fa-pen-fancy"></i>Titkos írás</span></a>
+              <a class="dropdown-item"><span><i class="fas fa-puzzle-piece"></i>Összes rejtvény</span></a>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a>
+            <i class="fas fa-home"></i>
+          </a>
+        </li>
       </ul>
     </div>
   </div>

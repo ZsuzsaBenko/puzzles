@@ -27,6 +27,7 @@ color: #00b300;
 
 .reg-login-container {
   margin: 70px auto;
+  border-radius: 0 10px 10px 10px;
 }
 
 .load-btn {
