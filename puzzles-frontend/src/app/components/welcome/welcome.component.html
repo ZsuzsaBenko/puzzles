@@ -1,0 +1,21 @@
+<div class="container-fluid welcome-container">
+  <div class="row">
+    <div class="col-12">
+      <div class="title">
+        <h1>Géniusz</h1>
+        <h2> - fejtörők, rejtvények, logikai játékok</h2>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
+      <div class="reg-login-container">
+        <button (click)="loadLoginComponent()" class="load-btn" [ngClass]="{'active-btn': login === true}" id="load-login">Bejelentkezés</button>
+        <button (click)="loadRegistrationComponent()" class="load-btn" [ngClass]="{'active-btn': login === false}" id="load-reg">Regisztráció</button>
+        <app-reg-login *ngIf="login"></app-reg-login>
+        <app-registration *ngIf="!login"></app-registration>
+      </div>
+    </div>
+  </div>
+
+</div>

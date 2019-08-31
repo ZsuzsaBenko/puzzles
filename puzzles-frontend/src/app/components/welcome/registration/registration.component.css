@@ -1,0 +1,40 @@
+input {
+  display: block;
+  width: 70%;
+  margin: 15px auto;
+  background-color: #333333;
+  border: none;
+  border-bottom: 1px solid #00b300;
+  padding: 5px;
+  transition: background-color, border-radius 1s, 0.2s;
+}
+
+label {
+  margin-top: 20px;
+}
+
+input:hover {
+  background-color: #f0fff0;
+  border-radius: 10px;
+}
+
+input:focus {
+  background-color: #f0fff0;
+  color: #333333;
+  border-radius: 10px;
+}
+
+button {
+  margin: 30px auto;
+  padding: 10px;
+  background-color: #00b300;
+  color: #333333;
+  font-weight: bold;
+  border-radius: 10px;
+  border: none;
+  transition: background-color 1s;
+}
+
+button:hover {
+  background-color: #f0fff0;
+}

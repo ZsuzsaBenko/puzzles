@@ -1,0 +1,36 @@
+nav {
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  background-color: #333333;
+  height: 50px;
+  line-height: 50px;
+}
+
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style-type: none;
+  float: right;
+  margin: 0 25px;
+}
+
+li:first-child {
+  float: left;
+  color: #00b300;
+}
+
+.fas {
+  font-size: 30px;
+  color: #00b300;
+  vertical-align: middle;
+}
+
+.fas:hover {
+  cursor: pointer;
+  color: #f0fff0;
+}
