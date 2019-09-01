@@ -1,11 +1,13 @@
 <div>
-  <form>
+  <form (ngSubmit)="onSubmit(f)" #f="ngForm">
     <label for="reg-username">Felhasználónév: </label>
-    <input type="text" id="reg-username" name="reg-username">
+    <input type="text" id="reg-username" name="reg-username" ngModel required>
     <label for="reg-email">Email cím: </label>
-    <input type="text" id="reg-email" name="reg-email">
+    <input type="text" id="reg-email" name="reg-email" ngModel required email>
     <label for="reg-password">Jelszó: </label>
-    <input type="password" id="reg-password" name="reg-password">
-    <button type="submit" >Regisztráció</button>
+    <input type="password" id="reg-password" name="reg-password" ngModel required>
+    <p>{{ message }}</p>
+    <button type="submit" [disabled]="!f.valid && (f.touched || submitted)">Regisztráció</button>
   </form>
 </div>
+

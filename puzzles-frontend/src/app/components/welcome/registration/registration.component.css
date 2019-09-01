@@ -3,6 +3,7 @@ input {
   width: 70%;
   margin: 15px auto;
   background-color: #333333;
+  color: #f0fff0;
   border: none;
   border-bottom: 1px solid #00b300;
   padding: 5px;
@@ -27,6 +28,13 @@ input:focus {
   border-radius: 10px;
 }
 
+input.ng-invalid.ng-touched {
+  background-color: #f0fff0;
+  color: #333333;
+  border: 1px solid #b22222;
+  border-radius: 10px;
+}
+
 button {
   margin: 30px auto;
   padding: 10px;
@@ -40,4 +48,9 @@ button {
 
 button:hover {
   background-color: #f0fff0;
+}
+
+button:disabled {
+  background-color: #b22222;
+  color: #f0fff0;
 }
