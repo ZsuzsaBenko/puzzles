@@ -1,6 +1,5 @@
 package com.codecool.zsuzsi.puzzlesbackend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
