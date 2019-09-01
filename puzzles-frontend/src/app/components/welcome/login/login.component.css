@@ -9,6 +9,7 @@ input {
   transition: background-color, border-radius 1s, 0.2s;
   font-size: 18px;
   text-align: center;
+  color: #f0fff0;
 }
 
 label {
@@ -27,6 +28,13 @@ input:focus {
   border-radius: 10px;
 }
 
+input.ng-invalid.ng-touched {
+  background-color: #f0fff0;
+  color: #333333;
+  border: 1px solid #b22222;
+  border-radius: 10px;
+}
+
 button {
   margin: 30px auto;
   padding: 10px;
@@ -40,6 +48,11 @@ button {
 
 button:hover {
   background-color: #f0fff0;
+}
+
+button:disabled {
+  background-color: #b22222;
+  color: #f0fff0;
 }
 
 

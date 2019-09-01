@@ -1,9 +1,10 @@
 <div>
-  <form>
+  <form (ngSubmit)="onSubmit(f)" #f="ngForm">
     <label for="login-email">Email cím: </label>
-    <input type="text" id="login-email" name="login-email">
+    <input type="text" id="login-email" name="login-email" ngModel required email>
     <label for="login-password">Jelszó: </label>
-    <input type="password" id="login-password" name="login-password">
-    <button type="submit" >Bejelentkezés</button>
+    <input type="password" id="login-password" name="login-password" ngModel required>
+    <p>{{ message }}</p>
+    <button type="submit" [disabled]="!f.valid && (f.touched || submitted)">Bejelentkezés</button>
   </form>
 </div>
