@@ -1,0 +1,22 @@
+<div class="leaderboard-container">
+  <div class="row">
+    <div class="col-12">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Username</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let member of members, let i =index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ member.username }}</td>
+            <td>{{ member.score }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
