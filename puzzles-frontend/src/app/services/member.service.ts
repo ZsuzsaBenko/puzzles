@@ -13,4 +13,9 @@ export class MemberService {
     const url = 'http://localhost:8080/members/leaderboard';
     return this.http.get<Member[]>(url);
   }
+
+  getLoggedInMember() {
+    const url = 'http://localhost:8080/members/profile';
+    return this.http.get<Member>(url);
+  }
 }

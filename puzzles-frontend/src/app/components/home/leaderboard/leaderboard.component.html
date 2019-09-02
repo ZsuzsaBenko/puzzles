@@ -1,19 +1,21 @@
 <div class="leaderboard-container">
   <div class="row">
-    <div class="col-12">
+    <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 table-container">
+      <h1>Ranglista</h1>
       <table>
         <thead>
           <tr>
-            <th>Rank</th>
-            <th>Username</th>
-            <th>Score</th>
+            <th>Rang</th>
+            <th>Felhasználónév</th>
+            <th>Pont</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let member of members, let i =index">
-            <td>{{ i + 1 }}</td>
+          <tr *ngFor="let member of members, let i =index"
+              [ngClass]="{'logged-in-member': member.id === loggedInMember.id}">
+            <td>{{ i + 1 }}.</td>
             <td>{{ member.username }}</td>
-            <td>{{ member.score }}</td>
+            <td>{{ member.score }} pont</td>
           </tr>
         </tbody>
       </table>
