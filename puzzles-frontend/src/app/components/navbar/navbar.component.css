@@ -45,6 +45,10 @@ li {
   color: #f0fff0;
 }
 
+.dropdown-toggle::after {
+  content: none;
+}
+
 .dropdown-menu {
   background-color: #f0fff0;
   color: #00b300;
