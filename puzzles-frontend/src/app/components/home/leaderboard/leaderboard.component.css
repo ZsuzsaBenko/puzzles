@@ -1,6 +1,6 @@
 .table-container {
   margin: 50px auto;
-  padding: 20px;
+  padding: 30px;
   background-color: #333333;
   color: #00b300;
   font-size: 17px;
@@ -9,7 +9,7 @@
 
 h1 {
   text-align: center;
-  margin: 20px 0;
+  margin: 0 0 20px;
 }
 
 table,
@@ -69,4 +69,19 @@ table tbody tr:nth-child(odd) td {
 .table-container table tbody tr.logged-in-member td {
   background-color: #f0fff0;
   color: #333333;
+}
+
+button {
+  margin: 20px auto 10px;
+  padding: 10px;
+  background-color: #00b300;
+  color: #333333;
+  font-weight: bold;
+  border-radius: 10px;
+  border: none;
+  transition: background-color 1s;
+}
+
+button:hover {
+  background-color: #f0fff0;
 }

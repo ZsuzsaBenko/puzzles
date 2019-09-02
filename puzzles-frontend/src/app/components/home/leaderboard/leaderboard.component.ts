@@ -11,6 +11,7 @@ import {MemberService} from '../../../services/member.service';
 export class LeaderboardComponent implements OnInit {
   members: Member[];
   loggedInMember: Member;
+  showAll: boolean;
 
   constructor(private memberService: MemberService) {
   }
@@ -18,6 +19,11 @@ export class LeaderboardComponent implements OnInit {
   ngOnInit() {
     this.memberService.getLeaderBoard().subscribe(members => this.members = members);
     this.memberService.getLoggedInMember().subscribe(member => this.loggedInMember = member);
+    this.showAll = false;
+  }
+
+  toggleShowAll() {
+    this.showAll = !this.showAll;
   }
 
 }
