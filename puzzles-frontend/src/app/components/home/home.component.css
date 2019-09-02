@@ -1,6 +1,4 @@
 .home-container {
-  background: url("../../../assets/puzzle-700382_1280.jpg") no-repeat top;
-  background-size: cover;
   margin-top: 50px;
   height: calc(100% - 50px);
   padding: 0;

@@ -1,8 +1,4 @@
 .welcome-container {
-  background-image: url("../../../assets/puzzle-700382_1280.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: top;
   margin-top: 50px;
   height: calc(100% - 50px);
   padding: 0;

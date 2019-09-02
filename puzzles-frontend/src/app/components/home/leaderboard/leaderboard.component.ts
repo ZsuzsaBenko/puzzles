@@ -10,7 +10,7 @@ import {MemberService} from '../../../services/member.service';
 })
 export class LeaderboardComponent implements OnInit {
   members: Member[];
-  loggedInMember: Member;
+  loggedInMember = new Member();
   showAll: boolean;
 
   constructor(private memberService: MemberService) {
