@@ -3,6 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 
 import {PuzzleService} from '../../services/puzzle.service';
 import {Puzzle} from '../../models/Puzzle';
+import {Category} from '../../models/Category';
 
 @Component({
   selector: 'app-puzzles',
@@ -14,15 +15,41 @@ export class PuzzlesComponent implements OnInit {
   title = '';
 
   constructor(private puzzleService: PuzzleService,
-              private route: ActivatedRoute) { }
+              private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    if (this.route.snapshot.url.toString().endsWith('all')) {
+    const url = this.activatedRoute.snapshot.url.toString();
+    if (url.endsWith('all')) {
       this.puzzleService.getAllPuzzles().subscribe( puzzles => {
         this.puzzles = puzzles;
-        this.title = 'Összes fejtörő';
-        console.log(puzzles);
+        this.title = 'Összes rejtvény';
       });
+    } else if (url.endsWith('riddles')) {
+      this.puzzleService.getPuzzlesByCategory(Category.RIDDLE).subscribe( puzzles => {
+        this.puzzles = puzzles;
+        this.title = 'Fejtörők, találós kérdések';
+      });
+    } else if (url.endsWith('math-puzzles')) {
+      this.puzzleService.getPuzzlesByCategory(Category.MATH_PUZZLE).subscribe( puzzles => {
+        this.puzzles = puzzles;
+        this.title = 'Matematikai feladványok';
+      });
+    } else if (url.endsWith('picture-puzzles')) {
+      this.puzzleService.getPuzzlesByCategory(Category.PICTURE_PUZZLE).subscribe( puzzles => {
+        this.puzzles = puzzles;
+        this.title = 'Képrejtvények';
+      });
+    } else if (url.endsWith('word-puzzles')) {
+      this.puzzleService.getPuzzlesByCategory(Category.WORD_PUZZLE).subscribe( puzzles => {
+        this.puzzles = puzzles;
+        this.title = 'Nyelvi játékok';
+      });
+    } else if (url.endsWith('ciphers')) {
+      this.puzzleService.getPuzzlesByCategory(Category.CIPHER).subscribe( puzzles => {
+        this.puzzles = puzzles;
+        this.title = 'Titkos írás';
+      });
+    } else {
     }
   }
 

@@ -10,9 +10,14 @@ import { PuzzleItemComponent } from './components/puzzles/puzzle-item/puzzle-ite
 const routes: Routes = [
   {path: '', component: WelcomeComponent},
   {path: 'home', canActivate: [AuthGuardService], component: HomeComponent},
-  {path: 'puzzles/:category', canActivate: [AuthGuardService], component: PuzzlesComponent},
+  {path: 'puzzles/riddles', canActivate: [AuthGuardService], component: PuzzlesComponent},
+  {path: 'puzzles/math-puzzles', canActivate: [AuthGuardService], component: PuzzlesComponent},
+  {path: 'puzzles/picture-puzzles', canActivate: [AuthGuardService], component: PuzzlesComponent},
+  {path: 'puzzles/word-puzzles', canActivate: [AuthGuardService], component: PuzzlesComponent},
+  {path: 'puzzles/ciphers', canActivate: [AuthGuardService], component: PuzzlesComponent},
   {path: 'puzzles/all', canActivate: [AuthGuardService], component: PuzzlesComponent},
-  {path: 'puzzles/all/:id', canActivate: [AuthGuardService], component: PuzzleItemComponent}
+  {path: 'puzzles/all/:id', canActivate: [AuthGuardService], component: PuzzleItemComponent},
+  {path: '**', redirectTo: 'home'}
 ];
 
 @NgModule({

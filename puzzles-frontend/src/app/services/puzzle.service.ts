@@ -22,6 +22,11 @@ export class PuzzleService {
     return this.http.get<Puzzle[]>(url);
   }
 
+  getPuzzlesByCategory(category: Category) {
+    const url = 'http://localhost:8080/puzzles/';
+    return this.http.get<Puzzle[]>(url + category.toString());
+  }
+
   translateCategory(category: Category) {
     switch (category) {
       case Category.RIDDLE.toString():
