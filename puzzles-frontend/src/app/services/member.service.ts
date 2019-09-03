@@ -9,8 +9,13 @@ export class MemberService {
 
   constructor(private http: HttpClient) { }
 
-  getLeaderBoard() {
-    const url = 'http://localhost:8080/members/leaderboard';
+  getTopLeaderBoard() {
+    const url = 'http://localhost:8080/members/top-leaderboard';
+    return this.http.get<Member[]>(url);
+  }
+
+  getFullLeaderBoard() {
+    const url = 'http://localhost:8080/members/full-leaderboard';
     return this.http.get<Member[]>(url);
   }
 

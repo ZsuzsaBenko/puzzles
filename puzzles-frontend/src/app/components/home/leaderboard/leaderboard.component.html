@@ -13,14 +13,13 @@
         <tbody>
           <tr *ngFor="let member of members, let i =index"
               [ngClass]="{'logged-in-member': member.id === loggedInMember.id}">
-            <td *ngIf="i < 5 || showAll">{{ i + 1 }}.</td>
-            <td *ngIf="i < 5 || showAll">{{ member.username }}</td>
-            <td *ngIf="i < 5 || showAll">{{ member.score }} pont</td>
+            <td>{{ i + 1 }}.</td>
+            <td>{{ member.username }}</td>
+            <td>{{ member.score }} pont</td>
           </tr>
         </tbody>
       </table>
-      <button *ngIf="!showAll" type="button" (click)="toggleShowAll()">Mutatsd mind</button>
-      <button *ngIf="showAll" type="button" (click)="toggleShowAll()">Első 5</button>
+      <button type="button" (click)="showFullLeaderboard()">Mutatsd mind!</button>
     </div>
   </div>
 </div>
