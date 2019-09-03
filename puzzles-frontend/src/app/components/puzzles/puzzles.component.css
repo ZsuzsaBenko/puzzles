@@ -70,6 +70,10 @@ button:hover {
   background-color: #f0fff0;
 }
 
+.puzzle button:last-child {
+  margin-right: 10px;
+}
+
 select {
   display: inline-block;
   margin: 0 20px;
@@ -86,7 +90,7 @@ select {
     text-align: center;
   }
 
-  select, #sort-button {
+  select, button {
     display: block;
     float: none;
     margin: 0 auto;
@@ -95,16 +99,16 @@ select {
   #sort-button {
     margin: 20px auto;
   }
-}
-
-@media only screen and (max-width: 500px) {
-  #date, button, select {
-    display: block;
-    float: none;
-  }
 
   button {
     margin: 20px 0 10px;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  #date {
+    display: block;
+    float: none;
   }
 
   select, #sort-button {
