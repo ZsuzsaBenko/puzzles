@@ -61,6 +61,7 @@ li {
   display: block;
   width: 100%;
   border-bottom: 1px solid #00b300;
+  color: #00b300;
 }
 
 .dropdown-menu a:last-child span{
@@ -69,6 +70,10 @@ li {
 
 .dropdown-menu a:hover {
   background-color: #00b300;
+  color: #333333;
+}
+
+.dropdown-menu a span:hover {
   color: #333333;
 }
 

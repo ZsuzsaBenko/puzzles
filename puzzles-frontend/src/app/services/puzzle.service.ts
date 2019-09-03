@@ -14,4 +14,9 @@ export class PuzzleService {
     const url = 'http://localhost:8080/puzzles/random';
     return this.http.get<Puzzle[]>(url);
   }
+
+  getAllPuzzles() {
+    const url = 'http://localhost:8080/puzzles/all';
+    return this.http.get<Puzzle[]>(url);
+  }
 }

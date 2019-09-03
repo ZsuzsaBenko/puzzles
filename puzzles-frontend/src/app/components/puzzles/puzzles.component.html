@@ -1,0 +1,35 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 puzzle-container">
+          <h1>{{ title }}</h1>
+          <ul>
+            <li *ngFor="let puzzle of puzzles">
+              <div class="puzzle">
+                <p class="puzzle-info">Beküldő: <span>{{ puzzle.member.username }}</span><span id="date"> {{ puzzle.dateTime | date:'yyyy. MM. dd.' }}</span></p>
+                <h3>{{ puzzle.title }}</h3>
+                <p class="puzzle-info">Kategória: <span>{{ translateCategory(puzzle.category) | uppercase }}</span></p>
+                <p class="puzzle-info">Nehézség: <span>{{ translateLevel(puzzle.level) | uppercase }}</span></p>
+                <p class="rating">
+                  <i class="fas fa-star-half-alt" *ngIf="puzzle.rating > 0 && puzzle.rating < 1"></i>
+                  <i class="fas fa-star" *ngIf="puzzle.rating >= 1"></i>
+                  <i class="fas fa-star-half-alt" *ngIf="puzzle.rating > 1 && puzzle.rating < 2"></i>
+                  <i class="fas fa-star" *ngIf="puzzle.rating >= 2"></i>
+                  <i class="fas fa-star-half-alt" *ngIf="puzzle.rating > 2 && puzzle.rating < 3"></i>
+                  <i class="fas fa-star" *ngIf="puzzle.rating >= 3"></i>
+                  <i class="fas fa-star-half-alt" *ngIf="puzzle.rating > 3 && puzzle.rating < 4"></i>
+                  <i class="fas fa-star" *ngIf="puzzle.rating >= 4"></i>
+                  <i class="fas fa-star-half-alt" *ngIf="puzzle.rating > 4 && puzzle.rating < 5"></i>
+                  <i class="fas fa-star" *ngIf="puzzle.rating === 5"></i>
+                  <span id="no-rating" *ngIf="puzzle.rating === 0">Ezt a fejtörőt még nem értékelték.</span>
+                  <button type="button">Megoldom!</button>
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
