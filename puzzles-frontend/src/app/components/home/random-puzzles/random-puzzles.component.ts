@@ -55,30 +55,4 @@ export class RandomPuzzlesComponent implements OnInit {
     }
   }
 
-  translateCategory(category: Category) {
-    switch (category) {
-      case Category.RIDDLE.toString():
-        return 'fejtörő';
-      case Category.MATH_PUZZLE.toString():
-        return 'matematikai feladvány';
-      case Category.WORD_PUZZLE.toString():
-        return 'nyelvi játék';
-      case Category.PICTURE_PUZZLE.toString():
-        return 'képrejtvény';
-      case Category.CIPHER.toString():
-        return 'titkos írás';
-    }
-  }
-
-  translateLevel(level: Level) {
-    switch (level) {
-      case Level.EASY.toString():
-        return 'könnyű';
-      case Level.MEDIUM.toString():
-        return 'közepes';
-      case Level.DIFFICULT.toString():
-        return 'nehéz';
-    }
-  }
-
 }

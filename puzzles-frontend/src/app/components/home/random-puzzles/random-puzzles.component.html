@@ -7,9 +7,9 @@
         <div class="random-puzzle">
           <h3>{{ currentPuzzle.title }}</h3>
           <p class="puzzle-info">Kategória:</p>
-          <p>{{ translateCategory(currentPuzzle.category) | uppercase }} </p>
+          <p>{{ puzzleService.translateCategory(currentPuzzle.category) | uppercase }} </p>
           <p class="puzzle-info">Nehézség:</p>
-          <p>{{ translateLevel(currentPuzzle.level) | uppercase }}</p>
+          <p>{{ puzzleService.translateLevel(currentPuzzle.level) | uppercase }}</p>
           <p class="rating">
             <i class="fas fa-star-half-alt" *ngIf="currentPuzzle.rating > 0 && currentPuzzle.rating < 1"></i>
             <i class="fas fa-star" *ngIf="currentPuzzle.rating >= 1"></i>
