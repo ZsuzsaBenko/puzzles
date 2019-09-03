@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { PuzzleService } from '../../services/puzzle.service';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+
+import {PuzzleService} from '../../services/puzzle.service';
 import {Puzzle} from '../../models/Puzzle';
-import {Category} from '../../models/Category';
-import {Level} from '../../models/Level';
 
 @Component({
   selector: 'app-puzzles',

@@ -69,3 +69,14 @@ button {
 button:hover {
   background-color: #f0fff0;
 }
+
+@media only screen and (max-width: 500px) {
+  #date, button {
+    display: block;
+    float: none;
+  }
+
+  button {
+    margin: 20px 0 10px;
+  }
+}

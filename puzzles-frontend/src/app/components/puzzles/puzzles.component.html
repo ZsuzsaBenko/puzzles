@@ -7,7 +7,9 @@
           <ul>
             <li *ngFor="let puzzle of puzzles">
               <div class="puzzle">
-                <p class="puzzle-info">Beküldő: <span>{{ puzzle.member.username }}</span><span id="date"> {{ puzzle.dateTime | date:'yyyy. MM. dd.' }}</span></p>
+                <p class="puzzle-info">Beküldő: <span>{{ puzzle.member.username }}</span>
+                  <span id="date"> {{ puzzle.dateTime | date:'yyyy. MM. dd.' }}</span>
+                </p>
                 <h3>{{ puzzle.title }}</h3>
                 <p class="puzzle-info">Kategória:
                   <span>{{ puzzleService.translateCategory(puzzle.category) | uppercase }}</span>
@@ -26,7 +28,7 @@
                   <i class="fas fa-star" *ngIf="puzzle.rating >= 4"></i>
                   <i class="fas fa-star-half-alt" *ngIf="puzzle.rating > 4 && puzzle.rating < 5"></i>
                   <i class="fas fa-star" *ngIf="puzzle.rating === 5"></i>
-                  <span id="no-rating" *ngIf="puzzle.rating === 0">Ezt a fejtörőt még nem értékelték.</span>
+                  <span id="no-rating" *ngIf="puzzle.rating === 0">Még nincs értékelés.</span>
                   <button type="button">Megoldom!</button>
                 </p>
               </div>
