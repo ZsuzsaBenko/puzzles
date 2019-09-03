@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PuzzleRepository extends JpaRepository<Puzzle, Long> {
@@ -20,6 +21,8 @@ public interface PuzzleRepository extends JpaRepository<Puzzle, Long> {
 
     @Query("SELECT p FROM Puzzle p WHERE p NOT IN :solved AND p.category = :category")
     List<Puzzle> findUnsolved(List<Puzzle> solved, Category category);
+
+    Optional<Puzzle> findFirstByCategory(Category category);
 
     List<Puzzle> findAllByOrderByTitleAsc();
 

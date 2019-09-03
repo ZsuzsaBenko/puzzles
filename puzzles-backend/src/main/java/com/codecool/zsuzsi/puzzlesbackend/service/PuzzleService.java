@@ -44,8 +44,15 @@ public class PuzzleService {
     public List<Puzzle> getUnsolvedPuzzleFromEachCategory(Member member) {
         List<Puzzle> solvedPuzzles = this.getSolvedPuzzles(member);
         List<Puzzle> unsolvedPuzzles = new ArrayList<>();
-        for (Category category : Category.values()) {
-            unsolvedPuzzles.add(puzzleRepository.findUnsolved(solvedPuzzles, category).get(0));
+
+        if (solvedPuzzles.size() > 0) {
+            for (Category category : Category.values()) {
+                unsolvedPuzzles.add(puzzleRepository.findUnsolved(solvedPuzzles, category).get(0));
+            }
+        } else {
+            for (Category category : Category.values()) {
+                unsolvedPuzzles.add(puzzleRepository.findFirstByCategory(category).orElse(null));
+            }
         }
         return unsolvedPuzzles;
     }
