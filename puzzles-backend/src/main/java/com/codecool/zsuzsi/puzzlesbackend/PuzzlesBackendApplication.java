@@ -270,7 +270,7 @@ public class PuzzlesBackendApplication {
             Puzzle puzzle9 = Puzzle.builder()
                     .category(Category.CIPHER)
                     .title("Titkos közmondás")
-                    .instruction("Fejtsd meg a titkosírással írt közmondást! Minde betű az abc egy másik betűjének felel meg, véletlenszerűen. Egy kis segítség: e = 'h', a = 'l', t = 'ű', l = 'k', n = 'd'")
+                    .instruction("Fejtsd meg a titkosírással írt közmondást! Minden betű az abc egy másik betűjének felel meg, véletlenszerűen. Egy kis segítség: e = 'h', a = 'l', t = 'ű', l = 'k', n = 'd'.")
                     .puzzleItem("lqx épsdlq uhzéhű ps, élml hsxq öhkh.")
                     .answer("Aki másnak vermet ás, amga esik bele")
                     .level(Level.MEDIUM)

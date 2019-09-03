@@ -49,6 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/registration", "/login").permitAll()
+                .antMatchers(HttpMethod.GET, "/image-resource/**").permitAll()
                 .antMatchers("/puzzles/**").authenticated()
                 .antMatchers("/comments/**").authenticated()
                 .antMatchers(HttpMethod.GET,"/solutions/**").authenticated()
@@ -56,6 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/members/**").authenticated()
                 .antMatchers(HttpMethod.POST,"/members/**").authenticated()
                 .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/image-resource/**").authenticated()
                 .anyRequest().denyAll()
                 .and()
                 .addFilterBefore(new JwtTokenFilter(jwtTokenServices), UsernamePasswordAuthenticationFilter.class);
