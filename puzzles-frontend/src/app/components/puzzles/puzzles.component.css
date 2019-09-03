@@ -27,7 +27,7 @@
   padding: 5px;
 }
 
-.puzzle {
+.puzzle, .sort {
   width: 80%;
   display: block;
   margin: 20px auto;
@@ -70,13 +70,48 @@ button:hover {
   background-color: #f0fff0;
 }
 
+select {
+  display: inline-block;
+  margin: 0 20px;
+  width: 150px;
+  padding: 5px;
+  border: 1px solid #00b300;
+  border-radius: 10px;
+  background-color: #f0fff0;
+  color: #333333;
+}
+
+@media only screen and (max-width: 620px) {
+  .sort {
+    text-align: center;
+  }
+
+  select, #sort-button {
+    display: block;
+    float: none;
+    margin: 0 auto;
+  }
+
+  #sort-button {
+    margin: 20px auto;
+  }
+}
+
 @media only screen and (max-width: 500px) {
-  #date, button {
+  #date, button, select {
     display: block;
     float: none;
   }
 
   button {
     margin: 20px 0 10px;
+  }
+
+  select, #sort-button {
+    margin: 0 auto;
+  }
+
+  #sort-button {
+    margin: 20px auto;
   }
 }
