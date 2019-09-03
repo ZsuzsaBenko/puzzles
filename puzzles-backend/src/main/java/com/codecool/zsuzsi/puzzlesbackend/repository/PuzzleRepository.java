@@ -35,4 +35,16 @@ public interface PuzzleRepository extends JpaRepository<Puzzle, Long> {
     List<Puzzle> findAllByOrderByRatingAsc();
 
     List<Puzzle> findAllByOrderByRatingDesc();
+
+    List<Puzzle> findAllByCategoryOrderByTitleAsc(Category category);
+
+    List<Puzzle> findAllByCategoryOrderByTitleDesc(Category category);
+
+    List<Puzzle> findAllByCategoryOrderByLevelAsc(Category category);
+
+    List<Puzzle> findAllByCategoryOrderByLevelDesc(Category category);
+
+    List<Puzzle> findAllByCategoryOrderByRatingAsc(Category category);
+
+    List<Puzzle> findAllByCategoryOrderByRatingDesc(Category category);
 }

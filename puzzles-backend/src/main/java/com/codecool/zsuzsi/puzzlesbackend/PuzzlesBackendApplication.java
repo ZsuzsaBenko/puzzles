@@ -233,7 +233,7 @@ public class PuzzlesBackendApplication {
                     .instruction("Milyen számok kerülnek a négyzetekbe? A megoldást ilyen formátumban add meg: bal felső szám, jobb felső szám, bal alsó szám, jobb alsó szám - szóközök nélkül, pl. 1,2,3,4!")
                     .puzzleItem("math-3.5.jpeg")
                     .answer("3.5,4.5,9.5,3.5")
-                    .level(Level.MEDIUM)
+                    .level(Level.DIFFICULT)
                     .member(admin)
                     .build();
 

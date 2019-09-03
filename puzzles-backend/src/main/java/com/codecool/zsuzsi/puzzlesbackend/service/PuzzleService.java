@@ -76,6 +76,25 @@ public class PuzzleService {
         }
     }
 
+    public List<Puzzle> getSortedPuzzles(Category category, String criteria) {
+        switch (criteria) {
+            case "titleASC":
+                return puzzleRepository.findAllByCategoryOrderByTitleAsc(category);
+            case "titleDESC":
+                return puzzleRepository.findAllByCategoryOrderByTitleDesc(category);
+            case "levelASC":
+                return puzzleRepository.findAllByCategoryOrderByLevelAsc(category);
+            case "levelDESC":
+                return puzzleRepository.findAllByCategoryOrderByLevelDesc(category);
+            case "ratingASC":
+                return puzzleRepository.findAllByCategoryOrderByRatingAsc(category);
+            case "ratingDESC":
+                return puzzleRepository.findAllByCategoryOrderByRatingDesc(category);
+            default:
+                return puzzleRepository.findAllByOrderByDateTimeDesc();
+        }
+    }
+
     public Puzzle addNewPuzzle(Puzzle puzzle, Member member) {
         puzzle.setMember(member);
 

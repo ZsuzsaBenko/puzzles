@@ -53,6 +53,12 @@ public class PuzzleController {
         return puzzleService.getSortedPuzzles(criteria);
     }
 
+    @GetMapping("/sort/{category}/{criteria}")
+    public List<Puzzle> getSortedPuzzles(@PathVariable("category") Category category,
+                                         @PathVariable("criteria") String criteria) {
+        return puzzleService.getSortedPuzzles(category, criteria);
+    }
+
     @PostMapping("/add")
     public Puzzle addNewPuzzle(@RequestBody Puzzle puzzle,
                                @RequestHeader("Authorization") String token) {
