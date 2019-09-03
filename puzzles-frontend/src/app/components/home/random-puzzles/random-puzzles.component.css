@@ -1,5 +1,6 @@
 .random-puzzle-container {
   margin-top: 50px;
+  border-radius: 10px;
 }
 
 .random-puzzle-container h1 {
@@ -47,6 +48,14 @@
   border: 2px solid #00b300;
   border-radius: 10px;
   text-align: center;
+  font-size: 17px;
+}
+
+.puzzle-info {
+  margin-top: 25px;
+  margin-bottom: 5px;
+  padding: 0;
+  color: #00b300;
 }
 
 button {
@@ -57,7 +66,6 @@ button {
   font-weight: bold;
   border-radius: 10px;
   border: none;
-  box-shadow:  0 0 5px 5px #333333;
   transition: background-color 1s;
 }
 
