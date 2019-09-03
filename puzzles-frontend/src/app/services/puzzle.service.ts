@@ -27,6 +27,15 @@ export class PuzzleService {
     return this.http.get<Puzzle[]>(url + category.toString());
   }
 
+  getSortedPuzzles(category: Category, sortingParam: string) {
+    const url = 'http://localhost:8080/puzzles/sort/';
+    if (!category) {
+      return this.http.get<Puzzle[]>(url + sortingParam);
+    } else {
+      return this.http.get<Puzzle[]>(url + category + '/' + sortingParam);
+    }
+  }
+
   translateCategory(category: Category) {
     switch (category) {
       case Category.RIDDLE.toString():
