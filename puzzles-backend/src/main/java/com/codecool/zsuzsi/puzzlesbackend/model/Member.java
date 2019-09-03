@@ -1,6 +1,7 @@
 package com.codecool.zsuzsi.puzzlesbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -27,6 +28,7 @@ public class Member {
     private String email;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     @CreationTimestamp
@@ -51,6 +53,7 @@ public class Member {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
+    @JsonIgnore
     private Set<String> roles = new HashSet<>();
 
     @Override

@@ -12,5 +12,4 @@ export class Member {
   puzzles: Puzzle[];
   solutions: Solution[];
   comments: PuzzleComment[];
-  roles: string[];
 }
