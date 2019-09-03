@@ -54,9 +54,8 @@ export class PuzzlesComponent implements OnInit {
       this.puzzleService.getPuzzlesByCategory(Category.CIPHER).subscribe( puzzles => {
         this.puzzles = puzzles;
         this.category = Category.CIPHER;
-        this.title = 'Titkos írás';
+        this.title = 'Titkosírás';
       });
-    } else {
     }
   }
 

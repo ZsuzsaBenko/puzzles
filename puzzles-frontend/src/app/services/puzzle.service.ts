@@ -36,6 +36,11 @@ export class PuzzleService {
     }
   }
 
+  getPuzzleById(id: number) {
+    const url = 'http://localhost:8080/puzzles/all/';
+    return this.http.get<Puzzle>(url + id);
+  }
+
   translateCategory(category: Category) {
     switch (category) {
       case Category.RIDDLE.toString():
@@ -47,7 +52,7 @@ export class PuzzleService {
       case Category.PICTURE_PUZZLE.toString():
         return 'képrejtvény';
       case Category.CIPHER.toString():
-        return 'titkos írás';
+        return 'titkosírás';
     }
   }
 

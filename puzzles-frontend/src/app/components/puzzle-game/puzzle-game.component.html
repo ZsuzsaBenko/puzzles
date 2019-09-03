@@ -1,0 +1,35 @@
+<div *ngIf="!isFetching">
+  <div class="row">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 puzzle-container">
+          <p class="puzzle-info">Beküldő: <span>{{ puzzle.member.username }}</span>
+            <span id="date"> {{ puzzle.dateTime | date:'yyyy. MM. dd.' }}</span>
+          </p>
+          <h1>{{ puzzle.title }}</h1>
+          <p class="puzzle-info">Instrukció:
+            <span>{{ puzzle.instruction }}</span>
+          </p>
+          <div class="puzzle-item">
+            <p *ngIf="puzzle.category.toString() !== 'PICTURE_PUZZLE'">{{ puzzle.puzzleItem }}</p>
+            <img src="http://localhost:8080/image-resource/{{ puzzle.puzzleItem }}" alt="puzzle"
+                 *ngIf="puzzle.category.toString() === 'PICTURE_PUZZLE'">
+          </div>
+          <p class="rating">
+            <i class="fas fa-star-half-alt" *ngIf="puzzle.rating > 0 && puzzle.rating < 1"></i>
+            <i class="fas fa-star" *ngIf="puzzle.rating >= 1"></i>
+            <i class="fas fa-star-half-alt" *ngIf="puzzle.rating > 1 && puzzle.rating < 2"></i>
+            <i class="fas fa-star" *ngIf="puzzle.rating >= 2"></i>
+            <i class="fas fa-star-half-alt" *ngIf="puzzle.rating > 2 && puzzle.rating < 3"></i>
+            <i class="fas fa-star" *ngIf="puzzle.rating >= 3"></i>
+            <i class="fas fa-star-half-alt" *ngIf="puzzle.rating > 3 && puzzle.rating < 4"></i>
+            <i class="fas fa-star" *ngIf="puzzle.rating >= 4"></i>
+            <i class="fas fa-star-half-alt" *ngIf="puzzle.rating > 4 && puzzle.rating < 5"></i>
+            <i class="fas fa-star" *ngIf="puzzle.rating === 5"></i>
+            <span id="no-rating" *ngIf="puzzle.rating === 0">Még nincs értékelés.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

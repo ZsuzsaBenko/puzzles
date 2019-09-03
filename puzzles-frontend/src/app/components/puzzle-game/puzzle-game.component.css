@@ -1,0 +1,88 @@
+.puzzle-container {
+  margin-top: 100px;
+  border-radius: 10px;
+  background-color: #333333;
+  padding: 20px;
+}
+
+.puzzle-container h1 {
+  color: #00b300;
+  padding: 10px 0 30px;
+  text-align: center;
+}
+
+.puzzle {
+  width: 80%;
+  display: block;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #444444;
+  color: #f0fff0;
+  border: 2px solid #00b300;
+  border-radius: 10px;
+  font-size: 17px;
+}
+
+.puzzle h1 {
+  padding-bottom: 20px;
+}
+
+#date {
+  float: right;
+}
+
+.puzzle-info, #no-rating {
+  color: #00b300;
+}
+
+.puzzle-info span {
+  color: #f0fff0;
+}
+
+.puzzle-item {
+  padding: 20px;
+  background-color: #444444;
+  border: 2px solid #00b300;
+  border-radius: 10px;
+  font-size: 18px;
+}
+
+.puzzle-item img {
+  width: 50%;
+  height: auto;
+  display: block;
+  margin: 10px auto;
+}
+
+button {
+  float: right;
+  padding: 10px;
+  background-color: #00b300;
+  color: #333333;
+  font-weight: bold;
+  border-radius: 10px;
+  border: none;
+  transition: background-color 1s;
+}
+
+button:hover {
+  background-color: #f0fff0;
+}
+
+@media only screen and (max-width: 1024px) {
+  .puzzle-item img {
+    width: 65%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .puzzle-item img {
+    width: 80%;
+  }
+}
+
+@media only screen and (max-width: 300px) {
+  .puzzle-item img {
+    width: 95%;
+  }
+}

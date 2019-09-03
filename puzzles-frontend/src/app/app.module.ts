@@ -14,7 +14,7 @@ import { LeaderboardComponent } from './components/home/leaderboard/leaderboard.
 import { RandomPuzzlesComponent } from './components/home/random-puzzles/random-puzzles.component';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { PuzzlesComponent } from './components/puzzles/puzzles.component';
-import { PuzzleItemComponent } from './components/puzzles/puzzle-item/puzzle-item.component';
+import { PuzzleGameComponent } from './components/puzzle-game/puzzle-game.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,7 @@ import { PuzzleItemComponent } from './components/puzzles/puzzle-item/puzzle-ite
     LeaderboardComponent,
     RandomPuzzlesComponent,
     PuzzlesComponent,
-    PuzzleItemComponent
+    PuzzleGameComponent
   ],
   imports: [
     BrowserModule,
