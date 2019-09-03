@@ -44,7 +44,7 @@ public class PuzzlesBackendApplication {
         return args -> {
 
             Member admin = Member.builder()
-                    .username("admin")
+                    .username("Admin")
                     .password(password)
                     .email("admin@admin.hu")
                     .roles(Set.of("ADMIN", "USER"))
@@ -57,7 +57,7 @@ public class PuzzlesBackendApplication {
                     .password(password)
                     .email("anna@anna.hu")
                     .roles(Set.of("USER"))
-                    .score(0)
+                    .score(500)
                     .build();
             memberRepository.save(user1);
 
@@ -66,9 +66,126 @@ public class PuzzlesBackendApplication {
                     .password(password)
                     .email("peter@peter.hu")
                     .roles(Set.of("USER"))
-                    .score(0)
+                    .score(200)
                     .build();
             memberRepository.save(user2);
+
+            Member user3 = Member.builder()
+                    .username("Bianka")
+                    .password(password)
+                    .email("bianka@bianka.hu")
+                    .roles(Set.of("USER"))
+                    .score(250)
+                    .build();
+            memberRepository.save(user3);
+
+            Member user4 = Member.builder()
+                    .username("Dávid")
+                    .password(password)
+                    .email("david@david.hu")
+                    .roles(Set.of("USER"))
+                    .score(600)
+                    .build();
+            memberRepository.save(user4);
+
+            Member user5 = Member.builder()
+                    .username("Robi")
+                    .password(password)
+                    .email("robi@probi.hu")
+                    .roles(Set.of("USER"))
+                    .score(420)
+                    .build();
+            memberRepository.save(user5);
+
+            Member user6 = Member.builder()
+                    .username("Zsófi")
+                    .password(password)
+                    .email("zsufi@zsofi.hu")
+                    .roles(Set.of("USER"))
+                    .score(30)
+                    .build();
+            memberRepository.save(user6);
+
+            Member user7 = Member.builder()
+                    .username("Bence")
+                    .password(password)
+                    .email("bence@bence.hu")
+                    .roles(Set.of("USER"))
+                    .score(360)
+                    .build();
+            memberRepository.save(user7);
+
+            Member user8 = Member.builder()
+                    .username("Gergő")
+                    .password(password)
+                    .email("gergo@gergo.hu")
+                    .roles(Set.of("USER"))
+                    .score(80)
+                    .build();
+            memberRepository.save(user8);
+
+            Member user9 = Member.builder()
+                    .username("Tomi")
+                    .password(password)
+                    .email("tomi@tomi.hu")
+                    .roles(Set.of("USER"))
+                    .score(590)
+                    .build();
+            memberRepository.save(user9);
+
+            Member user10 = Member.builder()
+                    .username("Emma")
+                    .password(password)
+                    .email("emma@emma.hu")
+                    .roles(Set.of("USER"))
+                    .score(120)
+                    .build();
+            memberRepository.save(user10);
+
+            Member user11 = Member.builder()
+                    .username("Juli")
+                    .password(password)
+                    .email("juli@juli.hu")
+                    .roles(Set.of("USER"))
+                    .score(570)
+                    .build();
+            memberRepository.save(user11);
+
+            Member user12 = Member.builder()
+                    .username("Csabi")
+                    .password(password)
+                    .email("csabi@csabi.hu")
+                    .roles(Set.of("USER"))
+                    .score(40)
+                    .build();
+            memberRepository.save(user12);
+
+            Member user13 = Member.builder()
+                    .username("Laura")
+                    .password(password)
+                    .email("laura@laura.hu")
+                    .roles(Set.of("USER"))
+                    .score(310)
+                    .build();
+            memberRepository.save(user13);
+
+            Member user14 = Member.builder()
+                    .username("Krisz")
+                    .password(password)
+                    .email("krisz@krisz.hu")
+                    .roles(Set.of("USER"))
+                    .score(260)
+                    .build();
+            memberRepository.save(user14);
+
+            Member user15 = Member.builder()
+                    .username("Zoé")
+                    .password(password)
+                    .email("zoe@zoe.hu")
+                    .roles(Set.of("USER"))
+                    .score(340)
+                    .build();
+            memberRepository.save(user15);
 
             Puzzle puzzle1 = Puzzle.builder()
                     .category(Category.RIDDLE)

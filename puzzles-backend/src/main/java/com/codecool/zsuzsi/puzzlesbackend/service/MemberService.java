@@ -46,7 +46,11 @@ public class MemberService {
         return memberRepository.findByEmail(email).orElse(null);
     }
 
-    public List<Member> getLeaderBoard() {
-        return memberRepository.findTop20ByOrderByScoreDesc();
+    public List<Member> getTopLeaderBoard() {
+        return memberRepository.findTop10ByOrderByScoreDesc();
+    }
+
+    public List<Member> getFullLeaderBoard() {
+        return memberRepository.findAllByOrderByScoreDesc();
     }
 }

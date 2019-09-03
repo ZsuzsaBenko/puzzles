@@ -13,8 +13,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByEmail(String email);
 
-    List<Member> findTop20ByOrderByScoreDesc();
+    List<Member> findTop10ByOrderByScoreDesc();
 
-    @Query("SELECT m FROM Member m LEFT JOIN FETCH m.solutions s WHERE m.email = :email")
-    Optional<Member> getProfile(String email);
+    List<Member> findAllByOrderByScoreDesc();
 }

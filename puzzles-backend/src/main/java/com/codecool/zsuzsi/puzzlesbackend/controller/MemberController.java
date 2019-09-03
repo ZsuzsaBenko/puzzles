@@ -17,9 +17,14 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/leaderboard")
-    public List<Member> getLeaderBoard() {
-        return memberService.getLeaderBoard();
+    @GetMapping("/top-leaderboard")
+    public List<Member> getTopLeaderBoard() {
+        return memberService.getTopLeaderBoard();
+    }
+
+    @GetMapping("/full-leaderboard")
+    public List<Member> getFullLeaderBoard() {
+        return memberService.getFullLeaderBoard();
     }
 
     @GetMapping("/profile")
