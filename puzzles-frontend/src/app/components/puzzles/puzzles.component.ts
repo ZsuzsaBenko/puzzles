@@ -61,6 +61,8 @@ export class PuzzlesComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     const sortingParam = form.value.sort;
-    this.puzzleService.getSortedPuzzles(this.category, sortingParam).subscribe( puzzles => this.puzzles = puzzles);
+    if (sortingParam !== '') {
+      this.puzzleService.getSortedPuzzles(this.category, sortingParam).subscribe( puzzles => this.puzzles = puzzles);
+    }
   }
 }
