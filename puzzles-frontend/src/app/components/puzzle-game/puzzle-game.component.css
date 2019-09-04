@@ -2,7 +2,7 @@
   margin-top: 100px;
   border-radius: 10px;
   background-color: #333333;
-  padding: 20px;
+  padding: 20px 40px;
 }
 
 .puzzle-container h1 {
@@ -40,7 +40,9 @@
 }
 
 .puzzle-item {
+  color: #f0fff0;
   padding: 20px;
+  margin: 20px auto;
   background-color: #444444;
   border: 2px solid #00b300;
   border-radius: 10px;
@@ -62,11 +64,50 @@ button {
   font-weight: bold;
   border-radius: 10px;
   border: none;
-  transition: background-color 1s;
+  transition: background-color 1s, color 1s;
 }
 
 button:hover {
   background-color: #f0fff0;
+}
+
+#cancel-button:hover {
+  background-color: #b22222;
+  color: #f0fff0;
+}
+
+.answer-form label {
+  color: #f0fff0;
+  margin-right: 20px;
+}
+
+.answer-form input {
+  display: inline-block;
+  width: 300px;
+  background-color: #333333;
+  color: #f0fff0;
+  border: none;
+  border-bottom: 1px solid #00b300;
+  padding: 5px;
+}
+
+.answer-btn-div {
+  display: inline;
+}
+
+#check-button {
+  margin-right: 10px;
+}
+
+.rating-box {
+  color: #f0fff0;
+  text-align: center;
+}
+
+.rating-box button {
+  float: none;
+  margin: 30px auto 20px;
+
 }
 
 @media only screen and (max-width: 1024px) {
@@ -78,6 +119,11 @@ button:hover {
 @media only screen and (max-width: 600px) {
   .puzzle-item img {
     width: 80%;
+  }
+
+  .answer-btn-div {
+    padding: 20px 0;
+    display: block;
   }
 }
 

@@ -3,6 +3,9 @@ import { NgModule } from '@angular/core';
 import { HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
+import { RatingModule } from 'ng-starrating';
+
+import { AuthInterceptorService } from './services/auth-interceptor.service';
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -12,7 +15,6 @@ import { RegistrationComponent } from './components/welcome/registration/registr
 import { HomeComponent } from './components/home/home.component';
 import { LeaderboardComponent } from './components/home/leaderboard/leaderboard.component';
 import { RandomPuzzlesComponent } from './components/home/random-puzzles/random-puzzles.component';
-import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { PuzzlesComponent } from './components/puzzles/puzzles.component';
 import { PuzzleGameComponent } from './components/puzzle-game/puzzle-game.component';
 
@@ -33,7 +35,8 @@ import { PuzzleGameComponent } from './components/puzzle-game/puzzle-game.compon
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    RatingModule
   ],
   providers: [
     {
