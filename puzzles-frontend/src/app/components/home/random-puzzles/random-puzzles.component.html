@@ -22,7 +22,7 @@
             <i class="fas fa-star-half-alt" *ngIf="currentPuzzle.rating > 4 && currentPuzzle.rating < 5"></i>
             <i class="fas fa-star" *ngIf="currentPuzzle.rating === 5"></i>
           </p>
-          <button type="button">Megoldom!</button>
+          <button type="button" routerLink="/puzzles/all/{{ currentPuzzle.id }}">Megoldom!</button>
         </div>
         <i class="fas fa-chevron-right" (click)="stepRight()" [ngClass]="{'disabled-chevron': !isNext}"></i>
       </div>
