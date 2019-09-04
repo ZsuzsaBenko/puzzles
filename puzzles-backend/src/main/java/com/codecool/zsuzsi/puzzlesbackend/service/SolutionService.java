@@ -39,8 +39,8 @@ public class SolutionService {
         solutionRepository.save(solution);
 
         this.updateRating(solvedPuzzle);
-        this.updateLevel(solvedPuzzle);
         this.updateScore(member);
+        this.updateLevel(solvedPuzzle);
 
         return solution;
     }

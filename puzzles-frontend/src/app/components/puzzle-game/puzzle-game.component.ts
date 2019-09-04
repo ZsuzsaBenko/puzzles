@@ -7,6 +7,7 @@ import {Puzzle} from '../../models/Puzzle';
 import {PuzzleService} from '../../services/puzzle.service';
 import {Solution} from '../../models/Solution';
 import {StarRatingComponent} from 'ng-starrating';
+import {SolutionService} from '../../services/solution.service';
 
 @Component({
   selector: 'app-puzzle-item',
@@ -22,6 +23,7 @@ export class PuzzleGameComponent implements OnInit {
   isIncorrect = false;
 
   constructor(private puzzleService: PuzzleService,
+              private solutionService: SolutionService,
               private activatedRoute: ActivatedRoute,
               private location: Location) {
   }
@@ -49,12 +51,11 @@ export class PuzzleGameComponent implements OnInit {
       this.isSolved = true;
     } else {
       this.isIncorrect = true;
-      setTimeout( () => this.isIncorrect = false, 3000);
+      setTimeout(() => this.isIncorrect = false, 3000);
     }
   }
 
   onRate($event: { oldValue: number, newValue: number, starRating: StarRatingComponent }) {
-    console.log(`Old Value:${$event.oldValue}, New Value: ${$event.newValue}`);
     this.rating = $event.newValue;
   }
 
@@ -67,5 +68,8 @@ export class PuzzleGameComponent implements OnInit {
     solution.seconds = diff;
     solution.rating = this.rating;
 
+    this.solutionService.sendSolution(solution).subscribe(() => {
+      this.location.back();
+    });
   }
 }
