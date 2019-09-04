@@ -95,6 +95,14 @@ button:hover {
   display: inline;
 }
 
+#incorrect-message {
+  margin-top: 20px;
+  padding: 10px;
+  color: #f0fff0;
+  background-color: #b22222;
+  border-radius: 10px;
+}
+
 #check-button {
   margin-right: 10px;
 }
@@ -124,6 +132,10 @@ button:hover {
   .answer-btn-div {
     padding: 20px 0;
     display: block;
+  }
+
+  #incorrect-message {
+    margin-top: 30px;
   }
 }
 

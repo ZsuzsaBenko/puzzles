@@ -37,6 +37,7 @@
                 <button id="check-button" type="submit">Helyes?</button>
               </div>
             </form>
+            <p *ngIf="isIncorrect" id="incorrect-message">Nem ez a helyes megoldás. Próbálkozz tovább!</p>
           </div>
           <div class="rating-box" *ngIf="isSolved">
             <h3>Kiváló megfejtés!</h3>

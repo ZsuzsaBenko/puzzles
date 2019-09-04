@@ -19,6 +19,7 @@ export class PuzzleGameComponent implements OnInit {
   rating = 0;
   isFetching = true;
   isSolved = false;
+  isIncorrect = false;
 
   constructor(private puzzleService: PuzzleService,
               private activatedRoute: ActivatedRoute,
@@ -47,7 +48,8 @@ export class PuzzleGameComponent implements OnInit {
     if (answer === this.puzzle.answer.trim().toLowerCase()) {
       this.isSolved = true;
     } else {
-      console.log('Sorry, not correct');
+      this.isIncorrect = true;
+      setTimeout( () => this.isIncorrect = false, 3000);
     }
   }
 
@@ -64,8 +66,6 @@ export class PuzzleGameComponent implements OnInit {
     solution.puzzle = this.puzzle;
     solution.seconds = diff;
     solution.rating = this.rating;
-
-    console.log(solution);
 
   }
 }
