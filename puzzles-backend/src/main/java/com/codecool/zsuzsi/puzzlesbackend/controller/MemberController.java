@@ -1,6 +1,7 @@
 package com.codecool.zsuzsi.puzzlesbackend.controller;
 
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
+import com.codecool.zsuzsi.puzzlesbackend.model.UserCredentials;
 import com.codecool.zsuzsi.puzzlesbackend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,5 +31,12 @@ public class MemberController {
     @GetMapping("/profile")
     public Member getMyProfile(@RequestHeader("Authorization") String token) {
         return memberService.getMemberFromToken(token);
+    }
+
+    @PutMapping("/profile/update")
+    public Member updateProfile(@RequestHeader("Authorization") String token,
+                                @RequestBody UserCredentials data) {
+        log.info(data.toString());
+        return memberService.updateProfile(token, data);
     }
 }

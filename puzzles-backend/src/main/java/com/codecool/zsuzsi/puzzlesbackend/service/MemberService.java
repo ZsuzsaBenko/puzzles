@@ -1,6 +1,7 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
+import com.codecool.zsuzsi.puzzlesbackend.model.UserCredentials;
 import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
 import com.codecool.zsuzsi.puzzlesbackend.security.JwtTokenServices;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +23,14 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtTokenServices jwtTokenServices;
 
-    public Member register(Member member) {
-        Optional<Member> existingMember = memberRepository.findByEmail(member.getEmail());
+    public Member register(UserCredentials data) {
+        Optional<Member> existingMember = memberRepository.findByEmail(data.getEmail());
 
         if (existingMember.isEmpty()) {
             Member newMember = Member.builder()
-                    .username(member.getUsername())
-                    .email(member.getEmail())
-                    .password(passwordEncoder.encode(member.getPassword()))
+                    .username(data.getUsername())
+                    .email(data.getEmail())
+                    .password(passwordEncoder.encode(data.getPassword()))
                     .score(0)
                     .roles(Set.of("USER"))
                     .build();
@@ -52,5 +53,17 @@ public class MemberService {
 
     public List<Member> getFullLeaderBoard() {
         return memberRepository.findAllByOrderByScoreDesc();
+    }
+
+    public Member updateProfile(String token, UserCredentials data) {
+        Member loggedInMember = getMemberFromToken(token);
+        if (data.getUsername() != null) {
+            loggedInMember.setUsername(data.getUsername());
+        }
+        if (data.getPassword() != null) {
+            loggedInMember.setPassword(passwordEncoder.encode(data.getPassword()));
+        }
+        memberRepository.save(loggedInMember);
+        return loggedInMember;
     }
 }
