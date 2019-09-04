@@ -6,6 +6,7 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { HomeComponent } from './components/home/home.component';
 import { PuzzlesComponent } from './components/puzzles/puzzles.component';
 import { PuzzleGameComponent } from './components/puzzle-game/puzzle-game.component';
+import {ProfileComponent} from './components/profile/profile.component';
 
 const routes: Routes = [
   {path: '', component: WelcomeComponent},
@@ -17,6 +18,7 @@ const routes: Routes = [
   {path: 'puzzles/ciphers', canActivate: [AuthGuardService], component: PuzzlesComponent},
   {path: 'puzzles/all', canActivate: [AuthGuardService], component: PuzzlesComponent},
   {path: 'puzzles/all/:id', canActivate: [AuthGuardService], component: PuzzleGameComponent},
+  {path: 'profile', canActivate: [AuthGuardService], component: ProfileComponent},
   {path: '**', redirectTo: 'home'}
 ];
 

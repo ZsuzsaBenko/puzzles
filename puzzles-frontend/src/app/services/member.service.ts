@@ -23,4 +23,9 @@ export class MemberService {
     const url = 'http://localhost:8080/members/profile';
     return this.http.get<Member>(url);
   }
+
+  updateMember(member: Member) {
+    const url = 'http://localhost:8080/members/profile/update';
+    return this.http.put<Member>(url, member);
+  }
 }

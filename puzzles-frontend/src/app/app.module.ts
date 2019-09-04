@@ -17,6 +17,11 @@ import { LeaderboardComponent } from './components/home/leaderboard/leaderboard.
 import { RandomPuzzlesComponent } from './components/home/random-puzzles/random-puzzles.component';
 import { PuzzlesComponent } from './components/puzzles/puzzles.component';
 import { PuzzleGameComponent } from './components/puzzle-game/puzzle-game.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { MyDataComponent } from './components/profile/my-data/my-data.component';
+import { MySolutionsComponent } from './components/profile/my-solutions/my-solutions.component';
+import { MyPuzzlesComponent } from './components/profile/my-puzzles/my-puzzles.component';
+import { MyCommentsComponent } from './components/profile/my-comments/my-comments.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +34,12 @@ import { PuzzleGameComponent } from './components/puzzle-game/puzzle-game.compon
     LeaderboardComponent,
     RandomPuzzlesComponent,
     PuzzlesComponent,
-    PuzzleGameComponent
+    PuzzleGameComponent,
+    ProfileComponent,
+    MyDataComponent,
+    MySolutionsComponent,
+    MyPuzzlesComponent,
+    MyCommentsComponent
   ],
   imports: [
     BrowserModule,
