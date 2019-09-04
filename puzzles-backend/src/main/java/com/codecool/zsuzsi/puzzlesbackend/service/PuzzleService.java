@@ -47,7 +47,10 @@ public class PuzzleService {
 
         if (solvedPuzzles.size() > 0) {
             for (Category category : Category.values()) {
-                unsolvedPuzzles.add(puzzleRepository.findUnsolved(solvedPuzzles, category).get(0));
+                List<Puzzle> notYetSolved = puzzleRepository.findUnsolved(solvedPuzzles, category);
+                if (notYetSolved.size() > 0) {
+                    unsolvedPuzzles.add(notYetSolved.get(0));
+                }
             }
         } else {
             for (Category category : Category.values()) {
