@@ -42,7 +42,7 @@ public class PuzzleService {
 
     public List<Puzzle> getAllPuzzlesByMember(Member member) {
         log.info("Puzzles of  " + member.getUsername() + " (" + member.getEmail() + ") requested");
-        return puzzleRepository.findAllByMember(member);
+        return puzzleRepository.findAllByMemberOOrderBySubmissionTimeDesc(member);
     }
 
     public List<Puzzle> getUnsolvedPuzzleFromEachCategory(Member member) {
