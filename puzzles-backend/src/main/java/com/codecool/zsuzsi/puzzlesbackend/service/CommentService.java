@@ -25,7 +25,7 @@ public class CommentService {
 
         if (puzzle != null) {
             log.info("Comments belonging to puzzle " + puzzle.getId() + " requested");
-            return commentRepository.findAllByPuzzle(puzzle);
+            return commentRepository.findAllByPuzzleOrderBySubmissionTimeAsc(puzzle);
         }
         return null;
     }

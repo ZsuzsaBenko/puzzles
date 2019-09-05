@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    List<Comment> findAllByPuzzle(Puzzle puzzle);
+    List<Comment> findAllByPuzzleOrderBySubmissionTimeAsc(Puzzle puzzle);
 
     List<Comment> findAllByMemberOrderBySubmissionTimeDesc(Member member);
 
