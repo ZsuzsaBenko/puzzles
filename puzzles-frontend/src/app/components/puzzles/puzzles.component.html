@@ -22,7 +22,7 @@
             <li *ngFor="let puzzle of puzzles">
               <div class="puzzle">
                 <p class="puzzle-info">Beküldő: <span>{{ puzzle.member.username }}</span>
-                  <span id="date"> {{ puzzle.dateTime | date:'yyyy. MM. dd.' }}</span>
+                  <span id="date"> {{ puzzle.submissionTime | date:'yyyy. MM. dd.' }}</span>
                 </p>
                 <h3>{{ puzzle.title }}</h3>
                 <p class="puzzle-info">Kategória:

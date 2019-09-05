@@ -36,6 +36,11 @@ export class PuzzleService {
     }
   }
 
+  getPuzzlesByMember() {
+    const url = 'http://localhost:8080/puzzles/member';
+    return this.http.get<Puzzle[]>(url);
+  }
+
   getPuzzleById(id: number) {
     const url = 'http://localhost:8080/puzzles/all/';
     return this.http.get<Puzzle>(url + id);

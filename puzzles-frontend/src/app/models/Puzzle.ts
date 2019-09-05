@@ -1,8 +1,6 @@
 import {Category} from './Category';
 import {Level} from './Level';
 import {Member} from './Member';
-import {PuzzleComment} from './PuzzleComment';
-import {Solution} from './Solution';
 
 export class Puzzle {
   id: number;
@@ -12,9 +10,7 @@ export class Puzzle {
   instruction: string;
   puzzleItem: string;
   answer: string;
-  dateTime: Date;
+  submissionTime: Date;
   rating: number;
   member: Member;
-  comments: PuzzleComment[];
-  solutions: Solution[];
 }
