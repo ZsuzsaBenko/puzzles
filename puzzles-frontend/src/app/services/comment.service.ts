@@ -20,4 +20,9 @@ export class CommentService {
     const url = 'http://localhost:8080/comments/';
     return this.http.get<PuzzleComment[]>(url + puzzleId);
   }
+
+  addNewComment(newComment: PuzzleComment) {
+    const url = 'http://localhost:8080/comments/add';
+    return this.http.post<PuzzleComment>(url, newComment);
+  }
 }

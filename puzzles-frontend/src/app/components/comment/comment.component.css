@@ -1,10 +1,13 @@
-.comment-column, .no-comments {
+.comment-column, .no-comments, .add-comment {
   margin-top: 100px;
   border-radius: 10px;
   background-color: #333333;
   padding: 30px 40px;
   color: #00b300;
   position: relative;
+}
+.add-comment {
+  margin-bottom: 50px;
 }
 
 .no-comments p {
@@ -14,6 +17,10 @@
   font-size: 17px;
   color: #00b300;
   text-align: center;
+}
+
+.add-comment {
+  margin-top: 20px;
 }
 
 h2 {
@@ -47,5 +54,47 @@ p:last-child {
 
 p span:last-child {
   float: right;
+}
+
+textarea, label, button {
+  display: block;
+}
+
+label {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+textarea {
+  width: 70%;
+  height: 150px;
+  margin: 0 auto;
+  padding: 10px;
+  background-color: #444444;
+  border: 2px solid #00b300;
+  color: #f0fff0;
+  border-radius: 10px;
+}
+
+button {
+  margin: 20px auto;
+  padding: 10px;
+  background-color: #00b300;
+  color: #333333;
+  font-weight: bold;
+  border-radius: 10px;
+  border: none;
+  transition: background-color 1s;
+}
+
+button:hover {
+  background-color: #f0fff0;
+}
+
+@media only screen and (max-width: 600px){
+  textarea {
+    width: 90%;
+  }
 }
 

@@ -16,4 +16,11 @@
   <div *ngIf="comments.length == 0" class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 no-comments">
     <p>Ehhez a rejtvényhez még nem írt hozzászólást senki sem.</p>
   </div>
+  <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 add-comment">
+    <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+      <label for="message">Szólj hozzá!</label>
+      <textarea name="message" id="message" ngModel></textarea>
+      <button type="submit">Hozzászólás küldése</button>
+    </form>
+  </div>
 </div>
