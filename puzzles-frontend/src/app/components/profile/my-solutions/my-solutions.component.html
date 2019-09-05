@@ -5,14 +5,16 @@
     <button type="button" *ngIf="isVisible" (click)="toggleVisible()">Becsukom</button>
     <ul *ngIf="isVisible">
       <li *ngFor="let solution of solutions">
-        <div class="solution-div">
-          <h3>{{ solution.puzzle.title }}
-            <span> - {{ puzzleService.translateCategory(solution.puzzle.category) }} |
-               {{ puzzleService.translateLevel(solution.puzzle.level) }}</span>
-          </h3>
-          <p>Dátum: <span>{{ solution.submissionTime | date: 'yyyy. MM. dd.' }}</span></p>
-          <p>Gyorsaság: <span>{{ countSpeed(solution.seconds) }}</span></p>
-        </div>
+        <a routerLink="/puzzles/all/{{ solution.puzzle.id }}">
+          <div class="solution-div">
+            <h3>{{ solution.puzzle.title }}
+              <span> - {{ puzzleService.translateCategory(solution.puzzle.category) }} |
+                 {{ puzzleService.translateLevel(solution.puzzle.level) }}</span>
+            </h3>
+            <p>Dátum: <span>{{ solution.submissionTime | date: 'yyyy. MM. dd.' }}</span></p>
+            <p>Gyorsaság: <span>{{ countSpeed(solution.seconds) }}</span></p>
+          </div>
+        </a>
       </li>
     </ul>
   </div>

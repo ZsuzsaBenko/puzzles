@@ -33,6 +33,11 @@ li {
   padding: 10px;
 }
 
+li a {
+  color: #00b300;
+  text-decoration: none;
+}
+
 .solution-div {
   border-radius: 10px;
   background-color: #444444;
