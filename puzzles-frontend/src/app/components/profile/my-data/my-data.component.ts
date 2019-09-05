@@ -22,7 +22,7 @@ export class MyDataComponent implements OnInit {
   }
 
 
-  onManageUSerData() {
+  toggleFormVisible() {
     this.isFormVisible = !this.isFormVisible;
   }
 

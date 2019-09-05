@@ -7,7 +7,8 @@
       <div class="col-12 col-md-8 data-div">
         <h1>{{ member.username }}</h1>
         <h2>{{ member.score }} pont</h2>
-        <button id="manage-button" type="button" (click)="onManageUSerData()">Személyes adatok módosítása</button>
+        <button *ngIf="!isFormVisible" type="button" (click)="toggleFormVisible()">Személyes adatok módosítása</button>
+        <button *ngIf="isFormVisible" type="button" (click)="toggleFormVisible()">Becsukom</button>
       </div>
     </div>
     <div class="row">

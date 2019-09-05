@@ -1,7 +1,9 @@
 <div class="row">
   <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 my-solutions">
     <h2>Megoldott rejtvények</h2>
-    <ul>
+    <button type="button" *ngIf="!isVisible" (click)="toggleVisible()">Megnézem</button>
+    <button type="button" *ngIf="isVisible" (click)="toggleVisible()">Becsukom</button>
+    <ul *ngIf="isVisible">
       <li *ngFor="let solution of solutions">
         <div class="solution-div">
           <h3>{{ solution.puzzle.title }}

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-import { Solution } from '../../../models/Solution';
-import { SolutionService } from '../../../services/solution.service';
+import {Solution} from '../../../models/Solution';
+import {SolutionService} from '../../../services/solution.service';
 import {PuzzleService} from '../../../services/puzzle.service';
 
 @Component({
@@ -11,6 +11,7 @@ import {PuzzleService} from '../../../services/puzzle.service';
 })
 export class MySolutionsComponent implements OnInit {
   solutions: Solution[];
+  isVisible = false;
 
   constructor(private solutionService: SolutionService,
               private puzzleService: PuzzleService) {
@@ -27,4 +28,9 @@ export class MySolutionsComponent implements OnInit {
       return `${seconds} másodperc`;
     }
   }
+
+  toggleVisible() {
+    this.isVisible = !this.isVisible;
+  }
+
 }
