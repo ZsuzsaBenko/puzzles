@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface PuzzleRepository extends JpaRepository<Puzzle, Long> {
 
-    List<Puzzle> findAllByOrderByDateTimeDesc();
+    List<Puzzle> findAllByOrderBySubmissionTimeDesc();
 
     List<Puzzle> findAllByCategory(Category category);
 

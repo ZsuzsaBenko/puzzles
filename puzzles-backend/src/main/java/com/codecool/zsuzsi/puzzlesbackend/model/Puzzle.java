@@ -40,7 +40,7 @@ public class Puzzle {
     private Level level;
 
     @CreationTimestamp
-    private LocalDateTime dateTime;
+    private LocalDateTime submissionTime;
 
     private double rating = 0;
 
@@ -67,7 +67,7 @@ public class Puzzle {
                 ", puzzleItem='" + puzzleItem + '\'' +
                 ", answer='" + answer + '\'' +
                 ", level=" + level +
-                ", dateTime=" + dateTime +
+                ", submissionTime=" + submissionTime +
                 ", rating=" + rating +
                 ", member=" + member +
                 '}';

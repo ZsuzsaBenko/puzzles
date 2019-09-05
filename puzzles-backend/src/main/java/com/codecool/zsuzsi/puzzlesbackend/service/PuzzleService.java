@@ -30,7 +30,7 @@ public class PuzzleService {
     }
 
     public List<Puzzle> getAllPuzzles() {
-        return puzzleRepository.findAllByOrderByDateTimeDesc();
+        return puzzleRepository.findAllByOrderBySubmissionTimeDesc();
     }
 
     public List<Puzzle> getAllPuzzlesByCategory(Category category) {
@@ -75,7 +75,7 @@ public class PuzzleService {
             case "ratingDESC":
                 return puzzleRepository.findAllByOrderByRatingDesc();
             default:
-                return puzzleRepository.findAllByOrderByDateTimeDesc();
+                return puzzleRepository.findAllByOrderBySubmissionTimeDesc();
         }
     }
 
@@ -94,7 +94,7 @@ public class PuzzleService {
             case "ratingDESC":
                 return puzzleRepository.findAllByCategoryOrderByRatingDesc(category);
             default:
-                return puzzleRepository.findAllByOrderByDateTimeDesc();
+                return puzzleRepository.findAllByOrderBySubmissionTimeDesc();
         }
     }
 
