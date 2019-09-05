@@ -1,1 +1,17 @@
-<p>my-solutions works!</p>
+<div class="row">
+  <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 my-solutions">
+    <h2>Megoldott rejtvények</h2>
+    <ul>
+      <li *ngFor="let solution of solutions">
+        <div class="solution-div">
+          <h3>{{ solution.puzzle.title }}
+            <span> - {{ puzzleService.translateCategory(solution.puzzle.category) }} |
+               {{ puzzleService.translateLevel(solution.puzzle.level) }}</span>
+          </h3>
+          <p>Dátum: <span>{{ solution.submissionTime | date: 'yyyy. MM. dd.' }}</span></p>
+          <p>Gyorsaság: <span>{{ countSpeed(solution.seconds) }}</span></p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

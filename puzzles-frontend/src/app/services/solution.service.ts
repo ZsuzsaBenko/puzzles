@@ -13,4 +13,9 @@ export class SolutionService {
     const url = 'http://localhost:8080/solutions/save';
     return this.http.post<Solution>(url, solution);
   }
+
+  getMySolutions() {
+    const url = 'http://localhost:8080/solutions/member';
+    return this.http.get<Solution[]>(url);
+  }
 }

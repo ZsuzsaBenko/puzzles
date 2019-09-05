@@ -23,7 +23,7 @@ export class MyDataComponent implements OnInit {
 
 
   onManageUSerData() {
-    this.isFormVisible = true;
+    this.isFormVisible = !this.isFormVisible;
   }
 
   onChangeUserData(form: NgForm) {
