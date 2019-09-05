@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,9 +30,22 @@ public class CommentService {
         return null;
     }
 
-    public List<Comment> getAllCommentsByMember(Member member) {
-        log.info("Comments belonging to member " + member.getEmail() + " requested");
-        return commentRepository.findAllByMember(member);
+    public List<Comment> getLatestCommentsByMember(Member member) {
+        log.info("Latest comments belonging to member " + member.getEmail() + " requested");
+        List<Comment> commentsByMember = commentRepository.findAllByMemberOrderBySubmissionTimeDesc(member);
+        List<Comment> latestComments = new ArrayList<>();
+
+        if (commentsByMember.size() > 0) {
+            latestComments.add(commentsByMember.get(0));
+            for (Comment comment : commentsByMember) {
+                for (Comment latestComment : latestComments) {
+                    if (!latestComment.getPuzzle().equals(comment.getPuzzle())) {
+                        latestComments.add(comment);
+                    }
+                }
+            }
+        }
+        return latestComments;
     }
 
     public Comment addNewComment(Comment comment, Member member) {

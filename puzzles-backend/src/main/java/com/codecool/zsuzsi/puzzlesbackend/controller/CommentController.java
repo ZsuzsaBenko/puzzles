@@ -26,9 +26,9 @@ public class CommentController {
     }
 
     @GetMapping("/member")
-    public List<Comment> getCommentsByMember(@RequestHeader("Authorization") String token) {
+    public List<Comment> getLatestCommentsByMember(@RequestHeader("Authorization") String token) {
         Member member = memberService.getMemberFromToken(token);
-        return commentService.getAllCommentsByMember(member);
+        return commentService.getLatestCommentsByMember(member);
     }
 
     @PostMapping("/add")
