@@ -30,7 +30,7 @@ public class SolutionService {
 
     public List<Solution> getAllSolutionsByMember(Member member) {
         log.info("All solutions by member " + member.getEmail() + " requested");
-        return solutionRepository.findAllByMember(member);
+        return solutionRepository.findAllByMemberOrderBySubmissionTimeDesc(member);
     }
 
     public Solution saveSolution(Solution solution, Member member) {

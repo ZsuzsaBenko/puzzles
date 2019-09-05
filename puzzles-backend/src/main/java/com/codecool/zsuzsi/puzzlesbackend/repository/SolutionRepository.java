@@ -14,6 +14,8 @@ public interface SolutionRepository extends JpaRepository<Solution, Long> {
 
     List<Solution> findAllByMember(Member member);
 
+    List<Solution> findAllByMemberOrderBySubmissionTimeDesc(Member member);
+
     @Query("SELECT AVG(s.rating) FROM Solution s WHERE s.puzzle = :puzzle AND s.rating > 0")
     double getRatingAverage(Puzzle puzzle);
 
