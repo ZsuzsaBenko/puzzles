@@ -43,6 +43,7 @@ li a {
   background-color: #444444;
   border: 2px solid #00b300;
   padding: 15px;
+  position: relative;
 }
 
 h3 {
@@ -66,6 +67,17 @@ p:first-child {
   margin-top: 10px;
 }
 
+.category-pic {
+  position: absolute;
+  right: 20px;
+  top: 40px;
+}
+
+.category-pic .fas {
+  font-size: 50px;
+  color: #00b300;
+}
+
 @media only screen and (max-width: 700px) {
   h3 span {
     display: block;
@@ -80,5 +92,9 @@ p:first-child {
 
   p {
     margin: 10px 0;
+  }
+
+  .category-pic {
+    display: none;
   }
 }

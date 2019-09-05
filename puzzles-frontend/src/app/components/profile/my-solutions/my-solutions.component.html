@@ -13,6 +13,13 @@
             </h3>
             <p>Dátum: <span>{{ solution.submissionTime | date: 'yyyy. MM. dd.' }}</span></p>
             <p>Gyorsaság: <span>{{ countSpeed(solution.seconds) }}</span></p>
+            <div class="category-pic">
+              <i class="fas fa-question" *ngIf="solution.puzzle.category.toString() === 'RIDDLE'"></i>
+              <i class="fas fa-square-root-alt" *ngIf="solution.puzzle.category.toString() === 'MATH_PUZZLE'"></i>
+              <i class="fas fa-dice" *ngIf="solution.puzzle.category.toString() === 'PICTURE_PUZZLE'"></i>
+              <i class="fas fa-font" *ngIf="solution.puzzle.category.toString() === 'WORD_PUZZLE'"></i>
+              <i class="fas fa-pen-fancy" *ngIf="solution.puzzle.category.toString() === 'CIPHER'"></i>
+            </div>
           </div>
         </a>
       </li>

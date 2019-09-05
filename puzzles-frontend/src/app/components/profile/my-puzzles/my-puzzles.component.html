@@ -25,9 +25,17 @@
               <i class="fas fa-star" *ngIf="puzzle.rating === 5"></i>
               <span id="no-rating" *ngIf="puzzle.rating === 0">Még nincs értékelés.</span>
             </p>
+            <div class="category-pic">
+              <i class="fas fa-question" *ngIf="puzzle.category.toString() === 'RIDDLE'"></i>
+              <i class="fas fa-square-root-alt" *ngIf="puzzle.category.toString() === 'MATH_PUZZLE'"></i>
+              <i class="fas fa-dice" *ngIf="puzzle.category.toString() === 'PICTURE_PUZZLE'"></i>
+              <i class="fas fa-font" *ngIf="puzzle.category.toString() === 'WORD_PUZZLE'"></i>
+              <i class="fas fa-pen-fancy" *ngIf="puzzle.category.toString() === 'CIPHER'"></i>
+            </div>
           </div>
         </a>
       </li>
     </ul>
+
   </div>
 </div>
