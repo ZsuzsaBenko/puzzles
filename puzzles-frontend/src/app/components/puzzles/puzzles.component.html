@@ -43,8 +43,8 @@
                   <i class="fas fa-star-half-alt" *ngIf="puzzle.rating > 4 && puzzle.rating < 5"></i>
                   <i class="fas fa-star" *ngIf="puzzle.rating === 5"></i>
                   <span id="no-rating" *ngIf="puzzle.rating === 0">Még nincs értékelés.</span>
-                  <button type="button" [routerLink]="['/puzzles/all', puzzle.id]">Megoldom!</button>
-                  <button type="button">Hozzászólások</button>
+                  <button type="button" routerLink="/puzzles/{{ puzzle.id }}">Megoldom!</button>
+                  <button type="button" routerLink="/puzzles/{{ puzzle.id }}/comments">Hozzászólások</button>
                 </p>
               </div>
             </li>

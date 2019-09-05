@@ -5,7 +5,7 @@
     <button type="button" *ngIf="isVisible" (click)="toggleVisible()">Becsukom</button>
     <ul *ngIf="isVisible">
       <li *ngFor="let puzzle of puzzles">
-        <a routerLink="/puzzles/all/{{ puzzle.id }}">
+        <a routerLink="/puzzles/{{ puzzle.id }}">
           <div class="puzzle-div">
             <h3>{{ puzzle.title }}
               <span> - {{ puzzleService.translateCategory(puzzle.category) }} |

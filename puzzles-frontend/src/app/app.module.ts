@@ -22,6 +22,7 @@ import { MyDataComponent } from './components/profile/my-data/my-data.component'
 import { MySolutionsComponent } from './components/profile/my-solutions/my-solutions.component';
 import { MyPuzzlesComponent } from './components/profile/my-puzzles/my-puzzles.component';
 import { MyCommentsComponent } from './components/profile/my-comments/my-comments.component';
+import { CommentComponent } from './components/comment/comment.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { MyCommentsComponent } from './components/profile/my-comments/my-comment
     MyDataComponent,
     MySolutionsComponent,
     MyPuzzlesComponent,
-    MyCommentsComponent
+    MyCommentsComponent,
+    CommentComponent
   ],
   imports: [
     BrowserModule,
