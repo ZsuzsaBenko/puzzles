@@ -1,5 +1,6 @@
 package com.codecool.zsuzsi.puzzlesbackend.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
@@ -14,6 +15,7 @@ import java.nio.file.Paths;
 
 @RestController
 @CrossOrigin
+@Slf4j
 public class UploadController {
 
     @Value("${IMAGE_PATH}")
@@ -24,6 +26,7 @@ public class UploadController {
         try {
             Path path = Paths.get(imagePath);
             Files.copy(file.getInputStream(), path.resolve(file.getOriginalFilename()));
+            log.info("New image saved by name " + file.getOriginalFilename());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -32,6 +35,7 @@ public class UploadController {
     @ResponseBody
     @RequestMapping(value = "/image-resource/{image}", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public FileSystemResource getFile(@PathVariable("image") String fileName) {
+        log.info("Image " + fileName + " requested");
         return new FileSystemResource(imagePath + fileName);
     }
 }

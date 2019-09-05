@@ -36,7 +36,6 @@ public class MemberController {
     @PutMapping("/profile/update")
     public Member updateProfile(@RequestHeader("Authorization") String token,
                                 @RequestBody UserCredentials data) {
-        log.info(data.toString());
         return memberService.updateProfile(token, data);
     }
 }

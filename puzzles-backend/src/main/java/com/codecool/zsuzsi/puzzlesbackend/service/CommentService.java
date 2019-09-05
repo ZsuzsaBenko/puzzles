@@ -21,17 +21,30 @@ public class CommentService {
 
     public List<Comment> getAllCommentsByPuzzle(Long id) {
         Puzzle puzzle = puzzleRepository.findById(id).orElse(null);
-        return commentRepository.findAllByPuzzle(puzzle);
+
+        if (puzzle != null) {
+            log.info("Comments belonging to puzzle " + puzzle.getId() + " requested");
+            return commentRepository.findAllByPuzzle(puzzle);
+        }
+        return null;
     }
 
     public List<Comment> getAllCommentsByMember(Member member) {
+        log.info("Comments belonging to member " + member.getEmail() + " requested");
         return commentRepository.findAllByMember(member);
     }
 
     public Comment addNewComment(Comment comment, Member member) {
         Puzzle puzzle = puzzleRepository.findById(comment.getPuzzle().getId()).orElse(null);
-        comment.setMember(member);
-        comment.setPuzzle(puzzle);
-        return commentRepository.save(comment);
+
+        if (puzzle != null) {
+            comment.setMember(member);
+            comment.setPuzzle(puzzle);
+
+            log.info("New comment for puzzle " + puzzle.getId() + " created by " + member.getEmail());
+
+            return commentRepository.save(comment);
+        }
+        return null;
     }
 }

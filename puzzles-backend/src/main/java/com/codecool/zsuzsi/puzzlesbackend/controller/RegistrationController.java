@@ -20,7 +20,7 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public Member register(@RequestBody UserCredentials data) {
-        log.info("Registration request: " + data.getUsername() + ", " + data.getEmail());
+        log.info("Registration request by : " + data.getUsername() + ", " + data.getEmail());
         return memberService.register(data);
     }
 }

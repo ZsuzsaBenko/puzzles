@@ -32,7 +32,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody UserCredentials data) {
-        log.info("Login attempt: " + data.getEmail());
+        log.info("Login attempt by: " + data.getEmail());
         try {
             String email = data.getEmail();
             String password = data.getPassword();

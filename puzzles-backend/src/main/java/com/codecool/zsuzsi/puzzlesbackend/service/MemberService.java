@@ -35,8 +35,13 @@ public class MemberService {
                     .roles(Set.of("USER"))
                     .build();
             memberRepository.save(newMember);
+
+            log.info("New registered member with username " + newMember.getUsername() +
+                    " and email " + newMember.getEmail());
+
             return newMember;
         } else {
+            log.info("Registration failed: email already exists");
             return null;
         }
     }
@@ -48,10 +53,12 @@ public class MemberService {
     }
 
     public List<Member> getTopLeaderBoard() {
+        log.info("Leaderboard top 10 requested");
         return memberRepository.findTop10ByOrderByScoreDesc();
     }
 
     public List<Member> getFullLeaderBoard() {
+        log.info("Full leaderboard requested");
         return memberRepository.findAllByOrderByScoreDesc();
     }
 
@@ -64,6 +71,9 @@ public class MemberService {
             loggedInMember.setPassword(passwordEncoder.encode(data.getPassword()));
         }
         memberRepository.save(loggedInMember);
+
+        log.info("Member " + loggedInMember.getEmail() + "'s personal data updated");
+
         return loggedInMember;
     }
 }

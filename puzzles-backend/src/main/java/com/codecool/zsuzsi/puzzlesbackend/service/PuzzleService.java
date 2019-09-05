@@ -26,24 +26,31 @@ public class PuzzleService {
 
 
     public Puzzle getById(Long id) {
+        log.info("Puzzle with id " + id + " requested");
         return puzzleRepository.findById(id).orElse(null);
     }
 
     public List<Puzzle> getAllPuzzles() {
+        log.info("All puzzles requested");
         return puzzleRepository.findAllByOrderBySubmissionTimeDesc();
     }
 
     public List<Puzzle> getAllPuzzlesByCategory(Category category) {
+        log.info("Puzzles with category " + category + " requested");
         return puzzleRepository.findAllByCategory(category);
     }
 
     public List<Puzzle> getAllPuzzlesByMember(Member member) {
+        log.info("Puzzles of  " + member.getUsername() + " (" + member.getEmail() + ") requested");
         return puzzleRepository.findAllByMember(member);
     }
 
     public List<Puzzle> getUnsolvedPuzzleFromEachCategory(Member member) {
         List<Puzzle> solvedPuzzles = this.getSolvedPuzzles(member);
         List<Puzzle> unsolvedPuzzles = new ArrayList<>();
+
+        log.info("Unsolved random puzzles requested for member " + member.getEmail() + ", " +
+                "number of already solved puzzles: " + solvedPuzzles.size());
 
         if (solvedPuzzles.size() > 0) {
             for (Category category : Category.values()) {
@@ -61,6 +68,7 @@ public class PuzzleService {
     }
 
     public List<Puzzle> getSortedPuzzles(String criteria) {
+        log.info("Sorted puzzles requested. Sorting criteria: " + criteria);
         switch (criteria) {
             case "titleASC":
                 return puzzleRepository.findAllByOrderByTitleAsc();
@@ -80,6 +88,7 @@ public class PuzzleService {
     }
 
     public List<Puzzle> getSortedPuzzles(Category category, String criteria) {
+        log.info("Sorted puzzles of category " + category + " requested. Sorting criteria: " + criteria);
         switch (criteria) {
             case "titleASC":
                 return puzzleRepository.findAllByCategoryOrderByTitleAsc(category);
@@ -99,6 +108,8 @@ public class PuzzleService {
     }
 
     public Puzzle addNewPuzzle(Puzzle puzzle, Member member) {
+        log.info("Member " + member.getEmail() + " added new puzzle: " + puzzle.getTitle() +
+                ", category: " + puzzle.getCategory() + ", level: " + puzzle.getLevel());
         puzzle.setMember(member);
 
         if (puzzle.getCategory().equals(Category.CIPHER)) {
@@ -146,5 +157,6 @@ public class PuzzleService {
                     "teljesen véletlenszerűen. Egy kis segítség: " + help + ". Az egyenlőségjel bal oldalán " +
                     "az eredeti betű áll, a jobb oldalon a titkosírásban használt megfelelője.");
         }
+        log.info("Encrypted text created: " + puzzle.getPuzzleItem() + ", solution: " + puzzle.getAnswer());
     }
 }
