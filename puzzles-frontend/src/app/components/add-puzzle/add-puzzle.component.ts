@@ -6,6 +6,7 @@ import { Puzzle } from '../../models/Puzzle';
 import { Category } from '../../models/Category';
 import { UploadService } from '../../services/upload.service';
 import { Router } from '@angular/router';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 
 @Component({
   selector: 'app-add-puzzle',
@@ -18,9 +19,11 @@ export class AddPuzzleComponent implements OnInit {
   isPicturePuzzle = false;
   isCipher = false;
   image: File = null;
+  errorMessage = '';
 
   constructor(private puzzleService: PuzzleService,
               private uploadService: UploadService,
+              private errorHandlerService: ErrorHandlerService,
               private router: Router) {
   }
 
@@ -69,8 +72,11 @@ export class AddPuzzleComponent implements OnInit {
       this.sendPuzzleData(form);
     } else {
       this.uploadService.uploadImage(this.image).subscribe(() => {
-        console.log('successful image upload');
         this.sendPuzzleData(form);
+      },
+      error => {
+        this.onError(error);
+        form.reset();
       });
 
     }
@@ -80,8 +86,14 @@ export class AddPuzzleComponent implements OnInit {
     this.puzzleService.addNewPuzzle(this.puzzle).subscribe(newPuzzle => {
       form.reset();
       this.router.navigate(['/puzzles/' + newPuzzle.id]).then();
+    },
+    error => {
+      this.onError(error);
+      form.reset();
     });
   }
 
-
+  onError(error) {
+    this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
+  }
 }

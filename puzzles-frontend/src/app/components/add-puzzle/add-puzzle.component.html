@@ -53,6 +53,9 @@
               <option value="DIFFICULT">Nehéz</option>
             </select>
           </div>
+          <div *ngIf="errorMessage !== ''" id="submit-error" class="error">
+            <p>{{ errorMessage }} A rejtvény feltöltése nem sikerült.</p>
+          </div>
           <button type="submit">Küldés</button>
         </div>
       </form>

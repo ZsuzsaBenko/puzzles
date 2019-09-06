@@ -87,3 +87,13 @@ button:disabled {
   background-color: #b22222;
   color: #f0fff0;
 }
+
+p {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#submit-error {
+  margin: 20px auto;
+  width: 80%;
+}
