@@ -2,7 +2,8 @@
   <div class="row">
     <div class="col-12">
       <div class="row">
-        <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 puzzle-container">
+        <div *ngIf="!showError"
+          class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 puzzle-container">
           <h1>{{ title }}</h1>
           <div class="sort">
             <form (ngSubmit)="onSubmit(f)" #f="ngForm">
@@ -49,6 +50,9 @@
               </div>
             </li>
           </ul>
+        </div>
+        <div class="error" *ngIf="showError">
+          <p>{{ errorMessage }}</p>
         </div>
       </div>
     </div>
