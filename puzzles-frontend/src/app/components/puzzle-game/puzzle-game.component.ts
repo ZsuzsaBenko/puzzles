@@ -1,13 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {NgForm} from '@angular/forms';
-import {Location} from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { NgForm } from '@angular/forms';
+import { Location } from '@angular/common';
 
-import {Puzzle} from '../../models/Puzzle';
-import {PuzzleService} from '../../services/puzzle.service';
-import {Solution} from '../../models/Solution';
-import {StarRatingComponent} from 'ng-starrating';
-import {SolutionService} from '../../services/solution.service';
+import { Puzzle } from '../../models/Puzzle';
+import { PuzzleService } from '../../services/puzzle.service';
+import { Solution } from '../../models/Solution';
+import { StarRatingComponent } from 'ng-starrating';
+import { SolutionService } from '../../services/solution.service';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 
 @Component({
   selector: 'app-puzzle-item',
@@ -21,9 +22,13 @@ export class PuzzleGameComponent implements OnInit {
   isFetching = true;
   isSolved = false;
   isIncorrect = false;
+  errorMessage = '';
+  showError = false;
+  failedToSendSolution = false;
 
   constructor(private puzzleService: PuzzleService,
               private solutionService: SolutionService,
+              private errorHandlerService: ErrorHandlerService,
               private activatedRoute: ActivatedRoute,
               private location: Location) {
   }
@@ -33,6 +38,11 @@ export class PuzzleGameComponent implements OnInit {
     const id = this.activatedRoute.snapshot.params.id;
     this.puzzleService.getPuzzleById(id).subscribe(puzzle => {
       this.puzzle = puzzle;
+      this.isFetching = false;
+    },
+    error => {
+      this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
+      this.showError = true;
       this.isFetching = false;
     });
   }
@@ -70,6 +80,10 @@ export class PuzzleGameComponent implements OnInit {
 
     this.solutionService.sendSolution(solution).subscribe(() => {
       this.location.back();
+    },
+    error => {
+      this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
+      this.failedToSendSolution = true;
     });
   }
 }

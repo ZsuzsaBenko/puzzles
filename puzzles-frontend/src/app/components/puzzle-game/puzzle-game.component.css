@@ -126,6 +126,11 @@ button:hover {
   white-space: pre-wrap;
 }
 
+#solution-error {
+  margin: 20px auto;
+  width: 80%;
+}
+
 @media only screen and (max-width: 1024px) {
   .puzzle-item img {
     width: 65%;
