@@ -1,8 +1,9 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Puzzle} from '../models/Puzzle';
-import {Category} from '../models/Category';
-import {Level} from '../models/Level';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+import { Puzzle } from '../models/Puzzle';
+import { Category } from '../models/Category';
+import { Level } from '../models/Level';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,11 @@ export class PuzzleService {
   getPuzzleById(id: number) {
     const url = 'http://localhost:8080/puzzles/all/';
     return this.http.get<Puzzle>(url + id);
+  }
+
+  addNewPuzzle(puzzle: Puzzle) {
+    const url = 'http://localhost:8080/puzzles/add';
+    return this.http.post<Puzzle>(url, puzzle);
   }
 
   translateCategory(category: Category) {
