@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="row" *ngIf="!isFetching">
+  <div class="row" *ngIf="!isFetching && !showError">
     <div *ngIf="comments.length > 0" class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 comment-column">
       <h2> {{ comments[0].puzzle.title }}</h2>
       <ul>
@@ -21,8 +21,14 @@
       <form (ngSubmit)="onSubmit(f)" #f="ngForm">
         <label for="message">Szólj hozzá!</label>
         <textarea name="message" id="message" ngModel></textarea>
+        <div *ngIf="failedAddComment" class="error" id="submit-error">
+          <p>{{ errorMessage }} A hozzászólás elküldése nem sikerült.</p>
+        </div>
         <button type="submit">Hozzászólás küldése</button>
       </form>
     </div>
+  </div>
+  <div *ngIf="showError" class="error">
+    <p>{{ errorMessage }}</p>
   </div>
 </div>

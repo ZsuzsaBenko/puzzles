@@ -7,6 +7,7 @@ import { Category } from '../../models/Category';
 import { UploadService } from '../../services/upload.service';
 import { Router } from '@angular/router';
 import { ErrorHandlerService } from '../../services/error-handler.service';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-add-puzzle',
@@ -93,7 +94,7 @@ export class AddPuzzleComponent implements OnInit {
     });
   }
 
-  onError(error) {
+  onError(error: HttpErrorResponse) {
     this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
   }
 }

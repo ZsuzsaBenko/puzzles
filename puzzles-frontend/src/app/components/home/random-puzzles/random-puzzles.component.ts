@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Puzzle } from '../../../models/Puzzle';
 import { PuzzleService } from '../../../services/puzzle.service';
 import { ErrorHandlerService } from '../../../services/error-handler.service';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-random-puzzles',
@@ -61,7 +62,7 @@ export class RandomPuzzlesComponent implements OnInit {
     }
   }
 
-  onError(error) {
+  onError(error: HttpErrorResponse) {
     this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
     this.showError = true;
   }

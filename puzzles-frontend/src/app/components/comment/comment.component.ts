@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { CommentService } from '../../services/comment.service';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 import { PuzzleComment } from '../../models/PuzzleComment';
 import { Puzzle } from '../../models/Puzzle';
 
@@ -15,8 +16,12 @@ export class CommentComponent implements OnInit {
   comments: PuzzleComment[];
   puzzleId: number;
   isFetching = true;
+  errorMessage = '';
+  showError = false;
+  failedAddComment = false;
 
   constructor(private commentService: CommentService,
+              private errorHandlerService: ErrorHandlerService,
               private activatedRoute: ActivatedRoute) {
   }
 
@@ -29,6 +34,11 @@ export class CommentComponent implements OnInit {
 
     this.commentService.getCommentsByPuzzle(this.puzzleId).subscribe(comments => {
       this.comments = comments;
+      this.isFetching = false;
+    },
+    error => {
+      this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
+      this.showError = true;
       this.isFetching = false;
     });
   }
@@ -45,6 +55,10 @@ export class CommentComponent implements OnInit {
     this.commentService.addNewComment(newPuzzleComment).subscribe( response => {
       form.reset();
       this.comments.push(response);
+    },
+      error => {
+      this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
+      this.failedAddComment = true;
     });
   }
 }

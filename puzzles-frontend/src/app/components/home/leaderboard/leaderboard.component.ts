@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Member } from '../../../models/Member';
 import { MemberService } from '../../../services/member.service';
 import { ErrorHandlerService } from '../../../services/error-handler.service';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-leaderboard',
@@ -44,7 +45,7 @@ export class LeaderboardComponent implements OnInit {
       });
   }
 
-  onError(error) {
+  onError(error: HttpErrorResponse) {
     this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
     this.showError = true;
   }
