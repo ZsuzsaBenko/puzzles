@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { PuzzleService } from '../../services/puzzle.service';
 import { Puzzle } from '../../models/Puzzle';
 import { Category } from '../../models/Category';
 import { UploadService } from '../../services/upload.service';
-import { Router } from '@angular/router';
 import { ErrorHandlerService } from '../../services/error-handler.service';
-import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-add-puzzle',

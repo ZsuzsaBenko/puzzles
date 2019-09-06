@@ -21,7 +21,7 @@
       <form (ngSubmit)="onSubmit(f)" #f="ngForm">
         <label for="message">Szólj hozzá!</label>
         <textarea name="message" id="message" ngModel></textarea>
-        <div *ngIf="failedAddComment" class="error" id="submit-error">
+        <div *ngIf="failedToAddComment" class="error" id="submit-comment-error">
           <p>{{ errorMessage }} A hozzászólás elküldése nem sikerült.</p>
         </div>
         <button type="submit">Hozzászólás küldése</button>

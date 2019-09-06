@@ -18,7 +18,7 @@ export class CommentComponent implements OnInit {
   isFetching = true;
   errorMessage = '';
   showError = false;
-  failedAddComment = false;
+  failedToAddComment = false;
 
   constructor(private commentService: CommentService,
               private errorHandlerService: ErrorHandlerService,
@@ -58,7 +58,7 @@ export class CommentComponent implements OnInit {
     },
       error => {
       this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
-      this.failedAddComment = true;
+      this.failedToAddComment = true;
     });
   }
 }

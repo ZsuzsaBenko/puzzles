@@ -3,6 +3,7 @@ import {Component, OnInit} from '@angular/core';
 import {Solution} from '../../../models/Solution';
 import {SolutionService} from '../../../services/solution.service';
 import {PuzzleService} from '../../../services/puzzle.service';
+import {ErrorHandlerService} from '../../../services/error-handler.service';
 
 @Component({
   selector: 'app-my-solutions',
@@ -12,13 +13,20 @@ import {PuzzleService} from '../../../services/puzzle.service';
 export class MySolutionsComponent implements OnInit {
   solutions: Solution[];
   isVisible = false;
+  errorMessage = '';
 
   constructor(private solutionService: SolutionService,
-              private puzzleService: PuzzleService) {
+              private puzzleService: PuzzleService,
+              private errorHandlerService: ErrorHandlerService) {
   }
 
   ngOnInit() {
-    this.solutionService.getMySolutions().subscribe(solutions => this.solutions = solutions);
+    this.solutionService.getMySolutions().subscribe(solutions => {
+      this.solutions = solutions;
+    },
+    error => {
+      this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
+    });
   }
 
   countSpeed(seconds: number) {

@@ -1,5 +1,6 @@
 <div class="row">
-  <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 my-comments">
+  <div *ngIf="errorMessage === ''"
+    class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 my-comments">
     <h2>Hozzászólások</h2>
     <button type="button" *ngIf="!isVisible" (click)="toggleVisible()">Megnézem</button>
     <button type="button" *ngIf="isVisible" (click)="toggleVisible()">Becsukom</button>

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {Puzzle} from '../../../models/Puzzle';
-import {PuzzleService} from '../../../services/puzzle.service';
+
+import { Puzzle } from '../../../models/Puzzle';
+import { PuzzleService } from '../../../services/puzzle.service';
+import { ErrorHandlerService } from '../../../services/error-handler.service';
 
 @Component({
   selector: 'app-my-puzzles',
@@ -10,11 +12,18 @@ import {PuzzleService} from '../../../services/puzzle.service';
 export class MyPuzzlesComponent implements OnInit {
   isVisible = false;
   puzzles: Puzzle[];
+  errorMessage = '';
 
-  constructor(private puzzleService: PuzzleService) { }
+  constructor(private puzzleService: PuzzleService,
+              private errorHandlerService: ErrorHandlerService) { }
 
   ngOnInit() {
-    this.puzzleService.getPuzzlesByMember().subscribe( puzzles => this.puzzles = puzzles);
+    this.puzzleService.getPuzzlesByMember().subscribe( puzzles => {
+      this.puzzles = puzzles;
+    },
+    error => {
+      this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
+    });
   }
 
   toggleVisible() {

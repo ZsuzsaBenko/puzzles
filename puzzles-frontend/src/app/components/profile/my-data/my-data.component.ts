@@ -1,8 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {FormGroup, NgForm, NgModelGroup} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 
-import {MemberService} from '../../../services/member.service';
-import {Member} from '../../../models/Member';
+import { MemberService } from '../../../services/member.service';
+import { Member } from '../../../models/Member';
+import { ErrorHandlerService } from '../../../services/error-handler.service';
 
 @Component({
   selector: 'app-my-data',
@@ -13,12 +15,22 @@ export class MyDataComponent implements OnInit {
   member = new Member();
   isFormVisible = false;
   invalidPassword = false;
+  errorMessage = '';
+  showError = false;
+  failedToModifyData = false;
 
-  constructor(private memberService: MemberService) {
+  constructor(private memberService: MemberService,
+              private errorHandlerService: ErrorHandlerService) {
   }
 
   ngOnInit() {
-    this.memberService.getLoggedInMember().subscribe(member => this.member = member);
+    this.memberService.getLoggedInMember().subscribe(member => {
+      this.member = member;
+    },
+    error => {
+      this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
+      this.showError = true;
+    });
   }
 
 
@@ -51,8 +63,11 @@ export class MyDataComponent implements OnInit {
       this.invalidPassword = false;
       this.isFormVisible = false;
       this.memberService.getLoggedInMember().subscribe(updatedMember => this.member = updatedMember);
+    },
+    error => {
+      this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
+      form.reset();
+      this.failedToModifyData = true;
     });
-
-
   }
 }

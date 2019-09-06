@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { Puzzle } from '../../../models/Puzzle';
 import { PuzzleService } from '../../../services/puzzle.service';
 import { ErrorHandlerService } from '../../../services/error-handler.service';
-import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-random-puzzles',
