@@ -58,6 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/members/**").authenticated()
                 .antMatchers(HttpMethod.PUT,"/members/**").authenticated()
                 .antMatchers(HttpMethod.POST, "/image-resource/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/upload").authenticated()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().denyAll()
                 .and()
