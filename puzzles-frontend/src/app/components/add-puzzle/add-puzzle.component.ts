@@ -4,6 +4,8 @@ import { NgForm } from '@angular/forms';
 import { PuzzleService } from '../../services/puzzle.service';
 import { Puzzle } from '../../models/Puzzle';
 import { Category } from '../../models/Category';
+import { UploadService } from '../../services/upload.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-puzzle',
@@ -17,7 +19,9 @@ export class AddPuzzleComponent implements OnInit {
   isCipher = false;
   image: File = null;
 
-  constructor(private puzzleService: PuzzleService) {
+  constructor(private puzzleService: PuzzleService,
+              private uploadService: UploadService,
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -57,16 +61,26 @@ export class AddPuzzleComponent implements OnInit {
       this.puzzle.instruction = form.value['instruction-picture'];
       this.puzzle.puzzleItem = this.image.name;
     }
-    console.log(this.puzzle);
-    this.addNewPuzzle();
+    this.addNewPuzzle(form);
   }
 
-  addNewPuzzle() {
+  addNewPuzzle(form) {
     if (this.puzzle.category !== Category.PICTURE_PUZZLE.toString()) {
-      this.puzzleService.addNewPuzzle(this.puzzle).subscribe(newPuzzle => console.log(newPuzzle));
+      this.sendPuzzleData(form);
     } else {
-      // upload image, then puzzle
+      this.uploadService.uploadImage(this.image).subscribe(() => {
+        console.log('successful image upload');
+        this.sendPuzzleData(form);
+      });
+
     }
+  }
+
+  sendPuzzleData(form: NgForm) {
+    this.puzzleService.addNewPuzzle(this.puzzle).subscribe(newPuzzle => {
+      form.reset();
+      this.router.navigate(['/puzzles/' + newPuzzle.id]).then();
+    });
   }
 
 
