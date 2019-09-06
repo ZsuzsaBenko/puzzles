@@ -1,6 +1,7 @@
 <div class="random-puzzle-container">
   <div class="row">
-    <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 random-puzzles">
+    <div *ngIf="!showError"
+      class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 random-puzzles">
       <h1>Ajánló</h1>
       <div>
         <i class="fas fa-chevron-left" (click)="stepLeft()" [ngClass]="{'disabled-chevron': !isPrevious}"></i>
@@ -26,6 +27,9 @@
         </div>
         <i class="fas fa-chevron-right" (click)="stepRight()" [ngClass]="{'disabled-chevron': !isNext}"></i>
       </div>
+    </div>
+    <div class="error" *ngIf="showError">
+      <p>{{ errorMessage }}</p>
     </div>
   </div>
 </div>

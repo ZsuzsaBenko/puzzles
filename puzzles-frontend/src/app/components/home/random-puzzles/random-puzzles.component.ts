@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {Puzzle} from '../../../models/Puzzle';
-import {PuzzleService} from '../../../services/puzzle.service';
-import {Category} from '../../../models/Category';
-import {Level} from '../../../models/Level';
+import { Component, OnInit } from '@angular/core';
+
+import { Puzzle } from '../../../models/Puzzle';
+import { PuzzleService } from '../../../services/puzzle.service';
+import { ErrorHandlerService } from '../../../services/error-handler.service';
 
 @Component({
   selector: 'app-random-puzzles',
@@ -14,15 +14,21 @@ export class RandomPuzzlesComponent implements OnInit {
   currentPuzzle = new Puzzle();
   isPrevious = false;
   isNext = true;
+  errorMessage = '';
+  showError = false;
 
-  constructor(private puzzleService: PuzzleService) {
+  constructor(private puzzleService: PuzzleService,
+              private errorHandlerService: ErrorHandlerService) {
   }
 
   ngOnInit() {
     this.puzzleService.getRandomPuzzles().subscribe(puzzles => {
-      this.puzzles = puzzles;
-      this.currentPuzzle = puzzles[0];
-    });
+        this.puzzles = puzzles;
+        this.currentPuzzle = puzzles[0];
+      },
+      error => {
+        this.onError(error);
+      });
   }
 
   stepRight() {
@@ -53,6 +59,11 @@ export class RandomPuzzlesComponent implements OnInit {
     if (index === 0) {
       this.isPrevious = false;
     }
+  }
+
+  onError(error) {
+    this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
+    this.showError = true;
   }
 
 }

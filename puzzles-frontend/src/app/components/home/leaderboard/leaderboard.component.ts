@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import {Member} from '../../../models/Member';
-import {MemberService} from '../../../services/member.service';
+import { Member } from '../../../models/Member';
+import { MemberService } from '../../../services/member.service';
+import { ErrorHandlerService } from '../../../services/error-handler.service';
 
 @Component({
   selector: 'app-leaderboard',
@@ -11,17 +12,41 @@ import {MemberService} from '../../../services/member.service';
 export class LeaderboardComponent implements OnInit {
   members: Member[];
   loggedInMember = new Member();
+  errorMessage = '';
+  showError = false;
 
-  constructor(private memberService: MemberService) {
+  constructor(private memberService: MemberService,
+              private errorHandlerService: ErrorHandlerService) {
   }
 
   ngOnInit() {
-    this.memberService.getTopLeaderBoard().subscribe(members => this.members = members);
-    this.memberService.getLoggedInMember().subscribe(member => this.loggedInMember = member);
+    this.memberService.getTopLeaderBoard().subscribe(members => {
+      this.members = members;
+    },
+    error => {
+      this.onError(error);
+    });
+
+    this.memberService.getLoggedInMember().subscribe(member => {
+      this.loggedInMember = member;
+    },
+      error => {
+      this.onError(error);
+      });
   }
 
   showFullLeaderboard() {
-    this.memberService.getFullLeaderBoard().subscribe(members => this.members = members);
+    this.memberService.getFullLeaderBoard().subscribe(members => {
+      this.members = members;
+    },
+      error => {
+        this.onError(error);
+      });
+  }
+
+  onError(error) {
+    this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
+    this.showError = true;
   }
 
 }

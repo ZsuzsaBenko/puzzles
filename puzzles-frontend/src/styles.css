@@ -14,3 +14,15 @@ body {
   background-position: top;
   background-attachment: fixed;
 }
+
+.error {
+  width: 320px;
+  margin: 100px auto;
+  padding: 20px;
+  background-color: #333333;
+  color: #f0fff0;
+  border: 5px solid #b22222;
+  border-radius: 10px;
+  font-size: 20px;
+  text-align: center;
+}
