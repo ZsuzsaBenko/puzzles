@@ -8,6 +8,7 @@ import { PuzzlesComponent } from './components/puzzles/puzzles.component';
 import { PuzzleGameComponent } from './components/puzzle-game/puzzle-game.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { CommentComponent } from './components/comment/comment.component';
+import { AddPuzzleComponent } from './components/add-puzzle/add-puzzle.component';
 
 const routes: Routes = [
   {path: '', component: WelcomeComponent},
@@ -18,6 +19,7 @@ const routes: Routes = [
   {path: 'puzzles/word-puzzles', canActivate: [AuthGuardService], component: PuzzlesComponent},
   {path: 'puzzles/ciphers', canActivate: [AuthGuardService], component: PuzzlesComponent},
   {path: 'puzzles/all', canActivate: [AuthGuardService], component: PuzzlesComponent},
+  {path: 'puzzles/add', canActivate: [AuthGuardService], component: AddPuzzleComponent, pathMatch: 'full'},
   {path: 'puzzles/:id', canActivate: [AuthGuardService], component: PuzzleGameComponent, pathMatch: 'full'},
   {path: 'puzzles/:id/comments', canActivate: [AuthGuardService], component: CommentComponent},
   {path: 'profile', canActivate: [AuthGuardService], component: ProfileComponent},

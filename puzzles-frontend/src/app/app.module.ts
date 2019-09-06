@@ -23,6 +23,7 @@ import { MySolutionsComponent } from './components/profile/my-solutions/my-solut
 import { MyPuzzlesComponent } from './components/profile/my-puzzles/my-puzzles.component';
 import { MyCommentsComponent } from './components/profile/my-comments/my-comments.component';
 import { CommentComponent } from './components/comment/comment.component';
+import { AddPuzzleComponent } from './components/add-puzzle/add-puzzle.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { CommentComponent } from './components/comment/comment.component';
     MySolutionsComponent,
     MyPuzzlesComponent,
     MyCommentsComponent,
-    CommentComponent
+    CommentComponent,
+    AddPuzzleComponent
   ],
   imports: [
     BrowserModule,
