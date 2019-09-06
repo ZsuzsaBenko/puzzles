@@ -1,26 +1,28 @@
-<div class="row" *ngIf="!isFetching">
-  <div *ngIf="comments.length > 0" class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 comment-column">
-    <h2> {{ comments[0].puzzle.title }}</h2>
-    <ul>
-      <li *ngFor="let comment of comments">
-        <div class="comment">
-          <p>
-            <span>{{ comment.member.username }}</span>
-            <span>{{ comment.submissionTime | date: 'yyyy. MM. dd.' }}</span>
-          </p>
-          <p>{{ comment.message }}</p>
-        </div>
-      </li>
-    </ul>
-  </div>
-  <div *ngIf="comments.length == 0" class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 no-comments">
-    <p>Ehhez a rejtvényhez még nem írt hozzászólást senki sem.</p>
-  </div>
-  <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 add-comment">
-    <form (ngSubmit)="onSubmit(f)" #f="ngForm">
-      <label for="message">Szólj hozzá!</label>
-      <textarea name="message" id="message" ngModel></textarea>
-      <button type="submit">Hozzászólás küldése</button>
-    </form>
+<div class="container-fluid">
+  <div class="row" *ngIf="!isFetching">
+    <div *ngIf="comments.length > 0" class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 comment-column">
+      <h2> {{ comments[0].puzzle.title }}</h2>
+      <ul>
+        <li *ngFor="let comment of comments">
+          <div class="comment">
+            <p>
+              <span>{{ comment.member.username }}</span>
+              <span>{{ comment.submissionTime | date: 'yyyy. MM. dd.' }}</span>
+            </p>
+            <p>{{ comment.message }}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="comments.length == 0" class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 no-comments">
+      <p>Ehhez a rejtvényhez még nem írt hozzászólást senki sem.</p>
+    </div>
+    <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 add-comment">
+      <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+        <label for="message">Szólj hozzá!</label>
+        <textarea name="message" id="message" ngModel></textarea>
+        <button type="submit">Hozzászólás küldése</button>
+      </form>
+    </div>
   </div>
 </div>
