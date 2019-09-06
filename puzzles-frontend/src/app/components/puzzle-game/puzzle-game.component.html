@@ -8,10 +8,10 @@
           </p>
           <h1>{{ puzzle.title }}</h1>
           <p class="puzzle-info">Instrukció:
-            <span>{{ puzzle.instruction }}</span>
+            <span class="preserve-newline">{{ puzzle.instruction }}</span>
           </p>
           <div class="puzzle-item">
-            <p *ngIf="puzzle.category.toString() !== 'PICTURE_PUZZLE'">{{ puzzle.puzzleItem }}</p>
+            <p *ngIf="puzzle.category.toString() !== 'PICTURE_PUZZLE'" class="preserve-newline">{{ puzzle.puzzleItem }}</p>
             <img src="http://localhost:8080/image-resource/{{ puzzle.puzzleItem }}" alt="puzzle"
                  *ngIf="puzzle.category.toString() === 'PICTURE_PUZZLE'">
           </div>
