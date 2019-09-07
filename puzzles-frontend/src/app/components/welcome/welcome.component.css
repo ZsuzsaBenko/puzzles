@@ -4,21 +4,23 @@
   padding: 0;
   position: relative;
 }
+
 .row {
-margin-left: 0;
-margin-right: 0;
+  margin-left: 0;
+  margin-right: 0;
 }
+
 .col-12 {
-padding-left: 0;
-padding-right: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .title, .reg-login-container {
-margin: 50px 0;
-padding: 20px;
-background-color: #333333;
-text-align: center;
-color: #00b300;
+  margin: 50px 0;
+  padding: 20px;
+  background-color: #333333;
+  text-align: center;
+  color: #00b300;
 }
 
 .reg-login-container {
@@ -27,32 +29,43 @@ color: #00b300;
 }
 
 .load-btn {
-padding: 10px;
-background-color: #00b300;
-color: #333333;
-font-weight: bold;
-border-radius: 10px 10px 0 0;
-border: 2px solid #333333;
-transition: background-color, color 1s;
-position: absolute;
-top: 25px;
+  width: 130px;
+  padding: 10px;
+  background-color: #00b300;
+  color: #333333;
+  font-weight: bold;
+  border-radius: 10px 10px 0 0;
+  border: 2px solid #333333;
+  transition: background-color, color 1s;
+  position: absolute;
+  top: 25px;
 }
 
 #load-login {
-left: 0;
+  left: 0;
 }
 
 #load-reg {
-left: 128px;
+  left: 130px;
 }
 
 .load-btn:hover {
-background-color: #f0fff0;
-color: #00b300;
+  background-color: #f0fff0;
+  color: #00b300;
 }
 
 .active-btn {
-background-color: #333333;
-color: #00b300;
+  background-color: #333333;
+  color: #00b300;
+}
+
+@media only screen and (max-width: 600px) {
+  h1 {
+    font-size: 35px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
 }
 
