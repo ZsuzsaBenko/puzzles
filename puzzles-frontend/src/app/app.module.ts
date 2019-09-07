@@ -10,8 +10,6 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
-import { LoginComponent } from './components/welcome/login/login.component';
-import { RegistrationComponent } from './components/welcome/registration/registration.component';
 import { HomeComponent } from './components/home/home.component';
 import { LeaderboardComponent } from './components/home/leaderboard/leaderboard.component';
 import { RandomPuzzlesComponent } from './components/home/random-puzzles/random-puzzles.component';
@@ -24,14 +22,13 @@ import { MyPuzzlesComponent } from './components/profile/my-puzzles/my-puzzles.c
 import { MyCommentsComponent } from './components/profile/my-comments/my-comments.component';
 import { CommentComponent } from './components/comment/comment.component';
 import { AddPuzzleComponent } from './components/add-puzzle/add-puzzle.component';
+import { RegLoginComponent } from './components/welcome/reg-login/reg-login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     WelcomeComponent,
-    LoginComponent,
-    RegistrationComponent,
     HomeComponent,
     LeaderboardComponent,
     RandomPuzzlesComponent,
@@ -43,7 +40,8 @@ import { AddPuzzleComponent } from './components/add-puzzle/add-puzzle.component
     MyPuzzlesComponent,
     MyCommentsComponent,
     CommentComponent,
-    AddPuzzleComponent
+    AddPuzzleComponent,
+    RegLoginComponent
   ],
   imports: [
     BrowserModule,

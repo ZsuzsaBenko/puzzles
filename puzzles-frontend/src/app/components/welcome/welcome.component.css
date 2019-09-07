@@ -15,47 +15,11 @@
   padding-right: 0;
 }
 
-.title, .reg-login-container {
+.title {
   margin: 50px 0;
   padding: 20px;
   background-color: #333333;
   text-align: center;
-  color: #00b300;
-}
-
-.reg-login-container {
-  margin: 70px auto;
-  border-radius: 0 10px 10px 10px;
-}
-
-.load-btn {
-  width: 130px;
-  padding: 10px;
-  background-color: #00b300;
-  color: #333333;
-  font-weight: bold;
-  border-radius: 10px 10px 0 0;
-  border: 2px solid #333333;
-  transition: background-color, color 1s;
-  position: absolute;
-  top: 25px;
-}
-
-#load-login {
-  left: 0;
-}
-
-#load-reg {
-  left: 130px;
-}
-
-.load-btn:hover {
-  background-color: #f0fff0;
-  color: #00b300;
-}
-
-.active-btn {
-  background-color: #333333;
   color: #00b300;
 }
 

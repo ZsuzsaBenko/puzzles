@@ -1,3 +1,44 @@
+.reg-login-container {
+  padding: 20px;
+  background-color: #333333;
+  text-align: center;
+  color: #00b300;
+  margin: 70px auto;
+  border-radius: 0 10px 10px 10px;
+  position: relative;
+}
+
+.load-btn {
+  width: 130px;
+  padding: 10px;
+  background-color: #00b300;
+  color: #333333;
+  font-weight: bold;
+  border-radius: 10px 10px 0 0;
+  border: 2px solid #333333;
+  transition: background-color, color 1s;
+  position: absolute;
+  top: -75px;
+}
+
+#load-login {
+  left: 0;
+}
+
+#load-reg {
+  left: 130px;
+}
+
+.load-btn:hover {
+  background-color: #f0fff0;
+  color: #00b300;
+}
+
+.active-btn {
+  background-color: #333333;
+  color: #00b300;
+}
+
 input {
   display: block;
   width: 70%;
@@ -31,7 +72,7 @@ input:focus {
 input.ng-invalid.ng-touched {
   background-color: #f0fff0;
   color: #333333;
-  border: 1px solid #b22222;
+  border: 2px solid #b22222;
   border-radius: 10px;
 }
 
@@ -52,6 +93,10 @@ button:hover {
 
 button:disabled {
   background-color: #b22222;
+  color: #f0fff0;
+}
+
+#message {
   color: #f0fff0;
 }
 
