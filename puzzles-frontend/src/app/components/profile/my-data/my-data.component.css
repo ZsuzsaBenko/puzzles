@@ -42,44 +42,12 @@ label {
 input {
   width: 60%;
   margin: 10px auto;
-  background-color: #333333;
-  border: none;
-  border-bottom: 1px solid #00b300;
-  padding: 5px;
-  transition: background-color, border-radius 1s, 0.2s;
   font-size: 17px;
-  color: #f0fff0;
-}
-
-input:hover {
-  background-color: #f0fff0;
-  border-radius: 10px;
-}
-
-input:focus {
-  background-color: #f0fff0;
-  color: #333333;
-  border-radius: 10px;
+  text-align: left;
 }
 
 button {
   margin: 10px auto;
-  padding: 10px;
-  background-color: #00b300;
-  color: #333333;
-  font-weight: bold;
-  border-radius: 10px;
-  border: none;
-  transition: background-color 1s;
-}
-
-button:hover {
-  background-color: #f0fff0;
-}
-
-button:disabled {
-  background-color: #b22222;
-  color: #f0fff0;
 }
 
 #confirm {

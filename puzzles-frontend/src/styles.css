@@ -1,6 +1,7 @@
 html {
   height: 100%;
 }
+
 body {
   padding: 0;
   margin: 0;
@@ -33,4 +34,68 @@ body {
   width: 100px;
   height: 100px;
   margin: 0 auto;
+}
+
+input {
+  background-color: #333333;
+  border: none;
+  border-bottom: 1px solid #00b300;
+  padding: 5px;
+  transition: background-color, border-radius 1s, 0.2s;
+  font-size: 18px;
+  text-align: center;
+  color: #f0fff0;
+}
+
+input:hover {
+  background-color: #f0fff0;
+  border-radius: 10px;
+}
+
+input:focus {
+  background-color: #f0fff0;
+  color: #333333;
+  border-radius: 10px;
+}
+
+input.ng-invalid.ng-touched {
+  background-color: #f0fff0;
+  color: #333333;
+  border: 2px solid #b22222;
+  border-radius: 10px;
+}
+
+textarea {
+  padding: 10px;
+  background-color: #444444;
+  border: 2px solid #00b300;
+  color: #f0fff0;
+  border-radius: 10px;
+}
+
+select {
+  padding: 5px;
+  border: 1px solid #00b300;
+  border-radius: 10px;
+  background-color: #f0fff0;
+  color: #333333;
+}
+
+button {
+  padding: 10px;
+  background-color: #00b300;
+  color: #333333;
+  font-weight: bold;
+  border-radius: 10px;
+  border: none;
+  transition: background-color 1s;
+}
+
+button:hover {
+  background-color: #f0fff0;
+}
+
+button:disabled {
+  background-color: #b22222;
+  color: #f0fff0;
 }

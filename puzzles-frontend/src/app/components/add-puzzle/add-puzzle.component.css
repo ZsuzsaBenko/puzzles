@@ -24,35 +24,14 @@ input {
   display: block;
   margin: 10px auto;
   width: 60%;
-  background-color: #333333;
-  border: none;
-  border-bottom: 1px solid #00b300;
-  padding: 5px;
-  transition: background-color, border-radius 1s, 0.2s;
   font-size: 17px;
-  color: #f0fff0;
-}
-
-input:hover {
-  background-color: #f0fff0;
-  border-radius: 10px;
-}
-
-input:focus {
-  background-color: #f0fff0;
-  color: #333333;
-  border-radius: 10px;
+  text-align: left;
 }
 
 select {
   display: block;
   margin: 20px auto 10px;
   width: 60%;
-  padding: 5px;
-  border: 1px solid #00b300;
-  border-radius: 10px;
-  background-color: #f0fff0;
-  color: #333333;
 }
 
 textarea {
@@ -60,32 +39,11 @@ textarea {
   width: 60%;
   height: 150px;
   margin: 0 auto;
-  padding: 10px;
-  background-color: #444444;
-  border: 2px solid #00b300;
-  color: #f0fff0;
-  border-radius: 10px;
 }
 
 button {
   display: block;
   margin: 30px auto;
-  padding: 10px;
-  background-color: #00b300;
-  color: #333333;
-  font-weight: bold;
-  border-radius: 10px;
-  border: none;
-  transition: background-color 1s;
-}
-
-button:hover {
-  background-color: #f0fff0;
-}
-
-button:disabled {
-  background-color: #b22222;
-  color: #f0fff0;
 }
 
 p {

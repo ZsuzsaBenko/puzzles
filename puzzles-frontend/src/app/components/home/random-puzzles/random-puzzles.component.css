@@ -1,6 +1,5 @@
 .random-puzzle-container {
   margin-top: 50px;
-  border-radius: 10px;
 }
 
 .random-puzzle-container h1 {
@@ -11,8 +10,9 @@
 
 .random-puzzles {
   background-color: #333333;
-  padding: 20px;
+  padding: 20px 20px 40px;
   position: relative;
+  border-radius: 10px;
 }
 
 .random-puzzles .fas {
