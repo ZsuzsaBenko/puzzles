@@ -95,6 +95,22 @@ button:hover {
   background-color: #f0fff0;
 }
 
+button:disabled {
+  background-color: #b22222;
+  color: #f0fff0;
+}
+
+#agreement {
+  width: 70%;
+  margin: 10px auto;
+  padding: 10px;
+  text-align: center;
+}
+
+#agreement label {
+  font-size: 15px;
+}
+
 #submit-comment-error {
   margin: 20px auto;
   width: 70%;

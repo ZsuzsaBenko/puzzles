@@ -27,11 +27,16 @@
     <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 add-comment">
       <form (ngSubmit)="onSubmit(f)" #f="ngForm">
         <label for="message">Szólj hozzá!</label>
-        <textarea name="message" id="message" ngModel></textarea>
+        <textarea name="message" id="message" ngModel required></textarea>
         <div *ngIf="failedToAddComment" class="error" id="submit-comment-error">
           <p>{{ errorMessage }} A hozzászólás elküldése nem sikerült.</p>
         </div>
-        <button type="submit">Hozzászólás küldése</button>
+        <div id="agreement">
+          <label for="agreement">
+          <input type="checkbox" name="agreement" ngModel> A hozzászólás nem tartalmazza a rejtvény megoldását vagy a helyes megoldásra történő
+          bármilyen utalást, sem semmilyen sértő megjegyzést.</label>
+        </div>
+        <button type="submit" [disabled]="(f.invalid || !f.value.agreement) && f.touched">Hozzászólás küldése</button>
       </form>
     </div>
   </div>

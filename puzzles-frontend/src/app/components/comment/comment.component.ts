@@ -44,6 +44,11 @@ export class CommentComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
+    const agreement = form.value.agreement;
+    if (!agreement) {
+      return;
+    }
+
     const message = form.value.message;
     const puzzle = new Puzzle();
     puzzle.id = this.puzzleId;
