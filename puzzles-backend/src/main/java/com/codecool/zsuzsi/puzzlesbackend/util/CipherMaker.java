@@ -83,7 +83,7 @@ public class CipherMaker {
            String letter = String.valueOf(text.charAt(i));
            letterFrequencies.merge(letter, 1, Integer::sum);
        }
-       return  letterFrequencies;
+       return letterFrequencies;
    }
 
    private List<String> getMostFrequentLetters(String text, int helperLetterNumber) {
