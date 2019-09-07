@@ -20,17 +20,22 @@
         <div *ngIf="isNormalPuzzle">
           <div>
             <label for="instruction-normal">Írj pontos instrukciót! Milyen formában várod a választ?</label>
-            <textarea id="instruction-normal" name="instruction" ngModel required></textarea>
+            <textarea id="instruction-normal" name="instruction" ngModel required
+            placeholder="Például: Hogy folytatódik a számsor? A megoldás három szám vesszővel, szóközzel elválasztva. Ha szükséges, használj tizedespontot!">
+            </textarea>
           </div>
           <div>
             <label for="puzzle-item-normal">Ide írd magát a rejtvényt!</label>
-            <textarea id="puzzle-item-normal" name="puzzle-item" ngModel required></textarea>
+            <textarea id="puzzle-item-normal" name="puzzle-item" ngModel required
+            placeholder="Például: 2, 3.5, 5, 6.5, 8, ?, ?, ?">
+            </textarea>
           </div>
         </div>
         <div *ngIf="isPicturePuzzle">
           <div>
             <label for="instruction-picture">Írj pontos instrukciót! Milyen formában várod a választ?</label>
-            <textarea id="instruction-picture" name="instruction-picture" ngModel required></textarea>
+            <textarea id="instruction-picture" name="instruction-picture" ngModel required
+            placeholder="Például: A megoldás három szám egy-egy szóközzel elválasztva. Amennyiben szükséges, tizedesvessző használható.">></textarea>
           </div>
           <div>
             <label for="upload">Töltsd fel a képet!</label>
@@ -43,7 +48,8 @@
         <div *ngIf="isNormalPuzzle || isPicturePuzzle || isCipher">
           <div>
             <label for="answer">Ide írd a helyes választ!</label>
-            <textarea id="answer" name="answer" ngModel required></textarea>
+            <textarea id="answer" name="answer" ngModel required
+            placeholder="Például: 9.5, 11, 12.5 - figyelj, hogy a válasz és az intrukcióban megadott formátum egyezzen!"></textarea>
           </div>
           <div>
             <label for="level">Milyen nehézségűnek ítéled a feladványt?</label>
