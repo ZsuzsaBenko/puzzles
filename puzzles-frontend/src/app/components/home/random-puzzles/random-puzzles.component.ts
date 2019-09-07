@@ -15,6 +15,7 @@ export class RandomPuzzlesComponent implements OnInit {
   currentPuzzle = new Puzzle();
   isPrevious = false;
   isNext = true;
+  isFetching = true;
   errorMessage = '';
   showError = false;
 
@@ -26,9 +27,11 @@ export class RandomPuzzlesComponent implements OnInit {
     this.puzzleService.getRandomPuzzles().subscribe(puzzles => {
         this.puzzles = puzzles;
         this.currentPuzzle = puzzles[0];
+        this.isFetching = false;
       },
       error => {
         this.onError(error);
+        this.isFetching = false;
       });
   }
 

@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {HttpErrorResponse} from '@angular/common/http';
 
-import { PuzzleService } from '../../services/puzzle.service';
-import { Puzzle } from '../../models/Puzzle';
-import { Category } from '../../models/Category';
-import { NgForm } from '@angular/forms';
-import { ErrorHandlerService } from '../../services/error-handler.service';
+import {PuzzleService} from '../../services/puzzle.service';
+import {Puzzle} from '../../models/Puzzle';
+import {Category} from '../../models/Category';
+import {NgForm} from '@angular/forms';
+import {ErrorHandlerService} from '../../services/error-handler.service';
 
 @Component({
   selector: 'app-puzzles',
@@ -17,6 +17,7 @@ export class PuzzlesComponent implements OnInit {
   puzzles: Puzzle[];
   title = '';
   category = null;
+  isFetching = true;
   errorMessage = '';
   showError = false;
 
@@ -30,52 +31,43 @@ export class PuzzlesComponent implements OnInit {
       this.puzzleService.getAllPuzzles().subscribe( puzzles => {
         this.puzzles = puzzles;
         this.title = 'Összes rejtvény';
+        this.isFetching = false;
       },
         error => {
         this.onError(error);
         });
     } else if (url.endsWith('riddles')) {
       this.puzzleService.getPuzzlesByCategory(Category.RIDDLE).subscribe( puzzles => {
-        this.puzzles = puzzles;
-        this.category = Category.RIDDLE;
-        this.title = 'Fejtörők, találós kérdések';
-      },
+        this.onSuccess(puzzles, Category.RIDDLE, 'Fejtörők, találós kérdések');
+        },
         error => {
           this.onError(error);
         });
     } else if (url.endsWith('math-puzzles')) {
       this.puzzleService.getPuzzlesByCategory(Category.MATH_PUZZLE).subscribe( puzzles => {
-        this.puzzles = puzzles;
-        this.category = Category.MATH_PUZZLE;
-        this.title = 'Matematikai feladványok';
-      },
+        this.onSuccess(puzzles, Category.MATH_PUZZLE, 'Matematikai feladványok');
+        },
         error => {
           this.onError(error);
         });
     } else if (url.endsWith('picture-puzzles')) {
       this.puzzleService.getPuzzlesByCategory(Category.PICTURE_PUZZLE).subscribe( puzzles => {
-        this.puzzles = puzzles;
-        this.category = Category.PICTURE_PUZZLE;
-        this.title = 'Képrejtvények';
-      },
+        this.onSuccess(puzzles, Category.PICTURE_PUZZLE, 'Képrejtvények');
+        },
         error => {
           this.onError(error);
         });
     } else if (url.endsWith('word-puzzles')) {
       this.puzzleService.getPuzzlesByCategory(Category.WORD_PUZZLE).subscribe( puzzles => {
-        this.puzzles = puzzles;
-        this.category = Category.WORD_PUZZLE;
-        this.title = 'Nyelvi játékok';
-      },
+        this.onSuccess(puzzles, Category.WORD_PUZZLE, 'Nyelvi játékok');
+        },
         error => {
           this.onError(error);
         });
     } else if (url.endsWith('ciphers')) {
       this.puzzleService.getPuzzlesByCategory(Category.CIPHER).subscribe( puzzles => {
-        this.puzzles = puzzles;
-        this.category = Category.CIPHER;
-        this.title = 'Titkosírás';
-      },
+        this.onSuccess(puzzles, Category.CIPHER, 'Titkosírás');
+        },
         error => {
           this.onError(error);
         });
@@ -94,8 +86,16 @@ export class PuzzlesComponent implements OnInit {
     }
   }
 
+  onSuccess(puzzles: Puzzle[], category: Category, title: string) {
+    this.puzzles = puzzles;
+    this.category = category;
+    this.title = title;
+    this.isFetching = false;
+  }
+
   onError(error: HttpErrorResponse) {
     this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
     this.showError = true;
+    this.isFetching = false;
   }
 }

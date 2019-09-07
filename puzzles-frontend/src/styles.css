@@ -26,3 +26,11 @@ body {
   font-size: 20px;
   text-align: center;
 }
+
+.spinner {
+  display: block;
+  color: #00b300;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+}

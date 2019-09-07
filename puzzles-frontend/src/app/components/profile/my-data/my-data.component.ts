@@ -15,6 +15,7 @@ export class MyDataComponent implements OnInit {
   member = new Member();
   isFormVisible = false;
   invalidPassword = false;
+  isFetching = true;
   errorMessage = '';
   showError = false;
   failedToModifyData = false;
@@ -26,9 +27,11 @@ export class MyDataComponent implements OnInit {
   ngOnInit() {
     this.memberService.getLoggedInMember().subscribe(member => {
       this.member = member;
+      this.isFetching = false;
     },
     error => {
       this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
+      this.isFetching = false;
       this.showError = true;
     });
   }
