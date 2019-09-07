@@ -56,7 +56,7 @@
           <div *ngIf="errorMessage !== ''" id="submit-error" class="error">
             <p>{{ errorMessage }} A rejtvény feltöltése nem sikerült.</p>
           </div>
-          <button type="submit">Küldés</button>
+          <button type="submit" [disabled]="f.invalid">Küldés</button>
         </div>
       </form>
     </div>
