@@ -7,7 +7,6 @@ nav {
   line-height: 50px;
 }
 
-
 ul {
   margin: 0;
   padding: 0;
@@ -86,4 +85,13 @@ li {
   color: #333333;
 }
 
+@media only screen and (max-width: 600px) {
+  #logo {
+    display: none;
+  }
+
+  li {
+    margin: 0 15px;
+  }
+}
 
