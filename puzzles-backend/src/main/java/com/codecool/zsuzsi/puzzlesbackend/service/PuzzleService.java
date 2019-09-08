@@ -3,7 +3,6 @@ package com.codecool.zsuzsi.puzzlesbackend.service;
 import com.codecool.zsuzsi.puzzlesbackend.model.*;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
-import com.codecool.zsuzsi.puzzlesbackend.util.CipherMaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -34,12 +34,11 @@ public class MemberService {
                     .score(0)
                     .roles(Set.of("USER"))
                     .build();
-            memberRepository.save(newMember);
 
             log.info("New registered member with username " + newMember.getUsername() +
                     " and email " + newMember.getEmail());
 
-            return newMember;
+            return memberRepository.save(newMember);
         } else {
             log.info("Registration failed: email already exists");
             return null;

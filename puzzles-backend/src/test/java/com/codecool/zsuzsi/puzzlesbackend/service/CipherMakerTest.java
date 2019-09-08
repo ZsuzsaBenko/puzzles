@@ -1,18 +1,24 @@
-package com.codecool.zsuzsi.puzzlesbackend.util;
+package com.codecool.zsuzsi.puzzlesbackend.service;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("test")
+@SpringBootTest
+@ComponentScan(basePackageClasses = {CipherMaker.class})
 public class CipherMakerTest {
 
-    private CipherMaker cipherMaker = new CipherMaker();
+    @Autowired
+    private CipherMaker cipherMaker;
 
     @Test
     public void testShiftCipherWithNullString() {
