@@ -114,8 +114,9 @@ public class PuzzleService {
         if (puzzle.getCategory().equals(Category.CIPHER)) {
             buildCipherPuzzle(puzzle);
         }
+        puzzleRepository.save(puzzle);
 
-        return puzzleRepository.save(puzzle);
+        return puzzle;
     }
 
     private List<Puzzle> getSolvedPuzzles(Member member) {

@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
 @DataJpaTest
 @ComponentScan(basePackageClasses = {MemberService.class})
-class MemberServiceTest {
+public class MemberServiceTest {
 
     @MockBean
     MemberRepository memberRepository;
