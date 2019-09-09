@@ -53,18 +53,16 @@ public class SolutionService {
         return null;
     }
 
-    private Puzzle updateRating(Puzzle solvedPuzzle) {
+    private void updateRating(Puzzle solvedPuzzle) {
         double prevRating = solvedPuzzle.getRating();
         double newRating = solutionRepository.getRatingAverage(solvedPuzzle);
         solvedPuzzle.setRating(newRating);
         puzzleRepository.save(solvedPuzzle);
 
         log.info("Previous rating: " + prevRating + ", new rating: " + solvedPuzzle.getRating());
-
-        return solvedPuzzle;
     }
 
-    private Puzzle updateLevel(Puzzle solvedPuzzle) {
+    private void updateLevel(Puzzle solvedPuzzle) {
         Level prevLevel = solvedPuzzle.getLevel();
         List<Integer> solutionTimes = solutionRepository.getSolutionTimes(solvedPuzzle);
         double levelAverage = solutionTimes.stream()
@@ -83,11 +81,9 @@ public class SolutionService {
         puzzleRepository.save(solvedPuzzle);
 
         log.info("Previous level: " + prevLevel + ", new level: " + solvedPuzzle.getLevel());
-
-        return solvedPuzzle;
     }
 
-    private Member updateScore(Member member) {
+    private void updateScore(Member member) {
         int prevScore = member.getScore();
         List<Solution> solutions = solutionRepository.findAllByMember(member);
         int score = solutions.stream()
@@ -100,7 +96,5 @@ public class SolutionService {
 
         log.info("Member " + member.getEmail() + "'s previous score: " + prevScore +
                 ", new score: " + member.getScore());
-
-        return member;
     }
 }
