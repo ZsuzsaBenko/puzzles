@@ -56,7 +56,8 @@ public class CommentService {
 
             log.info("New comment for puzzle " + puzzle.getId() + " created by " + member.getEmail());
 
-            return commentRepository.save(comment);
+            commentRepository.save(comment);
+            return comment;
         }
         return null;
     }
