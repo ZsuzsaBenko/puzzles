@@ -18,7 +18,7 @@ import { ErrorHandlerService } from '../../services/error-handler.service';
 export class PuzzleGameComponent implements OnInit {
   puzzle = new Puzzle();
   start: Date;
-  rating = 0;
+  rating = 5;
   isFetching = true;
   isSolved = false;
   isIncorrect = false;
