@@ -54,7 +54,7 @@ class MemberControllerTest {
     public void testGetMyProfile() throws Exception {
         when(memberService.getMemberFromToken(TOKEN)).thenReturn(member);
 
-        MvcResult mvcResult = this.mockMvc
+        MvcResult mvcResult = mockMvc
                 .perform(
                         get(MAIN_URL + "/profile")
                         .header("Authorization", TOKEN)
@@ -77,7 +77,7 @@ class MemberControllerTest {
         );
         when(memberService.getTopLeaderBoard()).thenReturn(leaderboard);
 
-        MvcResult mvcResult = this.mockMvc
+        MvcResult mvcResult = mockMvc
                 .perform(
                         get(MAIN_URL + "/top-leaderboard")
                                 .header("Authorization", TOKEN)
@@ -100,7 +100,7 @@ class MemberControllerTest {
         );
         when(memberService.getFullLeaderBoard()).thenReturn(leaderboard);
 
-        MvcResult mvcResult = this.mockMvc
+        MvcResult mvcResult = mockMvc
                 .perform(
                         get(MAIN_URL + "/full-leaderboard")
                                 .header("Authorization", TOKEN)
@@ -117,11 +117,11 @@ class MemberControllerTest {
     @WithMockUser
     public void testUpdateProfile() throws Exception{
         UserCredentials data = UserCredentials.builder().email("email@email.hu").password("password").build();
-        String requestBody = this.objectMapper.writeValueAsString(data);
+        String requestBody = objectMapper.writeValueAsString(data);
 
         when(memberService.updateProfile(TOKEN, data)).thenReturn(member);
 
-        MvcResult mvcResult = this.mockMvc
+        MvcResult mvcResult = mockMvc
                 .perform(
                         put(MAIN_URL + "/profile/update")
                                 .content(requestBody)

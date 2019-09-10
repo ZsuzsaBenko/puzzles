@@ -48,9 +48,6 @@ class PuzzleControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private PuzzleController puzzleController;
-
     private List<Puzzle> puzzles;
     private Member member;
 
@@ -70,7 +67,7 @@ class PuzzleControllerTest {
     public void testGetAllPuzzles() throws Exception {
         when(puzzleService.getAllPuzzles()).thenReturn(puzzles);
 
-        MvcResult mvcResult = this.mockMvc
+        MvcResult mvcResult = mockMvc
                 .perform(
                         get(MAIN_URL + "/all")
                                 .header("Authorization", TOKEN)
@@ -89,7 +86,7 @@ class PuzzleControllerTest {
         when(memberService.getMemberFromToken(TOKEN)).thenReturn(member);
         when(puzzleService.getUnsolvedPuzzleFromEachCategory(member)).thenReturn(puzzles);
 
-        MvcResult mvcResult = this.mockMvc
+        MvcResult mvcResult = mockMvc
                 .perform(
                         get(MAIN_URL + "/random")
                                 .header("Authorization", TOKEN)
@@ -108,7 +105,7 @@ class PuzzleControllerTest {
         when(memberService.getMemberFromToken(TOKEN)).thenReturn(member);
         when(puzzleService.getAllPuzzlesByMember(member)).thenReturn(puzzles);
 
-        MvcResult mvcResult = this.mockMvc
+        MvcResult mvcResult = mockMvc
                 .perform(
                         get(MAIN_URL + "/member")
                                 .header("Authorization", TOKEN)
@@ -127,7 +124,7 @@ class PuzzleControllerTest {
         Category category = Category.RIDDLE;
         when(puzzleService.getAllPuzzlesByCategory(category)).thenReturn(puzzles);
 
-        MvcResult mvcResult = this.mockMvc
+        MvcResult mvcResult = mockMvc
                 .perform(
                         get(MAIN_URL + "/{category}", category)
                                 .header("Authorization", TOKEN)
@@ -146,7 +143,7 @@ class PuzzleControllerTest {
         Long id = 1L;
         when(puzzleService.getById(id)).thenReturn(puzzles.get(0));
 
-        MvcResult mvcResult = this.mockMvc
+        MvcResult mvcResult = mockMvc
                 .perform(
                         get(MAIN_URL + "/all/{id}", id)
                                 .header("Authorization", TOKEN)
@@ -165,7 +162,7 @@ class PuzzleControllerTest {
         String criteria = "titleASC";
         when(puzzleService.getSortedPuzzles(criteria)).thenReturn(puzzles);
 
-        MvcResult mvcResult = this.mockMvc
+        MvcResult mvcResult = mockMvc
                 .perform(
                         get(MAIN_URL + "/sort/{criteria}", criteria)
                                 .header("Authorization", TOKEN)
@@ -185,7 +182,7 @@ class PuzzleControllerTest {
         Category category = Category.MATH_PUZZLE;
         when(puzzleService.getSortedPuzzles(category, criteria)).thenReturn(puzzles);
 
-        MvcResult mvcResult = this.mockMvc
+        MvcResult mvcResult = mockMvc
                 .perform(
                         get(MAIN_URL + "/sort/{category}/{criteria}", category, criteria)
                                 .header("Authorization", TOKEN)
@@ -202,12 +199,12 @@ class PuzzleControllerTest {
     @WithMockUser
     public void testAddNewPuzzle() throws Exception {
         Puzzle puzzle = puzzles.get(0);
-        String requestBody = this.objectMapper.writeValueAsString(puzzle);
+        String requestBody = objectMapper.writeValueAsString(puzzle);
 
         when(memberService.getMemberFromToken(TOKEN)).thenReturn(member);
         when(puzzleService.addNewPuzzle(puzzle, member)).thenReturn(puzzle);
 
-        MvcResult mvcResult = this.mockMvc
+        MvcResult mvcResult = mockMvc
                 .perform(
                         post(MAIN_URL + "/add")
                                 .content(requestBody)
