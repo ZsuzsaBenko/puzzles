@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class MemberControllerTest {
 
     private static final String MAIN_URL = "/members";
+    private static final String TOKEN = "Bearer abcdef";
 
     @MockBean
     private MemberService memberService;
@@ -42,7 +43,6 @@ class MemberControllerTest {
     private MockMvc mockMvc;
 
     private Member member;
-    private String token = "Bearer abcdef";
 
     @BeforeEach
     public void init() {
@@ -52,19 +52,19 @@ class MemberControllerTest {
     @Test
     @WithMockUser
     public void testGetMyProfile() throws Exception {
-        when(memberService.getMemberFromToken(token)).thenReturn(member);
+        when(memberService.getMemberFromToken(TOKEN)).thenReturn(member);
 
         MvcResult mvcResult = this.mockMvc
                 .perform(
                         get(MAIN_URL + "/profile")
-                        .header("Authorization", token)
+                        .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(member), responseBody);
-        verify(memberService).getMemberFromToken(token);
+        verify(memberService).getMemberFromToken(TOKEN);
     }
 
     @Test
@@ -80,7 +80,7 @@ class MemberControllerTest {
         MvcResult mvcResult = this.mockMvc
                 .perform(
                         get(MAIN_URL + "/top-leaderboard")
-                                .header("Authorization", token)
+                                .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
                 .andReturn();
@@ -103,7 +103,7 @@ class MemberControllerTest {
         MvcResult mvcResult = this.mockMvc
                 .perform(
                         get(MAIN_URL + "/full-leaderboard")
-                                .header("Authorization", token)
+                                .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
                 .andReturn();
@@ -119,13 +119,13 @@ class MemberControllerTest {
         UserCredentials data = UserCredentials.builder().email("email@email.hu").password("password").build();
         String requestBody = this.objectMapper.writeValueAsString(data);
 
-        when(memberService.updateProfile(token, data)).thenReturn(member);
+        when(memberService.updateProfile(TOKEN, data)).thenReturn(member);
 
         MvcResult mvcResult = this.mockMvc
                 .perform(
                         put(MAIN_URL + "/profile/update")
                                 .content(requestBody)
-                                .header("Authorization", token)
+                                .header("Authorization", TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
@@ -133,6 +133,6 @@ class MemberControllerTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(member), responseBody);
-        verify(memberService).updateProfile(token, data);
+        verify(memberService).updateProfile(TOKEN, data);
     }
 }
