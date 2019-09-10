@@ -7,6 +7,7 @@ import {Puzzle} from '../../models/Puzzle';
 import {Category} from '../../models/Category';
 import {NgForm} from '@angular/forms';
 import {ErrorHandlerService} from '../../services/error-handler.service';
+import {SolutionService} from '../../services/solution.service';
 
 @Component({
   selector: 'app-puzzles',
@@ -22,6 +23,7 @@ export class PuzzlesComponent implements OnInit {
   showError = false;
 
   constructor(private puzzleService: PuzzleService,
+              private solutionService: SolutionService,
               private errorHandlerService: ErrorHandlerService,
               private activatedRoute: ActivatedRoute) { }
 
@@ -32,6 +34,7 @@ export class PuzzlesComponent implements OnInit {
         this.puzzles = puzzles;
         this.title = 'Összes rejtvény';
         this.isFetching = false;
+        this.markSolvedPuzzles();
       },
         error => {
         this.onError(error);
@@ -74,11 +77,28 @@ export class PuzzlesComponent implements OnInit {
     }
   }
 
+  markSolvedPuzzles() {
+    this.solutionService.getMySolutions().subscribe(solutions => {
+      for (const puzzle of this.puzzles) {
+        for (const solution of solutions) {
+          if (solution.puzzle.id === puzzle.id) {
+            puzzle.solved = true;
+            break;
+          }
+        }
+      }
+    },
+      error => {
+      this.onError(error);
+      });
+  }
+
   onSubmit(form: NgForm) {
     const sortingParam = form.value.sort;
     if (sortingParam !== '') {
       this.puzzleService.getSortedPuzzles(this.category, sortingParam).subscribe( puzzles => {
         this.puzzles = puzzles;
+        this.markSolvedPuzzles();
       },
         error => {
           this.onError(error);
@@ -91,6 +111,7 @@ export class PuzzlesComponent implements OnInit {
     this.category = category;
     this.title = title;
     this.isFetching = false;
+    this.markSolvedPuzzles();
   }
 
   onError(error: HttpErrorResponse) {

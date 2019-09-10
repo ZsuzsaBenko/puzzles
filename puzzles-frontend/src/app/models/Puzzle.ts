@@ -13,4 +13,5 @@ export class Puzzle {
   submissionTime: Date;
   rating: number;
   member: Member;
+  solved: boolean;
 }

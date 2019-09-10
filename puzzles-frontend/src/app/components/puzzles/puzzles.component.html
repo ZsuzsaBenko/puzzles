@@ -31,7 +31,9 @@
                 <p class="puzzle-info">Beküldő: <span>{{ puzzle.member.username }}</span>
                   <span id="date"> {{ puzzle.submissionTime | date:'yyyy. MM. dd.' }}</span>
                 </p>
-                <h3>{{ puzzle.title }}</h3>
+                <h3>
+                  <span *ngIf="puzzle.solved" class="solved"><i class="fas fa-check"></i></span>{{ puzzle.title }}
+                </h3>
                 <p class="puzzle-info">Kategória:
                   <span>{{ puzzleService.translateCategory(puzzle.category) | uppercase }}</span>
                 </p>

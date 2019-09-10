@@ -31,6 +31,11 @@
   padding: 5px;
 }
 
+.solved .fas.fa-check {
+  font-size: 25px;
+  padding-left: 0;
+}
+
 .puzzle, .sort {
   width: 80%;
   display: block;
