@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -130,8 +127,12 @@ public class PuzzleService {
 
     private void buildCipherPuzzle(Puzzle puzzle) {
         if (puzzle.getLevel().equals(Level.EASY)) {
+            Random random = new Random();
+            int alphabetLength = 35;
+            int randomNumber = random.nextInt(alphabetLength) + 1;
+
             puzzle.setInstruction("Fejtsd meg a titkosírást! Az abc minden betűjét \"arréb toltuk\" valamennyivel.");
-            String puzzleItem = cipherMaker.createShiftCipher(puzzle.getAnswer(), 5);
+            String puzzleItem = cipherMaker.createShiftCipher(puzzle.getAnswer(), randomNumber);
             puzzle.setPuzzleItem(puzzleItem);
         }
         else {

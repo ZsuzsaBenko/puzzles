@@ -18,6 +18,8 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -338,15 +340,14 @@ public class PuzzleServiceTest {
         Puzzle expected = Puzzle.builder().title("Puzzle1").category(Category.CIPHER).level(Level.EASY).answer("answer")
                 .instruction("Fejtsd meg a titkosírást! Az abc minden betűjét \"arréb toltuk\" valamennyivel.")
                 .puzzleItem("epűáiü").member(Member.builder().email("test@test.hu").build()).build();
-        int difference = 5;
 
-        when(cipherMaker.createShiftCipher(newPuzzle.getAnswer(), difference)).thenReturn(expected.getPuzzleItem());
+        when(cipherMaker.createShiftCipher(eq(newPuzzle.getAnswer()), anyInt())).thenReturn(expected.getPuzzleItem());
         when(puzzleRepository.save(newPuzzle)).thenReturn(expected);
 
         Puzzle result = puzzleService.addNewPuzzle(newPuzzle, member);
 
         assertEquals(expected, result);
-        verify(cipherMaker).createShiftCipher(newPuzzle.getAnswer(), difference);
+        verify(cipherMaker).createShiftCipher(eq(newPuzzle.getAnswer()), anyInt());
         verify(puzzleRepository).save(newPuzzle);
     }
 
