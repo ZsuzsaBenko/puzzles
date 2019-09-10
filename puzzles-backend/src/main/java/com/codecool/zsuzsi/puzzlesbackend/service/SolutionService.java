@@ -55,8 +55,11 @@ public class SolutionService {
 
     private void updateRating(Puzzle solvedPuzzle) {
         double prevRating = solvedPuzzle.getRating();
-        double newRating = solutionRepository.getRatingAverage(solvedPuzzle);
-        solvedPuzzle.setRating(newRating);
+        Double newRating = solutionRepository.getRatingAverage(solvedPuzzle);
+
+        if (newRating != null) {
+            solvedPuzzle.setRating(newRating);
+        }
         puzzleRepository.save(solvedPuzzle);
 
         log.info("Previous rating: " + prevRating + ", new rating: " + solvedPuzzle.getRating());
