@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { Member } from '../../../models/Member';
 import { MemberService } from '../../../services/member.service';
 import { ErrorHandlerService } from '../../../services/error-handler.service';
-import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-leaderboard',

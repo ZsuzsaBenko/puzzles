@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import {Solution} from '../../../models/Solution';
-import {SolutionService} from '../../../services/solution.service';
-import {PuzzleService} from '../../../services/puzzle.service';
-import {ErrorHandlerService} from '../../../services/error-handler.service';
+import { Solution } from '../../../models/Solution';
+import { SolutionService } from '../../../services/solution.service';
+import { PuzzleService } from '../../../services/puzzle.service';
+import { ErrorHandlerService } from '../../../services/error-handler.service';
 
 @Component({
   selector: 'app-my-solutions',

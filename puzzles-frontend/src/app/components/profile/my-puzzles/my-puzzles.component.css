@@ -15,17 +15,6 @@ h2 {
 button {
   display: block;
   margin: 10px auto;
-  padding: 10px;
-  background-color: #00b300;
-  color: #333333;
-  font-weight: bold;
-  border-radius: 10px;
-  border: none;
-  transition: background-color 1s;
-}
-
-button:hover {
-  background-color: #f0fff0;
 }
 
 li {

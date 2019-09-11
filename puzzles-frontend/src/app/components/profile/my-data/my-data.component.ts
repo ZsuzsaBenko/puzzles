@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { NgForm } from '@angular/forms';
 
 import { MemberService } from '../../../services/member.service';
@@ -60,16 +61,29 @@ export class MyDataComponent implements OnInit {
       member.password = newPassword;
     }
 
+    this.updateMember(form, member);
+  }
+
+  updateMember(form: NgForm, member: Member) {
     this.memberService.updateMember(member).subscribe(() => {
-      form.reset();
-      this.invalidPassword = false;
-      this.isFormVisible = false;
-      this.memberService.getLoggedInMember().subscribe(updatedMember => this.member = updatedMember);
-    },
-    error => {
-      this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
-      form.reset();
-      this.failedToModifyData = true;
-    });
+        form.reset();
+        this.invalidPassword = false;
+        this.isFormVisible = false;
+        this.memberService.getLoggedInMember().subscribe(updatedMember => {
+            this.member = updatedMember;
+          },
+          error =>  {
+            this.onError(error, form);
+          });
+      },
+      error => {
+        this.onError(error, form);
+      });
+  }
+
+  onError(error: HttpErrorResponse, form: NgForm) {
+    this.errorMessage = this.errorHandlerService.handleHttpErrorResponse(error);
+    form.reset();
+    this.failedToModifyData = true;
   }
 }

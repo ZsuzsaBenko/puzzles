@@ -1,7 +1,3 @@
-import {Puzzle} from './Puzzle';
-import {Solution} from './Solution';
-import {PuzzleComment} from './PuzzleComment';
-
 export class Member {
   id: number;
   username: string;
@@ -9,7 +5,4 @@ export class Member {
   password: string;
   registration: Date;
   score: number;
-  puzzles: Puzzle[];
-  solutions: Solution[];
-  comments: PuzzleComment[];
 }

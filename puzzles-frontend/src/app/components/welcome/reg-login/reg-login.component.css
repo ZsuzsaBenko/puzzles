@@ -10,10 +10,6 @@
 
 .load-btn {
   width: 130px;
-  padding: 10px;
-  background-color: #00b300;
-  color: #333333;
-  font-weight: bold;
   border-radius: 10px 10px 0 0;
   border: 2px solid #333333;
   transition: background-color, color 1s;

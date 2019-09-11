@@ -47,7 +47,7 @@ export class PuzzleGameComponent implements OnInit {
     });
   }
 
-  cancel() {
+  onCancel() {
     this.location.back();
   }
 

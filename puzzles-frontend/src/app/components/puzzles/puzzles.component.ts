@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {HttpErrorResponse} from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
-import {PuzzleService} from '../../services/puzzle.service';
-import {Puzzle} from '../../models/Puzzle';
-import {Category} from '../../models/Category';
-import {NgForm} from '@angular/forms';
-import {ErrorHandlerService} from '../../services/error-handler.service';
-import {SolutionService} from '../../services/solution.service';
+import { PuzzleService } from '../../services/puzzle.service';
+import { Puzzle } from '../../models/Puzzle';
+import { Category } from '../../models/Category';
+import { NgForm } from '@angular/forms';
+import { ErrorHandlerService } from '../../services/error-handler.service';
+import { SolutionService } from '../../services/solution.service';
 
 @Component({
   selector: 'app-puzzles',
