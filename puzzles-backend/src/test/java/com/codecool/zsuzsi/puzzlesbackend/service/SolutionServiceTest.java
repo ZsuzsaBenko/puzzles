@@ -1,17 +1,20 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
-import com.codecool.zsuzsi.puzzlesbackend.model.*;
+import com.codecool.zsuzsi.puzzlesbackend.model.Level;
+import com.codecool.zsuzsi.puzzlesbackend.model.Member;
+import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
+import com.codecool.zsuzsi.puzzlesbackend.model.Solution;
 import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
 import com.codecool.zsuzsi.puzzlesbackend.security.JwtTokenServices;
+import com.codecool.zsuzsi.puzzlesbackend.util.CipherMaker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.access.method.P;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
@@ -19,18 +22,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @DataJpaTest
 @ActiveProfiles("test")
 @ComponentScan(basePackageClasses = {SolutionService.class})
-@Import(JwtTokenServices.class)
+@Import({JwtTokenServices.class, CipherMaker.class})
 class SolutionServiceTest {
-
-    @MockBean
-    private MemberRepository memberRepository;
 
     @MockBean
     private PuzzleRepository puzzleRepository;

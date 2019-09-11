@@ -3,6 +3,7 @@ package com.codecool.zsuzsi.puzzlesbackend.service;
 import com.codecool.zsuzsi.puzzlesbackend.model.*;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
+import com.codecool.zsuzsi.puzzlesbackend.util.CipherMaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -127,37 +128,48 @@ public class PuzzleService {
 
     private void buildCipherPuzzle(Puzzle puzzle) {
         if (puzzle.getLevel().equals(Level.EASY)) {
-            Random random = new Random();
-            int alphabetLength = 35;
-            int randomNumber = random.nextInt(alphabetLength) + 1;
-
-            puzzle.setInstruction("Fejtsd meg a titkosírást! Az abc minden betűjét \"arréb toltuk\" valamennyivel.");
-            String puzzleItem = cipherMaker.createShiftCipher(puzzle.getAnswer(), randomNumber);
-            puzzle.setPuzzleItem(puzzleItem);
+            buildShiftCipherPuzzle(puzzle);
         }
         else {
-            Map<String, Map<String, String>> puzzleWithHelp;
-            if (puzzle.getLevel().equals(Level.MEDIUM)) {
-                puzzleWithHelp = cipherMaker.createRandomCipher(puzzle.getAnswer(),
-                        HELPER_LETTER_NUMBER_MEDIUM);
-            } else {
-                puzzleWithHelp = cipherMaker.createRandomCipher(puzzle.getAnswer(),
-                        HELPER_LETTER_NUMBER_HARD);
-            }
-
-            String puzzleItem = "";
-            Map<String, String> help = new HashMap<>();
-
-            for (String item : puzzleWithHelp.keySet()) {
-                puzzleItem = item;
-                help = puzzleWithHelp.get(item);
-            }
-
-            puzzle.setPuzzleItem(puzzleItem);
-            puzzle.setInstruction("Fejtsd meg a titkosírást! Az abc minden betűje egy másik betűnek felel meg, " +
-                    "teljesen véletlenszerűen. Egy kis segítség: " + help + ". Az egyenlőségjel bal oldalán " +
-                    "az eredeti betű áll, a jobb oldalon a titkosírásban használt megfelelője.");
+            buildRandomCipherPuzzle(puzzle);
         }
         log.info("Encrypted text created: " + puzzle.getPuzzleItem() + ", solution: " + puzzle.getAnswer());
+    }
+
+    private void buildShiftCipherPuzzle(Puzzle puzzle) {
+        Random random = new Random();
+        int alphabetLength = 35;
+        int randomNumber = random.nextInt(alphabetLength) + 1;
+
+        String instruction = "Fejtsd meg a titkosírást! Az abc minden betűjét \"arréb toltuk\" valamennyivel.";
+        puzzle.setInstruction(instruction);
+
+        String puzzleItem = cipherMaker.createShiftCipher(puzzle.getAnswer(), randomNumber);
+        puzzle.setPuzzleItem(puzzleItem);
+    }
+
+    private void buildRandomCipherPuzzle(Puzzle puzzle) {
+        Map<String, Map<String, String>> puzzleWithHelp;
+        if (puzzle.getLevel().equals(Level.MEDIUM)) {
+            puzzleWithHelp = cipherMaker.createRandomCipher(puzzle.getAnswer(),
+                    HELPER_LETTER_NUMBER_MEDIUM);
+        } else {
+            puzzleWithHelp = cipherMaker.createRandomCipher(puzzle.getAnswer(),
+                    HELPER_LETTER_NUMBER_HARD);
+        }
+
+        String puzzleItem = "";
+        Map<String, String> help = new HashMap<>();
+
+        for (String item : puzzleWithHelp.keySet()) {
+            puzzleItem = item;
+            help = puzzleWithHelp.get(item);
+        }
+        puzzle.setPuzzleItem(puzzleItem);
+
+        String instruction = "Fejtsd meg a titkosírást! Az abc minden betűje egy másik betűnek felel meg, " +
+                "teljesen véletlenszerűen. Egy kis segítség: " + help + ". Az egyenlőségjel bal oldalán " +
+                "az eredeti betű áll, a jobb oldalon a titkosírásban használt megfelelője.";
+        puzzle.setInstruction(instruction);
     }
 }

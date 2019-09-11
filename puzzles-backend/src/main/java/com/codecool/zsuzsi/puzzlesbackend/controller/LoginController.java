@@ -36,13 +36,16 @@ public class LoginController {
         try {
             String email = data.getEmail();
             String password = data.getPassword();
+
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
             List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
             String token = jwtTokenServices.createToken(email, roles);
+
             Map<Object, Object> model = new HashMap<>();
             model.put("email", email);
             model.put("roles", roles);
             model.put("token", token);
+
             return ResponseEntity.ok(model);
 
         } catch (AuthenticationException e) {

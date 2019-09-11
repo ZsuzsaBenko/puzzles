@@ -47,9 +47,6 @@ class SolutionControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private SolutionController solutionController;
-
     private Member member;
 
     @BeforeEach

@@ -6,6 +6,7 @@ import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
 import com.codecool.zsuzsi.puzzlesbackend.repository.CommentRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.security.JwtTokenServices;
+import com.codecool.zsuzsi.puzzlesbackend.util.CipherMaker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -25,7 +26,7 @@ import static org.mockito.Mockito.when;
 @DataJpaTest
 @ComponentScan(basePackageClasses = {CommentService.class})
 @ActiveProfiles("test")
-@Import(JwtTokenServices.class)
+@Import({JwtTokenServices.class, CipherMaker.class})
 class CommentServiceTest {
 
     @MockBean

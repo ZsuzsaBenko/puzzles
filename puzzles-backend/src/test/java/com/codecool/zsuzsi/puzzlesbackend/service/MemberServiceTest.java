@@ -4,12 +4,14 @@ import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.UserCredentials;
 import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
 import com.codecool.zsuzsi.puzzlesbackend.security.JwtTokenServices;
+import com.codecool.zsuzsi.puzzlesbackend.util.CipherMaker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
@@ -26,6 +28,7 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
 @DataJpaTest
 @ComponentScan(basePackageClasses = {MemberService.class})
+@Import(CipherMaker.class)
 public class MemberServiceTest {
 
     @MockBean

@@ -4,6 +4,7 @@ import com.codecool.zsuzsi.puzzlesbackend.model.*;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
 import com.codecool.zsuzsi.puzzlesbackend.security.JwtTokenServices;
+import com.codecool.zsuzsi.puzzlesbackend.util.CipherMaker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -337,8 +338,9 @@ public class PuzzleServiceTest {
         Member member = Member.builder().email("test@test.hu").build();
         Puzzle newPuzzle = Puzzle.builder().title("Puzzle1").category(Category.CIPHER).level(Level.EASY).answer("answer")
                 .member(Member.builder().email("email@email.hu").build()).build();
+        String instruction = "Fejtsd meg a titkosírást! Az abc minden betűjét \"arréb toltuk\" valamennyivel.";
         Puzzle expected = Puzzle.builder().title("Puzzle1").category(Category.CIPHER).level(Level.EASY).answer("answer")
-                .instruction("Fejtsd meg a titkosírást! Az abc minden betűjét \"arréb toltuk\" valamennyivel.")
+                .instruction(instruction)
                 .puzzleItem("epűáiü").member(Member.builder().email("test@test.hu").build()).build();
 
         when(cipherMaker.createShiftCipher(eq(newPuzzle.getAnswer()), anyInt())).thenReturn(expected.getPuzzleItem());
@@ -359,10 +361,11 @@ public class PuzzleServiceTest {
         Map<String, Map<String, String>> cipher = new HashMap<>();
         int helperLetterNumber = 3;
 
+        String instruction = "Fejtsd meg a titkosírást! Az abc minden betűje egy másik betűnek felel meg, " +
+                "teljesen véletlenszerűen. Egy kis segítség: {}. Az egyenlőségjel bal oldalán az eredeti betű áll, " +
+                "a jobb oldalon a titkosírásban használt megfelelője.";
         Puzzle expected = Puzzle.builder().title("Puzzle1").category(Category.CIPHER).level(Level.DIFFICULT)
-                .instruction("Fejtsd meg a titkosírást! Az abc minden betűje egy másik betűnek felel meg, " +
-                        "teljesen véletlenszerűen. Egy kis segítség: {}. Az egyenlőségjel bal oldalán az eredeti betű áll, " +
-                        "a jobb oldalon a titkosírásban használt megfelelője.")
+                .instruction(instruction)
                 .puzzleItem("").answer("answer").member(Member.builder().email("test@test.hu").build()).build();
 
         when(cipherMaker.createRandomCipher(newPuzzle.getAnswer(), helperLetterNumber)).thenReturn(cipher);

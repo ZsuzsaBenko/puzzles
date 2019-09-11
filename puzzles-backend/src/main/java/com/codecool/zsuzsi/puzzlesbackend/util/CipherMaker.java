@@ -1,4 +1,4 @@
-package com.codecool.zsuzsi.puzzlesbackend.service;
+package com.codecool.zsuzsi.puzzlesbackend.util;
 
 import org.springframework.stereotype.Component;
 
