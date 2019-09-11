@@ -6,16 +6,17 @@ import { Solution } from '../models/Solution';
   providedIn: 'root'
 })
 export class SolutionService {
+  baseUrl = 'http://localhost:8080/solutions/';
 
   constructor(private http: HttpClient) { }
 
   sendSolution(solution: Solution) {
-    const url = 'http://localhost:8080/solutions/save';
+    const url = this.baseUrl + 'save';
     return this.http.post<Solution>(url, solution);
   }
 
   getMySolutions() {
-    const url = 'http://localhost:8080/solutions/member';
+    const url = this.baseUrl + 'member';
     return this.http.get<Solution[]>(url);
   }
 }

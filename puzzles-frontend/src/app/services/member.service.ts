@@ -6,26 +6,28 @@ import { Member } from '../models/Member';
   providedIn: 'root'
 })
 export class MemberService {
+  baseUrl = 'http://localhost:8080/members/';
+
 
   constructor(private http: HttpClient) { }
 
   getTopLeaderBoard() {
-    const url = 'http://localhost:8080/members/top-leaderboard';
+    const url = this.baseUrl + 'top-leaderboard';
     return this.http.get<Member[]>(url);
   }
 
   getFullLeaderBoard() {
-    const url = 'http://localhost:8080/members/full-leaderboard';
+    const url = this.baseUrl + 'full-leaderboard';
     return this.http.get<Member[]>(url);
   }
 
   getLoggedInMember() {
-    const url = 'http://localhost:8080/members/profile';
+    const url = this.baseUrl + 'profile';
     return this.http.get<Member>(url);
   }
 
   updateMember(member: Member) {
-    const url = 'http://localhost:8080/members/profile/update';
+    const url = this.baseUrl + 'profile/update';
     return this.http.put<Member>(url, member);
   }
 }

@@ -9,27 +9,28 @@ import { Level } from '../models/Level';
   providedIn: 'root'
 })
 export class PuzzleService {
+  baseUrl = 'http://localhost:8080/puzzles/';
+
 
   constructor(private http: HttpClient) {
   }
 
   getRandomPuzzles() {
-    const url = 'http://localhost:8080/puzzles/random';
+    const url = this.baseUrl + 'random';
     return this.http.get<Puzzle[]>(url);
   }
 
   getAllPuzzles() {
-    const url = 'http://localhost:8080/puzzles/all';
+    const url = this.baseUrl + 'all';
     return this.http.get<Puzzle[]>(url);
   }
 
   getPuzzlesByCategory(category: Category) {
-    const url = 'http://localhost:8080/puzzles/';
-    return this.http.get<Puzzle[]>(url + category.toString());
+    return this.http.get<Puzzle[]>(this.baseUrl + category.toString());
   }
 
   getSortedPuzzles(category: Category, sortingParam: string) {
-    const url = 'http://localhost:8080/puzzles/sort/';
+    const url = this.baseUrl + 'sort/';
     if (!category) {
       return this.http.get<Puzzle[]>(url + sortingParam);
     } else {
@@ -38,17 +39,17 @@ export class PuzzleService {
   }
 
   getPuzzlesByMember() {
-    const url = 'http://localhost:8080/puzzles/member';
+    const url = this.baseUrl + 'member';
     return this.http.get<Puzzle[]>(url);
   }
 
   getPuzzleById(id: number) {
-    const url = 'http://localhost:8080/puzzles/all/';
+    const url = this.baseUrl + 'all/';
     return this.http.get<Puzzle>(url + id);
   }
 
   addNewPuzzle(puzzle: Puzzle) {
-    const url = 'http://localhost:8080/puzzles/add';
+    const url = this.baseUrl + 'add';
     return this.http.post<Puzzle>(url, puzzle);
   }
 

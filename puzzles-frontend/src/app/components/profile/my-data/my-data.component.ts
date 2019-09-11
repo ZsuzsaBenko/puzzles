@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
 
 import { MemberService } from '../../../services/member.service';
 import { Member } from '../../../models/Member';

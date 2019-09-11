@@ -5,16 +5,16 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class UploadService {
+  url = 'http://localhost:8080/upload';
 
   constructor(private http: HttpClient) { }
 
   uploadImage(image: File) {
-    const url = 'http://localhost:8080/upload';
 
     const formData: FormData = new FormData();
     formData.append('file', image);
 
-    return this.http.post<any>(url, formData);
+    return this.http.post<any>(this.url, formData);
   }
 
 }

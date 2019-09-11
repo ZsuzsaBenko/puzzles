@@ -7,22 +7,22 @@ import { PuzzleComment } from '../models/PuzzleComment';
   providedIn: 'root'
 })
 export class CommentService {
+  baseUrl = 'http://localhost:8080/comments/';
 
   constructor(private http: HttpClient) {
   }
 
   getCommentsByMember() {
-    const url = 'http://localhost:8080/comments/member';
+    const url = this.baseUrl + 'member';
     return this.http.get<PuzzleComment[]>(url);
   }
 
   getCommentsByPuzzle(puzzleId: number) {
-    const url = 'http://localhost:8080/comments/';
-    return this.http.get<PuzzleComment[]>(url + puzzleId);
+    return this.http.get<PuzzleComment[]>(this.baseUrl + puzzleId);
   }
 
   addNewComment(newComment: PuzzleComment) {
-    const url = 'http://localhost:8080/comments/add';
+    const url = this.baseUrl + 'add';
     return this.http.post<PuzzleComment>(url, newComment);
   }
 }
