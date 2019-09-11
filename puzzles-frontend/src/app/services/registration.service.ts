@@ -1,14 +1,7 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 import {Member} from '../models/Member';
-
-
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/json'
-  })
-};
 
 
 @Injectable({
@@ -21,6 +14,6 @@ export class RegistrationService {
   }
 
   registerNewMember(member: Member) {
-    return this.http.post<Member>(this.url, member, httpOptions);
+    return this.http.post<Member>(this.url, member);
   }
 }

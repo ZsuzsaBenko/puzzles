@@ -1,11 +1,5 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/json'
-  })
-};
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 
 @Injectable({
@@ -18,6 +12,6 @@ export class AuthService {
   }
 
   login(data: {email: string, password: string}) {
-    return this.http.post(this.url, data, httpOptions);
+    return this.http.post(this.url, data);
   }
 }
