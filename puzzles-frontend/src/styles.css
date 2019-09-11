@@ -50,6 +50,7 @@ input {
 input:hover {
   background-color: #f0fff0;
   border-radius: 10px;
+  color: #333333;
 }
 
 input:focus {
