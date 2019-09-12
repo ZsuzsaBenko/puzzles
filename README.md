@@ -20,16 +20,16 @@ By collecting points for correct solutions, the users also compete for having a 
   * PostgreSQL
   * JPA
   * Hibernate
+  * Spring Security
   * Lombok
   * Mockito
   * Junit5
-  * IntelliJ
   
 * Frontend
-  * HTML5
-  * CSS3
   * Angular 8
   * TypeScript
-  * WebStorm
+  * HTML5
+  * CSS3
+  * Bootstrap 4
   
 * git
