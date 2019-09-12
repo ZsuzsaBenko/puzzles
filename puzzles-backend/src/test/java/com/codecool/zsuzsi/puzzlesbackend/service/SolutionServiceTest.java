@@ -64,7 +64,6 @@ class SolutionServiceTest {
     public void testSaveSolution() {
         /*
         EASY_SCORE = 10;
-        MEDIUM_SCORE = 20;
         MEDIUM_TIME_LIMIT = 120;
         DIFFICULT_TIME_LIMIT = 300;
          */
@@ -74,8 +73,9 @@ class SolutionServiceTest {
         List<Integer> solutionTimes = Arrays.asList(60, 150, 300);
         Puzzle solvedPuzzle = Puzzle.builder().id(1L).title("puzzle").level(initialLevel).build();
 
+        int initialScore = 20;
         int expectedScore = 30;
-        Member member = Member.builder().email("email@email.hu").score(0).build();
+        Member member = Member.builder().email("email@email.hu").score(initialScore).build();
 
         int solutionSeconds = 400;
         int newRating = 5;
@@ -86,10 +86,6 @@ class SolutionServiceTest {
         when(puzzleRepository.findById(solution.getPuzzle().getId())).thenReturn(Optional.of(solvedPuzzle));
         when(solutionRepository.getRatingAverage(solvedPuzzle)).thenReturn(expectedRating);
         when(solutionRepository.getSolutionTimes(solvedPuzzle)).thenReturn(solutionTimes);
-        when(solutionRepository.findAllByMember(member)).thenReturn(Arrays.asList(
-                Solution.builder().id(1L).puzzle(Puzzle.builder().level(Level.EASY).build()).build(),
-                Solution.builder().id(1L).puzzle(Puzzle.builder().level(Level.MEDIUM).build()).build()
-        ));
 
         Solution expected = Solution.builder().puzzle(Puzzle.builder().id(1L).build())
                 .seconds(solutionSeconds).rating(newRating).member(member).puzzle(solvedPuzzle).build();
@@ -105,6 +101,5 @@ class SolutionServiceTest {
         verify(puzzleRepository).findById(solution.getPuzzle().getId());
         verify(solutionRepository).getRatingAverage(solvedPuzzle);
         verify(solutionRepository).getSolutionTimes(solvedPuzzle);
-        verify(solutionRepository).findAllByMember(member);
     }
 }

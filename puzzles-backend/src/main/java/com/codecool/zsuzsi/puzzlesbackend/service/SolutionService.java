@@ -20,9 +20,9 @@ public class SolutionService {
 
     private static final int EASY_SCORE = 10;
     private static final int MEDIUM_SCORE = 20;
-    private static final int HARD_SCORE = 50;
+    private static final int DIFFICULT_SCORE = 50;
     private static final int MEDIUM_TIME_LIMIT = 120;
-    private static final int HARD_TIME_LIMIT = 300;
+    private static final int DIFFICULT_TIME_LIMIT = 300;
     private final SolutionRepository solutionRepository;
     private final PuzzleRepository puzzleRepository;
     private final MemberRepository memberRepository;
@@ -45,7 +45,7 @@ public class SolutionService {
                     "; seconds: " + solution.getSeconds() + ", rating: " + solution.getRating());
 
             this.updateRating(solvedPuzzle);
-            this.updateScore(member);
+            this.updateScore(member, solvedPuzzle);
             this.updateLevel(solvedPuzzle);
 
             return solution;
@@ -69,7 +69,7 @@ public class SolutionService {
         Level prevLevel = solvedPuzzle.getLevel();
         List<Integer> solutionTimes = solutionRepository.getSolutionTimes(solvedPuzzle);
         double levelAverage = solutionTimes.stream()
-                .map(time -> time > HARD_TIME_LIMIT ? 2 : time > MEDIUM_TIME_LIMIT ? 1 : 0)
+                .map(time -> time > DIFFICULT_TIME_LIMIT ? 2 : time > MEDIUM_TIME_LIMIT ? 1 : 0)
                 .mapToInt(Integer::intValue)
                 .average()
                 .orElse(0.0);
@@ -86,15 +86,18 @@ public class SolutionService {
         log.info("Previous level: " + prevLevel + ", new level: " + solvedPuzzle.getLevel());
     }
 
-    private void updateScore(Member member) {
+    private void updateScore(Member member, Puzzle solvedPuzzle) {
         int prevScore = member.getScore();
-        List<Solution> solutions = solutionRepository.findAllByMember(member);
-        int score = solutions.stream()
-                .map(solution -> solution.getPuzzle().getLevel().ordinal() + 1)
-                .map(num -> num == 1 ? EASY_SCORE : num == 2 ? MEDIUM_SCORE : HARD_SCORE)
-                .mapToInt(Integer::intValue)
-                .sum();
-        member.setScore(score);
+        int maxScore = 0;
+        if (solvedPuzzle.getLevel().equals(Level.EASY)) {
+            maxScore = prevScore + EASY_SCORE;
+        } else if (solvedPuzzle.getLevel().equals(Level.MEDIUM)) {
+            maxScore = prevScore + MEDIUM_SCORE;
+        } else if (solvedPuzzle.getLevel().equals(Level.DIFFICULT)) {
+            maxScore = prevScore + DIFFICULT_SCORE;
+        }
+
+        member.setScore(maxScore);
         memberRepository.save(member);
 
         log.info("Member " + member.getEmail() + "'s previous score: " + prevScore +
