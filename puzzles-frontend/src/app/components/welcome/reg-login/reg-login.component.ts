@@ -48,7 +48,7 @@ export class RegLoginComponent implements OnInit {
   onSubmit(form: NgForm) {
     if (this.isLogin) {
       const data = {
-        email: form.value.email,
+        email: form.value.email.toLowerCase(),
         password: form.value.password
       };
 
@@ -57,7 +57,7 @@ export class RegLoginComponent implements OnInit {
     } else {
       const member = new Member();
       member.username = form.value.username;
-      member.email = form.value.email;
+      member.email = form.value.email.toLowerCase();
       member.password = form.value.password;
 
       this.register(member);
