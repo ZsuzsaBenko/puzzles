@@ -7,6 +7,8 @@ The Hungarian-language web app is meant to be used by people who enjoy solving v
 Players can solve, rate and comment on the riddles and games; moreover, they can create their own puzzles.
 By collecting points for correct solutions, the users also compete for having a high-ranking position on the leaderboard.
 
+URL: https://zsuzsabenko.github.io/iqcko/
+
 ![IQckó 1](images/iqcko1.png)
 
 
