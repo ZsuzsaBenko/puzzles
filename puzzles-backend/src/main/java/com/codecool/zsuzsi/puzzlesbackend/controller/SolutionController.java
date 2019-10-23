@@ -21,15 +21,14 @@ public class SolutionController {
     private final MemberService memberService;
 
     @GetMapping("/member")
-    public List<Solution> getAllSolutionsByMember(@RequestHeader("Authorization") String token) {
-        Member member = memberService.getMemberFromToken(token);
+    public List<Solution> getAllSolutionsByMember() {
+        Member member = memberService.getLoggedInMember();
         return solutionService.getAllSolutionsByMember(member);
     }
 
     @PostMapping("/save")
-    public Solution saveSolution(@RequestBody Solution solution,
-                                 @RequestHeader("Authorization") String token) {
-        Member member = memberService.getMemberFromToken(token);
+    public Solution saveSolution(@RequestBody Solution solution) {
+        Member member = memberService.getLoggedInMember();
         return solutionService.saveSolution(solution, member);
     }
 }

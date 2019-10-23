@@ -3,7 +3,6 @@ package com.codecool.zsuzsi.puzzlesbackend.service;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.UserCredentials;
 import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
-import com.codecool.zsuzsi.puzzlesbackend.security.JwtTokenServices;
 import com.codecool.zsuzsi.puzzlesbackend.util.CipherMaker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
@@ -22,6 +22,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,9 +34,6 @@ public class MemberServiceTest {
 
     @MockBean
     MemberRepository memberRepository;
-
-    @MockBean
-    JwtTokenServices jwtTokenServices;
 
     @Autowired
     MemberService memberService;
@@ -97,18 +95,14 @@ public class MemberServiceTest {
     }
 
     @Test
-    public void testGetMemberFromToken() {
-        String fullToken = "Bearer abcdef";
-        String token = "abcdef";
-        when(jwtTokenServices.getEmailFromToken(token)).thenReturn(email);
-        when(memberRepository.findByEmail(email)).thenReturn(Optional.of(registeredMember));
+    @WithMockUser
+    public void testGetLoggedInMember() {
+        when(memberRepository.findByEmail(anyString())).thenReturn(Optional.of(registeredMember));
 
-        Member result = memberService.getMemberFromToken(fullToken);
+        Member result = memberService.getLoggedInMember();
 
         assertEquals(registeredMember, result);
-
-        verify(jwtTokenServices).getEmailFromToken(token);
-        verify(memberRepository).findByEmail(email);
+        verify(memberRepository).findByEmail(anyString());
     }
 
     @Test
@@ -158,38 +152,30 @@ public class MemberServiceTest {
     }
 
     @Test
+    @WithMockUser
     public void testUpdateUsername() {
-        String fullToken = "Bearer abcdef";
-        String token = "abcdef";
-        when(jwtTokenServices.getEmailFromToken(token)).thenReturn(email);
-        when(memberRepository.findByEmail(email)).thenReturn(Optional.of(registeredMember));
+        when(memberRepository.findByEmail(anyString())).thenReturn(Optional.of(registeredMember));
 
         String updatedName = "newName";
         UserCredentials data = UserCredentials.builder().username(updatedName).build();
 
-        Member result = memberService.updateProfile(fullToken, data);
+        Member result = memberService.updateProfile(data);
 
         assertEquals(updatedName, result.getUsername());
-
-        verify(jwtTokenServices).getEmailFromToken(token);
-        verify(memberRepository).findByEmail("email@email.hu");
+        verify(memberRepository).findByEmail(anyString());
     }
 
     @Test
+    @WithMockUser
     public void testUpdatePassword() {
-        String fullToken = "Bearer abcdef";
-        String token = "abcdef";
-        when(jwtTokenServices.getEmailFromToken(token)).thenReturn(email);
-        when(memberRepository.findByEmail(email)).thenReturn(Optional.of(registeredMember));
+        when(memberRepository.findByEmail(anyString())).thenReturn(Optional.of(registeredMember));
 
         String updatedPassword = "newPassword";
         UserCredentials data = UserCredentials.builder().password(updatedPassword).build();
 
-        Member result = memberService.updateProfile(fullToken, data);
+        Member result = memberService.updateProfile(data);
 
         assertNotEquals(passwordEncoder.encode(password), result.getPassword());
-
-        verify(jwtTokenServices).getEmailFromToken(token);
-        verify(memberRepository).findByEmail(email);
+        verify(memberRepository).findByEmail(anyString());
     }
 }

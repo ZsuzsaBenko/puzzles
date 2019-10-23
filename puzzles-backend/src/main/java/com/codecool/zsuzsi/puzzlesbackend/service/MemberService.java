@@ -6,6 +6,7 @@ import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
 import com.codecool.zsuzsi.puzzlesbackend.security.JwtTokenServices;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,6 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final MemberRepository memberRepository;
-    private final JwtTokenServices jwtTokenServices;
 
     public Member register(UserCredentials data) {
         Optional<Member> existingMember = memberRepository.findByEmail(data.getEmail());
@@ -44,10 +44,9 @@ public class MemberService {
             return null;
         }
     }
-    
-    public Member getMemberFromToken(String token) {
-        token = token.substring(7);
-        String email = jwtTokenServices.getEmailFromToken(token);
+
+    public Member getLoggedInMember() {
+        String email = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         return memberRepository.findByEmail(email).orElse(null);
     }
 
@@ -61,8 +60,8 @@ public class MemberService {
         return memberRepository.findAllByOrderByScoreDesc();
     }
 
-    public Member updateProfile(String token, UserCredentials data) {
-        Member loggedInMember = getMemberFromToken(token);
+    public Member updateProfile(UserCredentials data) {
+        Member loggedInMember = getLoggedInMember();
         if (data.getUsername() != null) {
             loggedInMember.setUsername(data.getUsername());
         }

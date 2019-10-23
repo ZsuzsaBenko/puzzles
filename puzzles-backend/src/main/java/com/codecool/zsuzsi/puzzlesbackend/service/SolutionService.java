@@ -69,8 +69,7 @@ public class SolutionService {
         Level prevLevel = solvedPuzzle.getLevel();
         List<Integer> solutionTimes = solutionRepository.getSolutionTimes(solvedPuzzle);
         double levelAverage = solutionTimes.stream()
-                .map(time -> time > DIFFICULT_TIME_LIMIT ? 2 : time > MEDIUM_TIME_LIMIT ? 1 : 0)
-                .mapToInt(Integer::intValue)
+                .mapToInt(time -> time > DIFFICULT_TIME_LIMIT ? 2 : time > MEDIUM_TIME_LIMIT ? 1 : 0)
                 .average()
                 .orElse(0.0);
 

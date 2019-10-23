@@ -52,7 +52,7 @@ class MemberControllerTest {
     @Test
     @WithMockUser
     public void testGetMyProfile() throws Exception {
-        when(memberService.getMemberFromToken(TOKEN)).thenReturn(member);
+        when(memberService.getLoggedInMember()).thenReturn(member);
 
         MvcResult mvcResult = mockMvc
                 .perform(
@@ -64,7 +64,7 @@ class MemberControllerTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(member), responseBody);
-        verify(memberService).getMemberFromToken(TOKEN);
+        verify(memberService).getLoggedInMember();
     }
 
     @Test
@@ -119,7 +119,7 @@ class MemberControllerTest {
         UserCredentials data = UserCredentials.builder().email("email@email.hu").password("password").build();
         String requestBody = objectMapper.writeValueAsString(data);
 
-        when(memberService.updateProfile(TOKEN, data)).thenReturn(member);
+        when(memberService.updateProfile(data)).thenReturn(member);
 
         MvcResult mvcResult = mockMvc
                 .perform(
@@ -133,6 +133,6 @@ class MemberControllerTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(member), responseBody);
-        verify(memberService).updateProfile(TOKEN, data);
+        verify(memberService).updateProfile(data);
     }
 }

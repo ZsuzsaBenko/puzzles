@@ -63,7 +63,7 @@ class SolutionControllerTest {
                 Solution.builder().id(3L).member(member).seconds(30).rating(5).build()
         );
 
-        when(memberService.getMemberFromToken(TOKEN)).thenReturn(member);
+        when(memberService.getLoggedInMember()).thenReturn(member);
         when(solutionService.getAllSolutionsByMember(member)).thenReturn(solutions);
 
         MvcResult mvcResult = mockMvc
@@ -76,7 +76,7 @@ class SolutionControllerTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(solutions), responseBody);
-        verify(memberService).getMemberFromToken(TOKEN);
+        verify(memberService).getLoggedInMember();
         verify(solutionService).getAllSolutionsByMember(member);
     }
 
@@ -85,7 +85,7 @@ class SolutionControllerTest {
     public void testSaveSolution() throws Exception {
         Solution solution = Solution.builder().id(1L).member(member).seconds(10).rating(3).build();
 
-        when(memberService.getMemberFromToken(TOKEN)).thenReturn(member);
+        when(memberService.getLoggedInMember()).thenReturn(member);
         when(solutionService.saveSolution(solution, member)).thenReturn(solution);
 
         String requestBody = objectMapper.writeValueAsString(solution);
@@ -101,7 +101,7 @@ class SolutionControllerTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(solution), responseBody);
-        verify(memberService).getMemberFromToken(TOKEN);
+        verify(memberService).getLoggedInMember();
         verify(solutionService).saveSolution(solution, member);
     }
 }

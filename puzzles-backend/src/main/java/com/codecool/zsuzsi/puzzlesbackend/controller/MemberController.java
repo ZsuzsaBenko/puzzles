@@ -29,13 +29,12 @@ public class MemberController {
     }
 
     @GetMapping("/profile")
-    public Member getMyProfile(@RequestHeader("Authorization") String token) {
-        return memberService.getMemberFromToken(token);
+    public Member getMyProfile() {
+        return memberService.getLoggedInMember();
     }
 
     @PutMapping("/profile/update")
-    public Member updateProfile(@RequestHeader("Authorization") String token,
-                                @RequestBody UserCredentials data) {
-        return memberService.updateProfile(token, data);
+    public Member updateProfile(@RequestBody UserCredentials data) {
+        return memberService.updateProfile(data);
     }
 }

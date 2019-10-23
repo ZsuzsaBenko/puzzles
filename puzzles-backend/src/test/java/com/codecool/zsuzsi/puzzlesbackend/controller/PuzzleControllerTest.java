@@ -83,7 +83,7 @@ class PuzzleControllerTest {
     @Test
     @WithMockUser
     public void testGetUnsolvedPuzzleFromEachCategory() throws Exception {
-        when(memberService.getMemberFromToken(TOKEN)).thenReturn(member);
+        when(memberService.getLoggedInMember()).thenReturn(member);
         when(puzzleService.getUnsolvedPuzzleFromEachCategory(member)).thenReturn(puzzles);
 
         MvcResult mvcResult = mockMvc
@@ -96,13 +96,14 @@ class PuzzleControllerTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(puzzles), responseBody);
+        verify(memberService).getLoggedInMember();
         verify(puzzleService).getUnsolvedPuzzleFromEachCategory(member);
     }
 
     @Test
     @WithMockUser
     public void testGetAllPuzzlesByMember() throws Exception {
-        when(memberService.getMemberFromToken(TOKEN)).thenReturn(member);
+        when(memberService.getLoggedInMember()).thenReturn(member);
         when(puzzleService.getAllPuzzlesByMember(member)).thenReturn(puzzles);
 
         MvcResult mvcResult = mockMvc
@@ -115,6 +116,7 @@ class PuzzleControllerTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(puzzles), responseBody);
+        verify(memberService).getLoggedInMember();
         verify(puzzleService).getAllPuzzlesByMember(member);
     }
 
@@ -201,7 +203,7 @@ class PuzzleControllerTest {
         Puzzle puzzle = puzzles.get(0);
         String requestBody = objectMapper.writeValueAsString(puzzle);
 
-        when(memberService.getMemberFromToken(TOKEN)).thenReturn(member);
+        when(memberService.getLoggedInMember()).thenReturn(member);
         when(puzzleService.addNewPuzzle(puzzle, member)).thenReturn(puzzle);
 
         MvcResult mvcResult = mockMvc
@@ -216,6 +218,7 @@ class PuzzleControllerTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(puzzle), responseBody);
+        verify(memberService).getLoggedInMember();
         verify(puzzleService).addNewPuzzle(puzzle, member);
     }
 }

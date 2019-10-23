@@ -81,7 +81,7 @@ class CommentControllerTest {
     @Test
     @WithMockUser
     public void testGetLatestCommentsByMember() throws Exception {
-        when(memberService.getMemberFromToken(TOKEN)).thenReturn(member);
+        when(memberService.getLoggedInMember()).thenReturn(member);
         when(commentService.getLatestCommentsByMember(member)).thenReturn(comments);
 
         MvcResult mvcResult = mockMvc
@@ -94,6 +94,7 @@ class CommentControllerTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(comments), responseBody);
+        verify(memberService).getLoggedInMember();
         verify(commentService).getLatestCommentsByMember(member);
     }
 
@@ -101,7 +102,7 @@ class CommentControllerTest {
     @WithMockUser
     public void testAddNewComment() throws Exception {
         Comment comment = comments.get(0);
-        when(memberService.getMemberFromToken(TOKEN)).thenReturn(member);
+        when(memberService.getLoggedInMember()).thenReturn(member);
         when(commentService.addNewComment(comment, member)).thenReturn(comment);
         String requestBody = objectMapper.writeValueAsString(comment);
 
@@ -117,6 +118,7 @@ class CommentControllerTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(comment), responseBody);
+        verify(memberService).getLoggedInMember();
         verify(commentService).addNewComment(comment, member);
     }
 

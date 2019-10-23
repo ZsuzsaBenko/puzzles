@@ -27,14 +27,14 @@ public class PuzzleController {
     }
 
     @GetMapping("/random")
-    public List<Puzzle> getUnsolvedPuzzleFromEachCategory(@RequestHeader("Authorization") String token) {
-        Member member = memberService.getMemberFromToken(token);
+    public List<Puzzle> getUnsolvedPuzzleFromEachCategory() {
+        Member member = memberService.getLoggedInMember();
         return puzzleService.getUnsolvedPuzzleFromEachCategory(member);
     }
 
     @GetMapping("/member")
-    public List<Puzzle> getAllPuzzlesByMember(@RequestHeader("Authorization") String token) {
-        Member member = memberService.getMemberFromToken(token);
+    public List<Puzzle> getAllPuzzlesByMember() {
+        Member member = memberService.getLoggedInMember();
         return puzzleService.getAllPuzzlesByMember(member);
     }
 
@@ -60,9 +60,8 @@ public class PuzzleController {
     }
 
     @PostMapping("/add")
-    public Puzzle addNewPuzzle(@RequestBody Puzzle puzzle,
-                               @RequestHeader("Authorization") String token) {
-        Member member = memberService.getMemberFromToken(token);
+    public Puzzle addNewPuzzle(@RequestBody Puzzle puzzle) {
+        Member member = memberService.getLoggedInMember();
         return puzzleService.addNewPuzzle(puzzle, member);
     }
 }

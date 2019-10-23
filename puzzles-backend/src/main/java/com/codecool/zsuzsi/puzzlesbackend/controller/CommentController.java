@@ -26,15 +26,14 @@ public class CommentController {
     }
 
     @GetMapping("/member")
-    public List<Comment> getLatestCommentsByMember(@RequestHeader("Authorization") String token) {
-        Member member = memberService.getMemberFromToken(token);
+    public List<Comment> getLatestCommentsByMember() {
+        Member member = memberService.getLoggedInMember();
         return commentService.getLatestCommentsByMember(member);
     }
 
     @PostMapping("/add")
-    public Comment addNewComment(@RequestBody Comment comment,
-                                 @RequestHeader("Authorization") String token) {
-        Member member = memberService.getMemberFromToken(token);
+    public Comment addNewComment(@RequestBody Comment comment) {
+        Member member = memberService.getLoggedInMember();
         return commentService.addNewComment(comment, member);
     }
 }
