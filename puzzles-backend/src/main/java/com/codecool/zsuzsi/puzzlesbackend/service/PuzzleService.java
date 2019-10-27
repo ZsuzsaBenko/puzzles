@@ -1,5 +1,6 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.PuzzleNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.*;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
@@ -24,7 +25,12 @@ public class PuzzleService {
 
     public Puzzle getById(Long id) {
         log.info("Puzzle with id " + id + " requested");
-        return puzzleRepository.findById(id).orElse(null);
+
+        Optional<Puzzle> puzzle = puzzleRepository.findById(id);
+        if (puzzle.isEmpty()) {
+            throw new PuzzleNotFoundException();
+        }
+        return puzzle.get();
     }
 
     public List<Puzzle> getAllPuzzles() {

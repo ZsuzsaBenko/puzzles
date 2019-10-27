@@ -1,5 +1,6 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.PuzzleNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.Comment;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,13 +23,12 @@ public class CommentService {
     private final PuzzleRepository puzzleRepository;
 
     public List<Comment> getAllCommentsByPuzzle(Long id) {
-        Puzzle puzzle = puzzleRepository.findById(id).orElse(null);
+        Optional<Puzzle> puzzle = puzzleRepository.findById(id);
 
-        if (puzzle != null) {
-            log.info("Comments belonging to puzzle " + puzzle.getId() + " requested");
-            return commentRepository.findAllByPuzzleOrderBySubmissionTimeAsc(puzzle);
-        }
-        return null;
+        if (puzzle.isEmpty()) throw new PuzzleNotFoundException();
+
+        log.info("Comments belonging to puzzle " + puzzle.get().getId() + " requested");
+        return commentRepository.findAllByPuzzleOrderBySubmissionTimeAsc(puzzle.get());
     }
 
     public List<Comment> getLatestCommentsByMember(Member member) {
@@ -48,17 +49,16 @@ public class CommentService {
     }
 
     public Comment addNewComment(Comment comment, Member member) {
-        Puzzle puzzle = puzzleRepository.findById(comment.getPuzzle().getId()).orElse(null);
+        Optional<Puzzle> puzzle = puzzleRepository.findById(comment.getPuzzle().getId());
 
-        if (puzzle != null) {
-            comment.setMember(member);
-            comment.setPuzzle(puzzle);
+        if (puzzle.isEmpty()) throw new PuzzleNotFoundException();
 
-            log.info("New comment for puzzle " + puzzle.getId() + " created by " + member.getEmail());
+        comment.setMember(member);
+        comment.setPuzzle(puzzle.get());
 
-            commentRepository.save(comment);
-            return comment;
-        }
-        return null;
+        log.info("New comment for puzzle " + puzzle.get().getId() + " created by " + member.getEmail());
+
+        commentRepository.save(comment);
+        return comment;
     }
 }

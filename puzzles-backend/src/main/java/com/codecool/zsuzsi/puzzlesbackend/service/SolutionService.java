@@ -1,5 +1,6 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.PuzzleNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.Level;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,24 +36,24 @@ public class SolutionService {
     }
 
     public Solution saveSolution(Solution solution, Member member) {
-        Puzzle solvedPuzzle = puzzleRepository.findById(solution.getPuzzle().getId()).orElse(null);
+        Optional<Puzzle> puzzle = puzzleRepository.findById(solution.getPuzzle().getId());
 
-        if (solvedPuzzle != null) {
-            solution.setPuzzle(solvedPuzzle);
-            solution.setMember(member);
-            solutionRepository.save(solution);
+        if (puzzle.isEmpty()) throw new PuzzleNotFoundException();
 
-            log.info("Member " + member.getEmail() + " saved solution for puzzle " + solvedPuzzle.getId() +
-                    "; seconds: " + solution.getSeconds() + ", rating: " + solution.getRating());
+        Puzzle solvedPuzzle = puzzle.get();
+        solution.setPuzzle(solvedPuzzle);
+        solution.setMember(member);
+        solutionRepository.save(solution);
 
-            this.updateRating(solvedPuzzle);
-            this.updateScore(member, solvedPuzzle);
-            this.updateLevel(solvedPuzzle);
+        log.info("Member " + member.getEmail() + " saved solution for puzzle " + solvedPuzzle.getId() +
+                "; seconds: " + solution.getSeconds() + ", rating: " + solution.getRating());
 
-            return solution;
-        }
-        return null;
-    }
+        this.updateRating(solvedPuzzle);
+        this.updateScore(member, solvedPuzzle);
+        this.updateLevel(solvedPuzzle);
+
+        return solution;
+         }
 
     private void updateRating(Puzzle solvedPuzzle) {
         double prevRating = solvedPuzzle.getRating();

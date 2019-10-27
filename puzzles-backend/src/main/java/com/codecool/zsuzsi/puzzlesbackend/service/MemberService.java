@@ -1,9 +1,9 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.InvalidRegistrationException;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.UserCredentials;
 import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
-import com.codecool.zsuzsi.puzzlesbackend.security.JwtTokenServices;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,30 +24,25 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public Member register(UserCredentials data) {
-        Optional<Member> existingMember = memberRepository.findByEmail(data.getEmail());
+        this.validateData(data);
 
-        if (existingMember.isEmpty()) {
-            Member newMember = Member.builder()
-                    .username(data.getUsername())
-                    .email(data.getEmail())
-                    .password(passwordEncoder.encode(data.getPassword()))
-                    .score(0)
-                    .roles(Set.of("USER"))
-                    .build();
+        Member newMember = Member.builder()
+                .username(data.getUsername())
+                .email(data.getEmail())
+                .password(passwordEncoder.encode(data.getPassword()))
+                .score(0)
+                .roles(Set.of("USER"))
+                .build();
 
-            log.info("New registered member with username " + newMember.getUsername() +
-                    " and email " + newMember.getEmail());
+        log.info("New registered member with username " + newMember.getUsername() +
+                " and email " + newMember.getEmail());
 
-            return memberRepository.save(newMember);
-        } else {
-            log.info("Registration failed: email already exists");
-            return null;
-        }
+        return memberRepository.save(newMember);
     }
 
     public Member getLoggedInMember() {
         String email = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        return memberRepository.findByEmail(email).orElse(null);
+        return memberRepository.findByEmail(email).get();
     }
 
     public List<Member> getTopLeaderBoard() {
@@ -73,5 +68,13 @@ public class MemberService {
         log.info("Member " + loggedInMember.getEmail() + "'s personal data updated");
 
         return loggedInMember;
+    }
+
+    private void validateData(UserCredentials data) {
+        if (data.getUsername() == null || data.getEmail() == null || data.getPassword() == null ||
+                memberRepository.findByEmail(data.getEmail()).isPresent()) {
+            log.info("Registration failed: data is incomplete or email already exists");
+            throw new InvalidRegistrationException();
+        }
     }
 }
