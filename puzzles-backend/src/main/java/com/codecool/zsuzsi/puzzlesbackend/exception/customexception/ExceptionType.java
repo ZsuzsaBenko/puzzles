@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 public enum ExceptionType {
     INVALIDLOGINEXCEPTION (HttpStatus.FORBIDDEN),
     INVALIDREGISTRATIONEXCEPTION(HttpStatus.BAD_REQUEST),
-    PUZZLENOTFOUNDEXCEPTION(HttpStatus.NOT_FOUND);
+    PUZZLENOTFOUNDEXCEPTION(HttpStatus.NOT_FOUND),
+    MEMBERNOTFOUNDEXCEPTION(HttpStatus.NOT_FOUND),
+    COMMENTNOTFOUNDEXCEPTION(HttpStatus.NOT_FOUND);
 
     private HttpStatus httpStatus;
 

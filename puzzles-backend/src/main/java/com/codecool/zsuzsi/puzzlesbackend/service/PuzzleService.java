@@ -2,6 +2,7 @@ package com.codecool.zsuzsi.puzzlesbackend.service;
 
 import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.PuzzleNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.*;
+import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
 import com.codecool.zsuzsi.puzzlesbackend.util.CipherMaker;
@@ -18,9 +19,13 @@ public class PuzzleService {
 
     private static final int HELPER_LETTER_NUMBER_MEDIUM = 5;
     private static final int HELPER_LETTER_NUMBER_HARD = 3;
+    private static final int EASY_SCORE = 10;
+    private static final int MEDIUM_SCORE = 20;
+    private static final int DIFFICULT_SCORE = 50;
     private final CipherMaker cipherMaker;
     private final PuzzleRepository puzzleRepository;
     private final SolutionRepository solutionRepository;
+    private final MemberRepository memberRepository;
 
 
     public Puzzle getById(Long id) {
@@ -121,6 +126,53 @@ public class PuzzleService {
         puzzleRepository.save(puzzle);
 
         return puzzle;
+    }
+
+    public Puzzle updatePuzzle(Long id, Puzzle updatedPuzzle) {
+        log.info("Update for puzzle with id '" + id + "' requested with data: '" + updatedPuzzle.getTitle() +
+                "' as title, '"  + updatedPuzzle.getPuzzleItem() + "' as puzzle item, '" + updatedPuzzle.getInstruction() +
+                "' as instruction and '" + updatedPuzzle.getAnswer() + "' as answer.");
+
+        Optional<Puzzle> puzzleToBeUpdated = puzzleRepository.findById(id);
+
+        if (puzzleToBeUpdated.isEmpty()) throw new PuzzleNotFoundException();
+
+        Puzzle puzzle = puzzleToBeUpdated.get();
+
+        if (!puzzle.getCategory().equals(Category.CIPHER) && !puzzle.getCategory().equals(Category.PICTURE_PUZZLE)) {
+            puzzle.setInstruction(updatedPuzzle.getInstruction());
+            puzzle.setPuzzleItem(updatedPuzzle.getPuzzleItem());
+        } else if (puzzle.getCategory().equals(Category.PICTURE_PUZZLE)) {
+            puzzle.setInstruction(updatedPuzzle.getInstruction());
+        }
+        puzzle.setTitle(updatedPuzzle.getTitle());
+        puzzle.setAnswer(updatedPuzzle.getAnswer());
+        puzzleRepository.save(puzzle);
+
+        return puzzle;
+    }
+
+    public void deletePuzzle(Long id) {
+        log.info("Deletion of puzzle with id " + id + " requested.");
+        Optional<Puzzle> puzzleToBeDeleted = puzzleRepository.findById(id);
+
+        if (puzzleToBeDeleted.isEmpty()) throw new PuzzleNotFoundException();
+
+        Puzzle puzzle = puzzleToBeDeleted.get();
+
+        decreaseScore(puzzle);
+        puzzleRepository.delete(puzzle);
+    }
+
+    private void decreaseScore(Puzzle puzzle) {
+        List<Member> membersWhoSolvedPuzzle = solutionRepository.getMembersWhoSolvedPuzzle(puzzle);
+        int scoreValue = puzzle.getLevel() == Level.EASY ? EASY_SCORE :
+                puzzle.getLevel() == Level.MEDIUM ? MEDIUM_SCORE : DIFFICULT_SCORE;
+
+        membersWhoSolvedPuzzle.forEach(member -> {
+            member.setScore(member.getScore() - scoreValue);
+            memberRepository.save(member);
+        });
     }
 
     private List<Puzzle> getSolvedPuzzles(Member member) {

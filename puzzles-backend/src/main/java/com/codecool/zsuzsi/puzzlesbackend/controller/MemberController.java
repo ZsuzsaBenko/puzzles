@@ -28,6 +28,11 @@ public class MemberController {
         return memberService.getFullLeaderBoard();
     }
 
+    @GetMapping("/all-members")
+    public List<Member> getAllMembers() {
+        return memberService.getAllMembers();
+    }
+
     @GetMapping("/profile")
     public Member getMyProfile() {
         return memberService.getLoggedInMember();
@@ -36,5 +41,10 @@ public class MemberController {
     @PutMapping("/profile/update")
     public Member updateProfile(@RequestBody UserCredentials data) {
         return memberService.updateProfile(data);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteMember(@PathVariable("id") Long id) {
+        memberService.deleteMember(id);
     }
 }

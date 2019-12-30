@@ -64,4 +64,14 @@ public class PuzzleController {
         Member member = memberService.getLoggedInMember();
         return puzzleService.addNewPuzzle(puzzle, member);
     }
+
+    @PutMapping("/update/{id}")
+    public Puzzle updatePuzzle(@PathVariable("id") Long id, @RequestBody Puzzle updatedPuzzle) {
+        return puzzleService.updatePuzzle(id, updatedPuzzle);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deletePuzzle(@PathVariable("id") Long id) {
+        puzzleService.deletePuzzle(id);
+    }
 }

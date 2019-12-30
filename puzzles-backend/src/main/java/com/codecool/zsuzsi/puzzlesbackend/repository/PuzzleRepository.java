@@ -17,6 +17,8 @@ public interface PuzzleRepository extends JpaRepository<Puzzle, Long> {
 
     List<Puzzle> findAllByCategory(Category category);
 
+    List<Puzzle> findAllByMember(Member member);
+
     List<Puzzle> findAllByMemberOrderBySubmissionTimeDesc(Member member);
 
     @Query("SELECT p FROM Puzzle p WHERE p NOT IN :solved AND p.category = :category")

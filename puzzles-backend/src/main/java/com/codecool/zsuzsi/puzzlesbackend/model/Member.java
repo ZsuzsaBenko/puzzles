@@ -41,12 +41,12 @@ public class Member {
     @JsonBackReference(value = "puzzles")
     Set<Puzzle> puzzles;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     @EqualsAndHashCode.Exclude
     @JsonBackReference(value = "comments")
     Set<Comment> comments;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     @EqualsAndHashCode.Exclude
     @JsonBackReference(value = "solutions")
     Set<Solution> solutions;

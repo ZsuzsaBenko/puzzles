@@ -21,4 +21,7 @@ public interface SolutionRepository extends JpaRepository<Solution, Long> {
 
     @Query("SELECT s.seconds FROM Solution s WHERE s.puzzle = :puzzle")
     List<Integer> getSolutionTimes(Puzzle puzzle);
+
+    @Query("SELECT s.member FROM Solution s WHERE s.puzzle = :puzzle")
+    List<Member> getMembersWhoSolvedPuzzle(Puzzle puzzle);
 }

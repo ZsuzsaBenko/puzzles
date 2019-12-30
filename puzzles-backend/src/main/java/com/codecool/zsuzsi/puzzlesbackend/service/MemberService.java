@@ -1,9 +1,12 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
 import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.InvalidRegistrationException;
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.MemberNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
+import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
 import com.codecool.zsuzsi.puzzlesbackend.model.UserCredentials;
 import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
+import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +25,7 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final MemberRepository memberRepository;
+    private final PuzzleRepository puzzleRepository;
 
     public Member register(UserCredentials data) {
         this.validateData(data);
@@ -55,6 +59,10 @@ public class MemberService {
         return memberRepository.findAllByOrderByScoreDesc();
     }
 
+    public List<Member> getAllMembers() {
+        return memberRepository.findAll();
+    }
+
     public Member updateProfile(UserCredentials data) {
         Member loggedInMember = getLoggedInMember();
         if (data.getUsername() != null) {
@@ -68,6 +76,25 @@ public class MemberService {
         log.info("Member " + loggedInMember.getEmail() + "'s personal data updated");
 
         return loggedInMember;
+    }
+
+    public void deleteMember(Long id) {
+        log.info("Deletion of member with id " + id + " requested");
+        Optional<Member> memberToBeDeleted = memberRepository.findById(id);
+
+        if (memberToBeDeleted.isEmpty()) throw new MemberNotFoundException();
+
+        deleteMemberReferenceOfPuzzles(memberToBeDeleted.get());
+        memberRepository.delete(memberToBeDeleted.get());
+
+    }
+
+    private void deleteMemberReferenceOfPuzzles(Member memberToBeDeleted) {
+        List<Puzzle> puzzlesOfMember = puzzleRepository.findAllByMember(memberToBeDeleted);
+        puzzlesOfMember.forEach(puzzle -> {
+            puzzle.setMember(null);
+            puzzleRepository.save(puzzle);
+        });
     }
 
     private void validateData(UserCredentials data) {

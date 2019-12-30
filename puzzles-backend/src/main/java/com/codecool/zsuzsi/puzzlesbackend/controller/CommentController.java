@@ -36,4 +36,9 @@ public class CommentController {
         Member member = memberService.getLoggedInMember();
         return commentService.addNewComment(comment, member);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteComment(@PathVariable("id") Long id) {
+        commentService.deleteComment(id);
+    }
 }

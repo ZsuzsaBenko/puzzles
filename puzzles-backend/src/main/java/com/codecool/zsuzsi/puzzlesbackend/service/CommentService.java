@@ -1,5 +1,6 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.CommentNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.PuzzleNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.Comment;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
@@ -60,5 +61,14 @@ public class CommentService {
 
         commentRepository.save(comment);
         return comment;
+    }
+
+    public void deleteComment(Long id) {
+        log.info("Deletion of comment with id " + id + " requested");
+        Optional<Comment> commentToBeDeleted = commentRepository.findById(id);
+
+        if (commentToBeDeleted.isEmpty()) throw new CommentNotFoundException();
+
+        commentRepository.delete(commentToBeDeleted.get());
     }
 }
