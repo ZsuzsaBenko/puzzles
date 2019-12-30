@@ -1,5 +1,6 @@
 package com.codecool.zsuzsi.puzzlesbackend.controller;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.InvalidLoginException;
 import com.codecool.zsuzsi.puzzlesbackend.model.UserCredentials;
 import com.codecool.zsuzsi.puzzlesbackend.security.JwtTokenServices;
 import org.junit.jupiter.api.Test;
@@ -72,7 +73,7 @@ class LoginControllerTest {
                 .password(PASSWORD)
                 .build();
 
-        assertThrows(BadCredentialsException.class, () -> loginController.login(data));
+        assertThrows(InvalidLoginException.class, () -> loginController.login(data));
 
         verify(authentication).getAuthorities();
         verify(authenticationManager).authenticate(new UsernamePasswordAuthenticationToken(EMAIL, PASSWORD));

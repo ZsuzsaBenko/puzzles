@@ -1,5 +1,6 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.PuzzleNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.*;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
@@ -17,8 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -70,6 +70,15 @@ public class PuzzleServiceTest {
         Puzzle result = puzzleService.getById(id);
 
         assertEquals(puzzle1, result);
+        verify(puzzleRepository).findById(id);
+    }
+
+    @Test
+    public void testPuzzleDoesNotExist() {
+        Long id = 1L;
+        when(puzzleRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(PuzzleNotFoundException.class, () -> puzzleService.getById(id));
         verify(puzzleRepository).findById(id);
     }
 

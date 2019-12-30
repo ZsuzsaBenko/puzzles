@@ -1,5 +1,6 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.InvalidRegistrationException;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.UserCredentials;
 import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
@@ -66,7 +67,7 @@ public class MemberServiceTest {
                 .password(password)
                 .build();
 
-        assertNull(memberService.register(data));
+        assertThrows(InvalidRegistrationException.class, () -> memberService.register(data));
 
         verify(memberRepository).findByEmail(email);
     }
