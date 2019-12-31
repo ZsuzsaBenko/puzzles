@@ -1,5 +1,6 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.CommentNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.Comment;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
@@ -20,8 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @DataJpaTest
 @ComponentScan(basePackageClasses = {CommentService.class})
@@ -94,5 +94,28 @@ class CommentServiceTest {
 
         assertEquals(expected, result);
         verify(puzzleRepository).findById(id);
+    }
+
+    @Test
+    public void testDeleteNonexistentComment() {
+        Long id = 1L;
+        when(commentRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(CommentNotFoundException.class, () -> commentService.deleteComment(id));
+        verify(commentRepository).findById(id);
+    }
+
+    @Test
+    public void testDeleteComment() {
+        Long id = 1L;
+        Comment commentToDelete = Comment.builder().message("first").build();
+
+        when(commentRepository.findById(id)).thenReturn(Optional.of(commentToDelete));
+        doNothing().when(commentRepository).delete(commentToDelete);
+
+        commentService.deleteComment(id);
+
+        verify(commentRepository).findById(id);
+        verify(commentRepository).delete(commentToDelete);
     }
 }

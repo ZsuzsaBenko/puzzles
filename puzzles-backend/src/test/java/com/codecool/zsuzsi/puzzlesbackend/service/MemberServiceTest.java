@@ -1,9 +1,12 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
 import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.InvalidRegistrationException;
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.MemberNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
+import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
 import com.codecool.zsuzsi.puzzlesbackend.model.UserCredentials;
 import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
+import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.util.CipherMaker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,8 +27,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -35,6 +37,9 @@ public class MemberServiceTest {
 
     @MockBean
     MemberRepository memberRepository;
+
+    @MockBean
+    private PuzzleRepository puzzleRepository;
 
     @Autowired
     MemberService memberService;
@@ -178,5 +183,38 @@ public class MemberServiceTest {
 
         assertNotEquals(passwordEncoder.encode(password), result.getPassword());
         verify(memberRepository).findByEmail(anyString());
+    }
+
+    @Test
+    public void testDeleteNonexistentMember() {
+        Long id = 1L;
+        when(memberRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(MemberNotFoundException.class, () -> memberService.deleteMember(id));
+        verify(memberRepository).findById(id);
+    }
+
+    @Test
+    public void testDeleteMember() {
+        Long id = 1L;
+        Member memberToDelete = Member.builder().id(id).email("test@test.hu").username("Test Member").build();
+        List<Puzzle> puzzlesOfMember = Arrays.asList(
+                Puzzle.builder().id(1L).member(memberToDelete).build(),
+                Puzzle.builder().id(2L).member(memberToDelete).build(),
+                Puzzle.builder().id(3L).member(memberToDelete).build());
+
+        when(memberRepository.findById(id)).thenReturn(Optional.of(memberToDelete));
+        when(puzzleRepository.findAllByMember(memberToDelete)).thenReturn(puzzlesOfMember);
+        doNothing().when(memberRepository).delete(memberToDelete);
+
+        memberService.deleteMember(id);
+
+        assertNull(puzzlesOfMember.get(0).getMember());
+        assertNull(puzzlesOfMember.get(1).getMember());
+        assertNull(puzzlesOfMember.get(2).getMember());
+
+        verify(memberRepository).findById(id);
+        verify(puzzleRepository).findAllByMember(memberToDelete);
+        verify(memberRepository).delete(memberToDelete);
     }
 }

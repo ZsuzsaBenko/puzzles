@@ -23,10 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -220,5 +219,75 @@ class PuzzleControllerTest {
         assertEquals(objectMapper.writeValueAsString(puzzle), responseBody);
         verify(memberService).getLoggedInMember();
         verify(puzzleService).addNewPuzzle(puzzle, member);
+    }
+
+    @Test
+    @WithMockUser
+    public void testUpdatePuzzleWithNormalUser() throws Exception {
+        Long id = 1L;
+        String requestBody = objectMapper.writeValueAsString(puzzles.get(0));
+
+        mockMvc.perform(
+                        put(MAIN_URL + "/update/{id}", id)
+                                .content(requestBody)
+                                .header("Authorization", TOKEN)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void testUpdatePuzzleWithAdminUser() throws Exception {
+        Long id = 1L;
+        Puzzle updatePuzzle = puzzles.get(0);
+        String requestBody = objectMapper.writeValueAsString(updatePuzzle);
+        when(puzzleService.updatePuzzle(id, updatePuzzle)).thenReturn(updatePuzzle);
+
+        MvcResult mvcResult = mockMvc
+                .perform(
+                    put(MAIN_URL + "/update/{id}", id)
+                            .content(requestBody)
+                            .header("Authorization", TOKEN)
+                            .contentType(MediaType.APPLICATION_JSON)
+            )
+                .andExpect(status().isOk())
+                .andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        assertEquals(objectMapper.writeValueAsString(updatePuzzle), responseBody);
+        verify(puzzleService).updatePuzzle(id, updatePuzzle);
+    }
+
+    @Test
+    @WithMockUser
+    public void testDeletePuzzleWithNormalUser() throws Exception {
+        Long id = 1L;
+        mockMvc.perform(
+                delete(MAIN_URL + "/delete/{id}", id)
+                        .header("Authorization", TOKEN)
+        )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void testDeletePuzzleWithAdminUser() throws Exception {
+        Long id = 1L;
+        doNothing().when(puzzleService).deletePuzzle(id);
+
+        MvcResult mvcResult = mockMvc
+                .perform(
+                        delete(MAIN_URL + "/delete/{id}", id)
+                                .header("Authorization", TOKEN)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        assertTrue(responseBody.isEmpty());
+        verify(puzzleService).deletePuzzle(id);
+
     }
 }

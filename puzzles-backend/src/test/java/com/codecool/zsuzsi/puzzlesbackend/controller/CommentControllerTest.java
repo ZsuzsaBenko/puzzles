@@ -19,12 +19,11 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -120,6 +119,37 @@ class CommentControllerTest {
         assertEquals(objectMapper.writeValueAsString(comment), responseBody);
         verify(memberService).getLoggedInMember();
         verify(commentService).addNewComment(comment, member);
+    }
+
+    @Test
+    @WithMockUser
+    public void testDeleteCommentWithNormalUser() throws Exception {
+        Long id = 1L;
+        mockMvc.perform(
+                        delete(MAIN_URL + "/delete/{id}", id)
+                                .header("Authorization", TOKEN)
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void testDeleteCommentWithAdminUser() throws Exception {
+        Long id = 1L;
+        doNothing().when(commentService).deleteComment(id);
+
+        MvcResult mvcResult = mockMvc
+                .perform(
+                delete(MAIN_URL + "/delete/{id}", id)
+                        .header("Authorization", TOKEN)
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        assertTrue(responseBody.isEmpty());
+        verify(commentService).deleteComment(id);
     }
 
 }
