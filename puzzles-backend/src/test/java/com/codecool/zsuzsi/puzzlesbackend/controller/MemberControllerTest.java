@@ -137,6 +137,39 @@ class MemberControllerTest {
 
     @Test
     @WithMockUser
+    public void testGetAllMembersWithNormalUser() throws Exception {
+        mockMvc.perform(
+                get(MAIN_URL + "/all-members")
+                        .header("Authorization", TOKEN)
+        )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void testGetAllMembersWithAdminUser() throws Exception {
+        List<Member> members = Arrays.asList(
+                Member.builder().username("User1").email("email@email.hu").build(),
+                Member.builder().username("User2").email("email@email.hu").build(),
+                Member.builder().username("User3").email("email@email.hu").build()
+        );
+        when(memberService.getAllMembers()).thenReturn(members);
+
+        MvcResult mvcResult = mockMvc.perform(
+                get(MAIN_URL + "/all-members")
+                        .header("Authorization", TOKEN)
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        assertEquals(objectMapper.writeValueAsString(members), responseBody);
+        verify(memberService).getAllMembers();
+    }
+
+
+    @Test
+    @WithMockUser
     public void testDeleteMemberWithNormalUser() throws Exception {
         Long id = 1L;
         mockMvc.perform(

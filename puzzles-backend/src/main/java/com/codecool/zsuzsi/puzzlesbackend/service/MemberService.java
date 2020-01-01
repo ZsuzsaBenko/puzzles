@@ -60,7 +60,7 @@ public class MemberService {
     }
 
     public List<Member> getAllMembers() {
-        return memberRepository.findAll();
+        return memberRepository.findAllByOrderByRegistrationDesc();
     }
 
     public Member updateProfile(UserCredentials data) {

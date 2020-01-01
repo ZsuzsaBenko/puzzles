@@ -195,6 +195,21 @@ public class MemberServiceTest {
     }
 
     @Test
+    public void testGetAllMembers() {
+        List<Member> expectedMembers = Arrays.asList(
+                Member.builder().username("User1").email("email@email.hu").build(),
+                Member.builder().username("User2").email("email@email.hu").build(),
+                Member.builder().username("User3").email("email@email.hu").build()
+        );
+        when(memberRepository.findAllByOrderByRegistrationDesc()).thenReturn(expectedMembers);
+
+        List<Member> result = memberService.getAllMembers();
+
+        assertEquals(expectedMembers, result);
+        verify(memberRepository).findAllByOrderByRegistrationDesc();
+    }
+
+    @Test
     public void testDeleteMember() {
         Long id = 1L;
         Member memberToDelete = Member.builder().id(id).email("test@test.hu").username("Test Member").build();
