@@ -65,17 +65,14 @@ public class MemberService {
 
     public Member updateProfile(UserCredentials data) {
         Member loggedInMember = getLoggedInMember();
-        if (data.getUsername() != null) {
-            loggedInMember.setUsername(data.getUsername());
-        }
-        if (data.getPassword() != null) {
-            loggedInMember.setPassword(passwordEncoder.encode(data.getPassword()));
-        }
-        memberRepository.save(loggedInMember);
+        return updateMember(loggedInMember, data);
+    }
 
-        log.info("Member " + loggedInMember.getEmail() + "'s personal data updated");
+    public Member updateProfile(Long id, UserCredentials data) {
+        Optional<Member> memberToUpdate = memberRepository.findById(id);
+        if (memberToUpdate.isEmpty()) throw new MemberNotFoundException();
 
-        return loggedInMember;
+        return updateMember(memberToUpdate.get(), data);
     }
 
     public void deleteMember(Long id) {
@@ -87,6 +84,20 @@ public class MemberService {
         deleteMemberReferenceOfPuzzles(memberToBeDeleted.get());
         memberRepository.delete(memberToBeDeleted.get());
 
+    }
+
+    private Member updateMember(Member member, UserCredentials data) {
+        if (data.getUsername() != null) {
+            member.setUsername(data.getUsername());
+        }
+        if (data.getPassword() != null) {
+            member.setPassword(passwordEncoder.encode(data.getPassword()));
+        }
+        memberRepository.save(member);
+
+        log.info("Member " + member.getEmail() + "'s personal data updated");
+
+        return member;
     }
 
     private void deleteMemberReferenceOfPuzzles(Member memberToBeDeleted) {

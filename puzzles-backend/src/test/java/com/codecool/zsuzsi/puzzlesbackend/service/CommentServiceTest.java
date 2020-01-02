@@ -1,10 +1,12 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
 import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.CommentNotFoundException;
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.MemberNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.Comment;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
 import com.codecool.zsuzsi.puzzlesbackend.repository.CommentRepository;
+import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.security.JwtTokenServices;
 import com.codecool.zsuzsi.puzzlesbackend.util.CipherMaker;
@@ -34,6 +36,9 @@ class CommentServiceTest {
 
     @MockBean
     private PuzzleRepository puzzleRepository;
+
+    @MockBean
+    private MemberRepository memberRepository;
 
     @Autowired
     private CommentService commentService;
@@ -77,6 +82,35 @@ class CommentServiceTest {
         List<Comment> result = commentService.getLatestCommentsByMember(member);
 
         assertIterableEquals(expected, result);
+        verify(commentRepository).findAllByMemberOrderBySubmissionTimeDesc(member);
+    }
+
+    @Test
+    public void testGetAllCommentsByMemberWithNonexistentMember() {
+        Long id = 1L;
+        when(memberRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(MemberNotFoundException.class, () -> commentService.getAllCommentsByMember(id));
+        verify(memberRepository).findById(id);
+    }
+
+    @Test
+    public void testGetAllCommentsByMember() {
+        Long id = 1L;
+        Member member = Member.builder().id(id).build();
+        List<Comment> expected = Arrays.asList(
+                Comment.builder().message("first").member(member).puzzle(Puzzle.builder().id(1L).build()).build(),
+                Comment.builder().message("second").member(member).puzzle(Puzzle.builder().id(1L).build()).build(),
+                Comment.builder().message("third").member(member).puzzle(Puzzle.builder().id(2L).build()).build()
+        );
+
+        when(memberRepository.findById(id)).thenReturn(Optional.of(member));
+        when(commentRepository.findAllByMemberOrderBySubmissionTimeDesc(member)).thenReturn(expected);
+
+        List<Comment> comments = commentService.getAllCommentsByMember(id);
+
+        assertIterableEquals(expected, comments);
+        verify(memberRepository).findById(id);
         verify(commentRepository).findAllByMemberOrderBySubmissionTimeDesc(member);
     }
 

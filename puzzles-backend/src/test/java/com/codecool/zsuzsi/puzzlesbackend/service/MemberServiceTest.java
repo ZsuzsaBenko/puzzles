@@ -159,7 +159,7 @@ public class MemberServiceTest {
 
     @Test
     @WithMockUser
-    public void testUpdateUsername() {
+    public void testUpdateOwnUsername() {
         when(memberRepository.findByEmail(anyString())).thenReturn(Optional.of(registeredMember));
 
         String updatedName = "newName";
@@ -173,7 +173,7 @@ public class MemberServiceTest {
 
     @Test
     @WithMockUser
-    public void testUpdatePassword() {
+    public void testUpdateOwnPassword() {
         when(memberRepository.findByEmail(anyString())).thenReturn(Optional.of(registeredMember));
 
         String updatedPassword = "newPassword";
@@ -183,6 +183,46 @@ public class MemberServiceTest {
 
         assertNotEquals(passwordEncoder.encode(password), result.getPassword());
         verify(memberRepository).findByEmail(anyString());
+    }
+
+    @Test
+    public void testUpdateUsernameAsAdmin() {
+        Long id = 1L;
+        Member memberToUpdate= Member.builder().username("oldName").build();
+        when(memberRepository.findById(id)).thenReturn(Optional.of(memberToUpdate));
+
+        String updatedName = "newName";
+        UserCredentials data = UserCredentials.builder().username(updatedName).build();
+
+        Member result = memberService.updateProfile(id, data);
+
+        assertEquals(updatedName, result.getUsername());
+        verify(memberRepository).findById(id);
+    }
+
+    @Test
+    public void testUpdatePasswordAsAdmin() {
+        Long id = 1L;
+        Member memberToUpdate= Member.builder().password(password).build();
+        when(memberRepository.findById(id)).thenReturn(Optional.of(memberToUpdate));
+
+        String updatedPassword = "newPassword";
+        UserCredentials data = UserCredentials.builder().password(updatedPassword).build();
+
+        Member result = memberService.updateProfile(id, data);
+
+        assertNotEquals(passwordEncoder.encode(password), result.getPassword());
+        verify(memberRepository).findById(id);
+    }
+
+    @Test
+    public void testUpdateProfileAsAdminWithNonexistentMember() {
+        Long id = 1L;
+        UserCredentials data = UserCredentials.builder().username(username).password(password).build();
+
+        when(memberRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(MemberNotFoundException.class, () -> memberService.updateProfile(id, data));
     }
 
     @Test
@@ -205,7 +245,7 @@ public class MemberServiceTest {
 
         List<Member> result = memberService.getAllMembers();
 
-        assertEquals(expectedMembers, result);
+        assertIterableEquals(expectedMembers, result);
         verify(memberRepository).findAllByOrderByRegistrationDesc();
     }
 

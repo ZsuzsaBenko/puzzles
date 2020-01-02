@@ -56,7 +56,7 @@ class SolutionControllerTest {
 
     @Test
     @WithMockUser
-    public void testGetAllSolutionsByMember() throws Exception {
+    public void testGetAllSolutionsByLoggedInMember() throws Exception {
         List<Solution> solutions = Arrays.asList(
                 Solution.builder().id(1L).member(member).seconds(10).rating(3).build(),
                 Solution.builder().id(2L).member(member).seconds(20).rating(4).build(),
@@ -68,7 +68,7 @@ class SolutionControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        get(MAIN_URL + "/member")
+                        get(MAIN_URL + "/logged-in-member")
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
@@ -78,6 +78,44 @@ class SolutionControllerTest {
         assertEquals(objectMapper.writeValueAsString(solutions), responseBody);
         verify(memberService).getLoggedInMember();
         verify(solutionService).getAllSolutionsByMember(member);
+    }
+
+    @Test
+    @WithMockUser
+    public void testGetAllSolutionsByMemberWithNormalUser() throws Exception {
+        Long id = 1L;
+
+        mockMvc
+                .perform(
+                        get(MAIN_URL + "/member/{id}", id)
+                                .header("Authorization", TOKEN)
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void testGetAllSolutionsByMemberWithAdminUser() throws Exception {
+        Long id = 1L;
+        List<Solution> solutions = Arrays.asList(
+                Solution.builder().id(1L).member(member).seconds(10).rating(3).build(),
+                Solution.builder().id(2L).member(member).seconds(20).rating(4).build(),
+                Solution.builder().id(3L).member(member).seconds(30).rating(5).build()
+        );
+
+        when(solutionService.getAllSolutionsByMember(id)).thenReturn(solutions);
+
+        MvcResult mvcResult = mockMvc
+                .perform(
+                        get(MAIN_URL + "/member/{id}", id)
+                                .header("Authorization", TOKEN)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        assertEquals(objectMapper.writeValueAsString(solutions), responseBody);
+        verify(solutionService).getAllSolutionsByMember(id);
     }
 
     @Test

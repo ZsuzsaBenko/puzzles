@@ -1,7 +1,9 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.MemberNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.PuzzleNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.*;
+import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
 import com.codecool.zsuzsi.puzzlesbackend.security.JwtTokenServices;
@@ -37,6 +39,9 @@ public class PuzzleServiceTest {
 
     @MockBean
     private SolutionRepository solutionRepository;
+
+    @MockBean
+    private MemberRepository memberRepositrory;
 
     @Autowired
     private PuzzleService puzzleService;
@@ -104,13 +109,37 @@ public class PuzzleServiceTest {
 
     @Test
     public void testGetAllPuzzlesByMember() {
-        Member member = Member.builder().email("anna@email.hu").build();
+        Member member = Member.builder().email("email@email.hu").build();
         when(puzzleRepository.findAllByMemberOrderBySubmissionTimeDesc(member)).thenReturn(puzzles);
 
         List<Puzzle> result = puzzleService.getAllPuzzlesByMember(member);
 
         assertIterableEquals(puzzles, result);
         verify(puzzleRepository).findAllByMemberOrderBySubmissionTimeDesc(member);
+    }
+
+    @Test
+    public void testGetAllPuzzlesByMemberAsAdmin() {
+        Long id = 1L;
+        Member member = Member.builder().email("email@email.hu").build();
+
+        when(memberRepositrory.findById(id)).thenReturn(Optional.of(member));
+        when(puzzleRepository.findAllByMemberOrderBySubmissionTimeDesc(member)).thenReturn(puzzles);
+
+        List<Puzzle> result = puzzleService.getAllPuzzlesByMember(id);
+
+        assertIterableEquals(puzzles, result);
+        verify(memberRepositrory).findById(id);
+        verify(puzzleRepository).findAllByMemberOrderBySubmissionTimeDesc(member);
+    }
+
+    @Test
+    public void testGetAllPuzzlesByMemberAsAdminWithNonexistentMember() {
+        Long id = 1L;
+        when(memberRepositrory.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(MemberNotFoundException.class, () -> puzzleService.getAllPuzzlesByMember(id));
+        verify(memberRepositrory).findById(id);
     }
 
     @Test

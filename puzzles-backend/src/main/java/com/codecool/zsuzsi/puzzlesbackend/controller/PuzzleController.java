@@ -32,10 +32,15 @@ public class PuzzleController {
         return puzzleService.getUnsolvedPuzzleFromEachCategory(member);
     }
 
-    @GetMapping("/member")
-    public List<Puzzle> getAllPuzzlesByMember() {
+    @GetMapping("/logged-in-member")
+    public List<Puzzle> getAllPuzzlesByLoggedInMember() {
         Member member = memberService.getLoggedInMember();
         return puzzleService.getAllPuzzlesByMember(member);
+    }
+
+    @GetMapping("/member/{id}")
+    public List<Puzzle> getAllPuzzlesByMember(@PathVariable("id") Long id) {
+        return puzzleService.getAllPuzzlesByMember(id);
     }
 
     @GetMapping("/{category}")

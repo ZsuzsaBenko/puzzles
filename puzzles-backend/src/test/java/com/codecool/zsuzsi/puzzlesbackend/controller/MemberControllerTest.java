@@ -137,6 +137,41 @@ class MemberControllerTest {
 
     @Test
     @WithMockUser
+    public void testUpdateMemberWithNormalUser() throws Exception {
+        Long id = 1L;
+        mockMvc.perform(
+                        put(MAIN_URL + "/update/{id}", id)
+                                .header("Authorization", TOKEN)
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void testUpdateMemberWithAdminUser() throws Exception {
+        Long id = 1L;
+        UserCredentials data = UserCredentials.builder().email("email@email.hu").password("password").build();
+        String requestBody = objectMapper.writeValueAsString(data);
+
+        when(memberService.updateProfile(id, data)).thenReturn(member);
+
+        MvcResult mvcResult = mockMvc
+                .perform(
+                        put(MAIN_URL + "/update/{id}", id)
+                                .content(requestBody)
+                                .header("Authorization", TOKEN)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        assertEquals(objectMapper.writeValueAsString(member), responseBody);
+        verify(memberService).updateProfile(id, data);
+    }
+
+    @Test
+    @WithMockUser
     public void testGetAllMembersWithNormalUser() throws Exception {
         mockMvc.perform(
                 get(MAIN_URL + "/all-members")

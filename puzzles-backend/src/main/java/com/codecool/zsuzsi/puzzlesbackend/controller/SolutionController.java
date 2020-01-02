@@ -20,10 +20,15 @@ public class SolutionController {
     private final SolutionService solutionService;
     private final MemberService memberService;
 
-    @GetMapping("/member")
-    public List<Solution> getAllSolutionsByMember() {
+    @GetMapping("/logged-in-member")
+    public List<Solution> getAllSolutionsByLoggedInMember() {
         Member member = memberService.getLoggedInMember();
         return solutionService.getAllSolutionsByMember(member);
+    }
+
+    @GetMapping("/member/{id}")
+    public List<Solution> getAllSolutionsByMember(@PathVariable("id") Long id) {
+        return solutionService.getAllSolutionsByMember(id);
     }
 
     @PostMapping("/save")

@@ -79,13 +79,13 @@ class CommentControllerTest {
 
     @Test
     @WithMockUser
-    public void testGetLatestCommentsByMember() throws Exception {
+    public void testGetLatestCommentsByLoggedInMember() throws Exception {
         when(memberService.getLoggedInMember()).thenReturn(member);
         when(commentService.getLatestCommentsByMember(member)).thenReturn(comments);
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        get(MAIN_URL + "/member")
+                        get(MAIN_URL + "/logged-in-member")
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
@@ -95,6 +95,38 @@ class CommentControllerTest {
         assertEquals(objectMapper.writeValueAsString(comments), responseBody);
         verify(memberService).getLoggedInMember();
         verify(commentService).getLatestCommentsByMember(member);
+    }
+
+    @Test
+    @WithMockUser
+    public void testGetAllCommentsByMemberWithNormalUser() throws Exception {
+        Long id = 1L;
+
+        mockMvc.perform(
+                        get(MAIN_URL + "/member/{id}", id)
+                                .header("Authorization", TOKEN)
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void testGetAllCommentsByMemberWithAdminUser() throws Exception {
+        Long id = 1L;
+        when(commentService.getAllCommentsByMember(id)).thenReturn(comments);
+
+        MvcResult mvcResult = mockMvc
+                .perform(
+                        get(MAIN_URL + "/member/{id}", id)
+                                .header("Authorization", TOKEN)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        assertEquals(objectMapper.writeValueAsString(comments), responseBody);
+        verify(commentService).getAllCommentsByMember(id);
+
     }
 
     @Test

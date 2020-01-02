@@ -101,13 +101,13 @@ class PuzzleControllerTest {
 
     @Test
     @WithMockUser
-    public void testGetAllPuzzlesByMember() throws Exception {
+    public void testGetAllPuzzlesByLoggedInMember() throws Exception {
         when(memberService.getLoggedInMember()).thenReturn(member);
         when(puzzleService.getAllPuzzlesByMember(member)).thenReturn(puzzles);
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        get(MAIN_URL + "/member")
+                        get(MAIN_URL + "/logged-in-member")
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
@@ -117,6 +117,37 @@ class PuzzleControllerTest {
         assertEquals(objectMapper.writeValueAsString(puzzles), responseBody);
         verify(memberService).getLoggedInMember();
         verify(puzzleService).getAllPuzzlesByMember(member);
+    }
+
+    @Test
+    @WithMockUser
+    public void testGetAllPuzzlesByMemberWithNormalUser() throws Exception {
+        Long id = 1L;
+        mockMvc
+                .perform(
+                        get(MAIN_URL + "/member/{id}", id)
+                                .header("Authorization", TOKEN)
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void testGetAllPuzzlesByMemberWithAdminUser() throws Exception {
+        Long id = 1L;
+        when(puzzleService.getAllPuzzlesByMember(id)).thenReturn(puzzles);
+
+        MvcResult mvcResult = mockMvc
+                .perform(
+                        get(MAIN_URL + "/member/{id}", id)
+                                .header("Authorization", TOKEN)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        assertEquals(objectMapper.writeValueAsString(puzzles), responseBody);
+        verify(puzzleService).getAllPuzzlesByMember(id);
     }
 
     @Test

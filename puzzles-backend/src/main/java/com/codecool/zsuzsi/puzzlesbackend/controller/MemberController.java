@@ -5,6 +5,7 @@ import com.codecool.zsuzsi.puzzlesbackend.model.UserCredentials;
 import com.codecool.zsuzsi.puzzlesbackend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,6 +42,11 @@ public class MemberController {
     @PutMapping("/profile/update")
     public Member updateProfile(@RequestBody UserCredentials data) {
         return memberService.updateProfile(data);
+    }
+
+    @PutMapping("/update/{id}")
+    public Member updateMember(@PathVariable("id") Long id, @RequestBody UserCredentials data) {
+        return memberService.updateProfile(id, data);
     }
 
     @DeleteMapping("/delete/{id}")

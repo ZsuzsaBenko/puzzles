@@ -1,11 +1,13 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
 import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.CommentNotFoundException;
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.MemberNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.PuzzleNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.Comment;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
 import com.codecool.zsuzsi.puzzlesbackend.repository.CommentRepository;
+import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PuzzleRepository puzzleRepository;
+    private final MemberRepository memberRepository;
 
     public List<Comment> getAllCommentsByPuzzle(Long id) {
         Optional<Puzzle> puzzle = puzzleRepository.findById(id);
@@ -47,6 +50,14 @@ public class CommentService {
             }
         }
         return latestComments;
+    }
+
+    public List<Comment> getAllCommentsByMember(Long id) {
+        Optional<Member> requestedMember = memberRepository.findById(id);
+        if (requestedMember.isEmpty()) throw new MemberNotFoundException();
+
+        Member member = requestedMember.get();
+        return commentRepository.findAllByMemberOrderBySubmissionTimeDesc(member);
     }
 
     public Comment addNewComment(Comment comment, Member member) {

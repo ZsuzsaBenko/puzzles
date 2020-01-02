@@ -25,10 +25,15 @@ public class CommentController {
         return commentService.getAllCommentsByPuzzle(id);
     }
 
-    @GetMapping("/member")
-    public List<Comment> getLatestCommentsByMember() {
+    @GetMapping("/logged-in-member")
+    public List<Comment> getLatestCommentsByLoggedInMember() {
         Member member = memberService.getLoggedInMember();
         return commentService.getLatestCommentsByMember(member);
+    }
+
+    @GetMapping("/member/{id}")
+    public List<Comment> getAllCommentsByMember(@PathVariable("id") Long id) {
+        return commentService.getAllCommentsByMember(id);
     }
 
     @PostMapping("/add")

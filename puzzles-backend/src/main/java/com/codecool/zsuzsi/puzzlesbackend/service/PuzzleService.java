@@ -1,5 +1,6 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.MemberNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.PuzzleNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.*;
 import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
@@ -50,6 +51,16 @@ public class PuzzleService {
 
     public List<Puzzle> getAllPuzzlesByMember(Member member) {
         log.info("Puzzles of  " + member.getUsername() + " (" + member.getEmail() + ") requested");
+        return puzzleRepository.findAllByMemberOrderBySubmissionTimeDesc(member);
+    }
+
+    public List<Puzzle> getAllPuzzlesByMember(Long id) {
+        Optional<Member> requestedMember = memberRepository.findById(id);
+        if (requestedMember.isEmpty()) throw new MemberNotFoundException();
+
+        Member member = requestedMember.get();
+        log.info("Puzzles of  " + member.getUsername() + " (" + member.getEmail() + ") requested");
+
         return puzzleRepository.findAllByMemberOrderBySubmissionTimeDesc(member);
     }
 

@@ -1,5 +1,6 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.MemberNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.Level;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
@@ -22,8 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,18 +39,21 @@ class SolutionServiceTest {
     @MockBean
     private SolutionRepository solutionRepository;
 
+    @MockBean
+    private MemberRepository memberRepository;
+
     @Autowired
     private SolutionService solutionService;
 
     @Test
     public void testGetAllSolutionsByMember() {
         Member member = Member.builder().email("email@email.hu").build();
-        Solution solution1 = Solution.builder().member(member).submissionTime(LocalDateTime.now()).build();
-        Solution solution2 = Solution.builder().member(member)
-                .submissionTime(LocalDateTime.of(2019, 9, 9, 10, 10)).build();
-        Solution solution3 = Solution.builder().member(member)
-                .submissionTime(LocalDateTime.of(2019, 9, 8, 10, 10)).build();
-        List<Solution> expected = Arrays.asList(solution1, solution2, solution3);
+        List<Solution> expected = Arrays.asList(
+                Solution.builder().member(member).submissionTime(LocalDateTime.now()).build(),
+                Solution.builder().member(member)
+                        .submissionTime(LocalDateTime.of(2019, 10, 10, 10, 10)).build(),
+                Solution.builder().member(member)
+                        .submissionTime(LocalDateTime.of(2019, 9, 10, 10, 10)).build());
 
         when(solutionRepository.findAllByMemberOrderBySubmissionTimeDesc(member)).thenReturn(expected);
 
@@ -58,6 +61,35 @@ class SolutionServiceTest {
 
         assertIterableEquals(expected, result);
         verify(solutionRepository).findAllByMemberOrderBySubmissionTimeDesc(member);
+    }
+
+    @Test
+    public void testGetAllSolutionsByMemberAsAdmin() {
+        Long id = 1L;
+        Member member = Member.builder().email("email@email.hu").build();
+        List<Solution> expected = Arrays.asList(
+                Solution.builder().member(member).submissionTime(LocalDateTime.now()).build(),
+                Solution.builder().member(member)
+                        .submissionTime(LocalDateTime.of(2019, 10, 10, 10, 10)).build(),
+                Solution.builder().member(member)
+                        .submissionTime(LocalDateTime.of(2019, 9, 10, 10, 10)).build());
+
+        when(memberRepository.findById(id)).thenReturn(Optional.of(member));
+        when(solutionRepository.findAllByMemberOrderBySubmissionTimeDesc(member)).thenReturn(expected);
+
+        List<Solution> result = solutionService.getAllSolutionsByMember(id);
+
+        assertIterableEquals(expected, result);
+        verify(memberRepository).findById(id);
+        verify(solutionRepository).findAllByMemberOrderBySubmissionTimeDesc(member);
+    }
+
+    @Test
+    public void testGetAllSolutionsByMemberAsAdminWithNonexistentMember() {
+        Long id = 1L;
+        when(memberRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(MemberNotFoundException.class, () -> solutionService.getAllSolutionsByMember(id));
     }
 
     @Test
