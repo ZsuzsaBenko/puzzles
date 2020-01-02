@@ -5,7 +5,6 @@ import com.codecool.zsuzsi.puzzlesbackend.model.UserCredentials;
 import com.codecool.zsuzsi.puzzlesbackend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,12 +34,12 @@ public class MemberController {
     }
 
     @GetMapping("/profile")
-    public Member getMyProfile() {
+    public Member getLoggedInMemberProfile() {
         return memberService.getLoggedInMember();
     }
 
     @PutMapping("/profile/update")
-    public Member updateProfile(@RequestBody UserCredentials data) {
+    public Member updateLoggedInMemberProfile(@RequestBody UserCredentials data) {
         return memberService.updateProfile(data);
     }
 

@@ -48,11 +48,6 @@ public class PuzzleController {
         return puzzleService.getAllPuzzlesByCategory(category);
     }
 
-    @GetMapping("/all/{id}")
-    public Puzzle getPuzzle(@PathVariable("id") Long id) {
-        return puzzleService.getById(id);
-    }
-
     @GetMapping("/sort/{criteria}")
     public List<Puzzle> getSortedPuzzles(@PathVariable("criteria") String criteria) {
         return puzzleService.getSortedPuzzles(criteria);
@@ -62,6 +57,11 @@ public class PuzzleController {
     public List<Puzzle> getSortedPuzzles(@PathVariable("category") Category category,
                                          @PathVariable("criteria") String criteria) {
         return puzzleService.getSortedPuzzles(category, criteria);
+    }
+
+    @GetMapping("/all/{id}")
+    public Puzzle getPuzzle(@PathVariable("id") Long id) {
+        return puzzleService.getById(id);
     }
 
     @PostMapping("/add")
