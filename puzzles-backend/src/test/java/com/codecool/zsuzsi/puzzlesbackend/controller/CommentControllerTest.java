@@ -155,6 +155,30 @@ class CommentControllerTest {
 
     @Test
     @WithMockUser
+    public void testUpdateComment() throws Exception {
+        Long id = 1L;
+        Comment comment = comments.get(0);
+        Comment updatedComment = comments.get(1);
+        when(commentService.updateComment(id, comment)).thenReturn(updatedComment);
+        String requestBody = objectMapper.writeValueAsString(comment);
+
+        MvcResult mvcResult = mockMvc
+                .perform(
+                        put(MAIN_URL + "/update/{id}", id)
+                                .content(requestBody)
+                                .header("Authorization", TOKEN)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        assertEquals(objectMapper.writeValueAsString(updatedComment), responseBody);
+        verify(commentService).updateComment(id, comment);
+    }
+
+    @Test
+    @WithMockUser
     public void testDeleteCommentWithNormalUser() throws Exception {
         Long id = 1L;
         mockMvc.perform(

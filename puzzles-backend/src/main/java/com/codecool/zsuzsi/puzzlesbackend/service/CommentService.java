@@ -74,6 +74,19 @@ public class CommentService {
         return comment;
     }
 
+    public Comment updateComment(Long id, Comment updateComment) {
+        log.info("Update of comment with id " + id + " requested");
+        Optional<Comment> commentToBeUpdated = commentRepository.findById(id);
+
+        if (commentToBeUpdated.isEmpty()) throw new CommentNotFoundException();
+
+        Comment comment = commentToBeUpdated.get();
+        comment.setMessage(updateComment.getMessage());
+        commentRepository.save(comment);
+
+        return comment;
+    }
+
     public void deleteComment(Long id) {
         log.info("Deletion of comment with id " + id + " requested");
         Optional<Comment> commentToBeDeleted = commentRepository.findById(id);

@@ -131,6 +131,29 @@ class CommentServiceTest {
     }
 
     @Test
+    public void testUpdateNonExistentComment() {
+        Long id = 1L;
+        Comment comment = Comment.builder().message("abc").build();
+        when(commentRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(CommentNotFoundException.class, () -> commentService.updateComment(id, comment));
+        verify(commentRepository).findById(id);
+    }
+
+    @Test
+    public void testUpdateComment() {
+        Long id = 1L;
+        Comment prevComment = Comment.builder().message("abc").build();
+        Comment updatedComment = Comment.builder().message("updated").build();
+        when(commentRepository.findById(id)).thenReturn(Optional.of(prevComment));
+
+        Comment result = commentService.updateComment(id, updatedComment);
+
+        assertEquals(updatedComment, result);
+        verify(commentRepository).findById(id);
+    }
+
+    @Test
     public void testDeleteNonexistentComment() {
         Long id = 1L;
         when(commentRepository.findById(id)).thenReturn(Optional.empty());
