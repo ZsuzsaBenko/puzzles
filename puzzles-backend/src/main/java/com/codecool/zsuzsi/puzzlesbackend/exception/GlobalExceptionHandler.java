@@ -8,12 +8,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    private static final String INTERNAL_SERVER_ERROR_MESSAGE = "Szerverhiba történt. Próbáld újra!";
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
-        HttpStatus httpStatus = ExceptionType.valueOf(e.getClass().getSimpleName().toUpperCase()).getHttpStatus();
-        ErrorResponse errorResponse = new ErrorResponse(httpStatus.value(), e.getMessage());
-        return new ResponseEntity<>(errorResponse, httpStatus);
+        try{
+            HttpStatus httpStatus = ExceptionType.valueOf(e.getClass().getSimpleName().toUpperCase()).getHttpStatus();
+            ErrorResponse errorResponse = new ErrorResponse(httpStatus.value(), e.getMessage());
+            return new ResponseEntity<>(errorResponse, httpStatus);
+        } catch (IllegalArgumentException exception) {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),INTERNAL_SERVER_ERROR_MESSAGE);
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
 
