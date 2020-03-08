@@ -101,11 +101,11 @@ public class SolutionService {
     private void updateScore(Member member, Puzzle solvedPuzzle) {
         int prevScore = member.getScore();
         int maxScore = 0;
-        if (solvedPuzzle.getLevel().equals(Level.EASY)) {
+        if (Level.EASY.equals(solvedPuzzle.getLevel())) {
             maxScore = prevScore + EASY_SCORE;
-        } else if (solvedPuzzle.getLevel().equals(Level.MEDIUM)) {
+        } else if (Level.MEDIUM.equals(solvedPuzzle.getLevel())) {
             maxScore = prevScore + MEDIUM_SCORE;
-        } else if (solvedPuzzle.getLevel().equals(Level.DIFFICULT)) {
+        } else if (Level.DIFFICULT.equals(solvedPuzzle.getLevel())) {
             maxScore = prevScore + DIFFICULT_SCORE;
         }
 

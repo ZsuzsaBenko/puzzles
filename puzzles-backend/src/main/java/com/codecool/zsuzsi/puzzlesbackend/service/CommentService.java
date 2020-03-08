@@ -41,7 +41,7 @@ public class CommentService {
         List<Comment> latestComments = new ArrayList<>();
         List<Long> puzzleIDs = new ArrayList<>();
 
-        if (commentsByMember.size() > 0) {
+        if (!commentsByMember.isEmpty()) {
             for (Comment comment : commentsByMember) {
                if (!puzzleIDs.contains(comment.getPuzzle().getId())) {
                    latestComments.add(comment);

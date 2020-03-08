@@ -71,10 +71,10 @@ public class PuzzleService {
         log.info("Unsolved random puzzles requested for member " + member.getEmail() + ", " +
                 "number of already solved puzzles: " + solvedPuzzles.size());
 
-        if (solvedPuzzles.size() > 0) {
+        if (!solvedPuzzles.isEmpty()) {
             for (Category category : Category.values()) {
                 List<Puzzle> notYetSolved = puzzleRepository.findUnsolved(solvedPuzzles, category);
-                if (notYetSolved.size() > 0) {
+                if (!notYetSolved.isEmpty()) {
                     unsolvedPuzzles.add(notYetSolved.get(0));
                 }
             }
@@ -131,7 +131,7 @@ public class PuzzleService {
                 ", category: " + puzzle.getCategory() + ", level: " + puzzle.getLevel());
         puzzle.setMember(member);
 
-        if (puzzle.getCategory().equals(Category.CIPHER)) {
+        if (Category.CIPHER.equals(puzzle.getCategory())) {
             buildCipherPuzzle(puzzle);
         }
         puzzleRepository.save(puzzle);
@@ -150,9 +150,9 @@ public class PuzzleService {
 
         Puzzle puzzle = puzzleToBeUpdated.get();
 
-        if (puzzle.getCategory().equals(Category.CIPHER)) {
+        if (Category.CIPHER.equals(puzzle.getCategory())) {
             puzzle.setTitle(updatedPuzzle.getTitle());
-        } else if (puzzle.getCategory().equals(Category.PICTURE_PUZZLE)) {
+        } else if (Category.PICTURE_PUZZLE.equals(puzzle.getCategory())) {
             puzzle.setTitle(updatedPuzzle.getTitle());
             puzzle.setInstruction(updatedPuzzle.getInstruction());
             puzzle.setAnswer(updatedPuzzle.getAnswer());
@@ -181,8 +181,8 @@ public class PuzzleService {
 
     private void decreaseScore(Puzzle puzzle) {
         List<Member> membersWhoSolvedPuzzle = solutionRepository.getMembersWhoSolvedPuzzle(puzzle);
-        int scoreValue = puzzle.getLevel() == Level.EASY ? EASY_SCORE :
-                puzzle.getLevel() == Level.MEDIUM ? MEDIUM_SCORE : DIFFICULT_SCORE;
+        int scoreValue = Level.EASY.equals(puzzle.getLevel()) ? EASY_SCORE :
+                Level.MEDIUM.equals(puzzle.getLevel()) ? MEDIUM_SCORE : DIFFICULT_SCORE;
 
         membersWhoSolvedPuzzle.forEach(member -> {
             member.setScore(member.getScore() - scoreValue);
@@ -200,7 +200,7 @@ public class PuzzleService {
     }
 
     private void buildCipherPuzzle(Puzzle puzzle) {
-        if (puzzle.getLevel().equals(Level.EASY)) {
+        if (Level.EASY.equals(puzzle.getLevel())) {
             buildShiftCipherPuzzle(puzzle);
         }
         else {
@@ -223,7 +223,7 @@ public class PuzzleService {
 
     private void buildRandomCipherPuzzle(Puzzle puzzle) {
         Map<String, Map<String, String>> puzzleWithHelp;
-        if (puzzle.getLevel().equals(Level.MEDIUM)) {
+        if (Level.MEDIUM.equals(puzzle.getLevel())) {
             puzzleWithHelp = cipherMaker.createRandomCipher(puzzle.getAnswer(),
                     HELPER_LETTER_NUMBER_MEDIUM);
         } else {

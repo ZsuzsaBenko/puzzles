@@ -109,7 +109,9 @@ public class MemberService {
     }
 
     private void validateData(UserCredentials data) {
-        if (data.getUsername() == null || data.getEmail() == null || data.getPassword() == null ||
+        if (data.getUsername() == null ||
+                data.getEmail() == null ||
+                data.getPassword() == null ||
                 memberRepository.findByEmail(data.getEmail()).isPresent()) {
             log.info("Registration failed: data is incomplete or email already exists");
             throw new InvalidRegistrationException();

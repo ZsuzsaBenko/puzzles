@@ -77,9 +77,4 @@ public class JwtTokenServices {
         return new UsernamePasswordAuthenticationToken(username, "", authorities);
     }
 
-    public String getEmailFromToken(String token) {
-        Claims body = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
-        return body.getSubject();
-    }
-
 }
