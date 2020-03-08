@@ -150,14 +150,18 @@ public class PuzzleService {
 
         Puzzle puzzle = puzzleToBeUpdated.get();
 
-        if (!puzzle.getCategory().equals(Category.CIPHER) && !puzzle.getCategory().equals(Category.PICTURE_PUZZLE)) {
+        if (puzzle.getCategory().equals(Category.CIPHER)) {
+            puzzle.setTitle(updatedPuzzle.getTitle());
+        } else if (puzzle.getCategory().equals(Category.PICTURE_PUZZLE)) {
+            puzzle.setTitle(updatedPuzzle.getTitle());
+            puzzle.setInstruction(updatedPuzzle.getInstruction());
+            puzzle.setAnswer(updatedPuzzle.getAnswer());
+        } else {
+            puzzle.setTitle(updatedPuzzle.getTitle());
             puzzle.setInstruction(updatedPuzzle.getInstruction());
             puzzle.setPuzzleItem(updatedPuzzle.getPuzzleItem());
-        } else if (puzzle.getCategory().equals(Category.PICTURE_PUZZLE)) {
-            puzzle.setInstruction(updatedPuzzle.getInstruction());
+            puzzle.setAnswer(updatedPuzzle.getAnswer());
         }
-        puzzle.setTitle(updatedPuzzle.getTitle());
-        puzzle.setAnswer(updatedPuzzle.getAnswer());
         puzzleRepository.save(puzzle);
 
         return puzzle;
