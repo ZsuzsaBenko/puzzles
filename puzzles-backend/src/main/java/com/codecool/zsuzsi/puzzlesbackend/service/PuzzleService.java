@@ -1,6 +1,9 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.MemberNotFoundException;
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.PuzzleNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.*;
+import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
 import com.codecool.zsuzsi.puzzlesbackend.util.CipherMaker;
@@ -17,14 +20,23 @@ public class PuzzleService {
 
     private static final int HELPER_LETTER_NUMBER_MEDIUM = 5;
     private static final int HELPER_LETTER_NUMBER_HARD = 3;
+    private static final int EASY_SCORE = 10;
+    private static final int MEDIUM_SCORE = 20;
+    private static final int DIFFICULT_SCORE = 50;
     private final CipherMaker cipherMaker;
     private final PuzzleRepository puzzleRepository;
     private final SolutionRepository solutionRepository;
+    private final MemberRepository memberRepository;
 
 
     public Puzzle getById(Long id) {
         log.info("Puzzle with id " + id + " requested");
-        return puzzleRepository.findById(id).orElse(null);
+
+        Optional<Puzzle> puzzle = puzzleRepository.findById(id);
+        if (puzzle.isEmpty()) {
+            throw new PuzzleNotFoundException();
+        }
+        return puzzle.get();
     }
 
     public List<Puzzle> getAllPuzzles() {
@@ -42,6 +54,16 @@ public class PuzzleService {
         return puzzleRepository.findAllByMemberOrderBySubmissionTimeDesc(member);
     }
 
+    public List<Puzzle> getAllPuzzlesByMember(Long id) {
+        Optional<Member> requestedMember = memberRepository.findById(id);
+        if (requestedMember.isEmpty()) throw new MemberNotFoundException();
+
+        Member member = requestedMember.get();
+        log.info("Puzzles of  " + member.getUsername() + " (" + member.getEmail() + ") requested");
+
+        return puzzleRepository.findAllByMemberOrderBySubmissionTimeDesc(member);
+    }
+
     public List<Puzzle> getUnsolvedPuzzleFromEachCategory(Member member) {
         List<Puzzle> solvedPuzzles = this.getSolvedPuzzles(member);
         List<Puzzle> unsolvedPuzzles = new ArrayList<>();
@@ -49,10 +71,10 @@ public class PuzzleService {
         log.info("Unsolved random puzzles requested for member " + member.getEmail() + ", " +
                 "number of already solved puzzles: " + solvedPuzzles.size());
 
-        if (solvedPuzzles.size() > 0) {
+        if (!solvedPuzzles.isEmpty()) {
             for (Category category : Category.values()) {
                 List<Puzzle> notYetSolved = puzzleRepository.findUnsolved(solvedPuzzles, category);
-                if (notYetSolved.size() > 0) {
+                if (!notYetSolved.isEmpty()) {
                     unsolvedPuzzles.add(notYetSolved.get(0));
                 }
             }
@@ -109,12 +131,63 @@ public class PuzzleService {
                 ", category: " + puzzle.getCategory() + ", level: " + puzzle.getLevel());
         puzzle.setMember(member);
 
-        if (puzzle.getCategory().equals(Category.CIPHER)) {
+        if (Category.CIPHER.equals(puzzle.getCategory())) {
             buildCipherPuzzle(puzzle);
         }
         puzzleRepository.save(puzzle);
 
         return puzzle;
+    }
+
+    public Puzzle updatePuzzle(Long id, Puzzle updatedPuzzle) {
+        log.info("Update for puzzle with id '" + id + "' requested with data: '" + updatedPuzzle.getTitle() +
+                "' as title, '"  + updatedPuzzle.getPuzzleItem() + "' as puzzle item, '" + updatedPuzzle.getInstruction() +
+                "' as instruction and '" + updatedPuzzle.getAnswer() + "' as answer.");
+
+        Optional<Puzzle> puzzleToBeUpdated = puzzleRepository.findById(id);
+
+        if (puzzleToBeUpdated.isEmpty()) throw new PuzzleNotFoundException();
+
+        Puzzle puzzle = puzzleToBeUpdated.get();
+
+        if (Category.CIPHER.equals(puzzle.getCategory())) {
+            puzzle.setTitle(updatedPuzzle.getTitle());
+        } else if (Category.PICTURE_PUZZLE.equals(puzzle.getCategory())) {
+            puzzle.setTitle(updatedPuzzle.getTitle());
+            puzzle.setInstruction(updatedPuzzle.getInstruction());
+            puzzle.setAnswer(updatedPuzzle.getAnswer());
+        } else {
+            puzzle.setTitle(updatedPuzzle.getTitle());
+            puzzle.setInstruction(updatedPuzzle.getInstruction());
+            puzzle.setPuzzleItem(updatedPuzzle.getPuzzleItem());
+            puzzle.setAnswer(updatedPuzzle.getAnswer());
+        }
+        puzzleRepository.save(puzzle);
+
+        return puzzle;
+    }
+
+    public void deletePuzzle(Long id) {
+        log.info("Deletion of puzzle with id " + id + " requested.");
+        Optional<Puzzle> puzzleToBeDeleted = puzzleRepository.findById(id);
+
+        if (puzzleToBeDeleted.isEmpty()) throw new PuzzleNotFoundException();
+
+        Puzzle puzzle = puzzleToBeDeleted.get();
+
+        decreaseScore(puzzle);
+        puzzleRepository.delete(puzzle);
+    }
+
+    private void decreaseScore(Puzzle puzzle) {
+        List<Member> membersWhoSolvedPuzzle = solutionRepository.getMembersWhoSolvedPuzzle(puzzle);
+        int scoreValue = Level.EASY.equals(puzzle.getLevel()) ? EASY_SCORE :
+                Level.MEDIUM.equals(puzzle.getLevel()) ? MEDIUM_SCORE : DIFFICULT_SCORE;
+
+        membersWhoSolvedPuzzle.forEach(member -> {
+            member.setScore(member.getScore() - scoreValue);
+            memberRepository.save(member);
+        });
     }
 
     private List<Puzzle> getSolvedPuzzles(Member member) {
@@ -127,7 +200,7 @@ public class PuzzleService {
     }
 
     private void buildCipherPuzzle(Puzzle puzzle) {
-        if (puzzle.getLevel().equals(Level.EASY)) {
+        if (Level.EASY.equals(puzzle.getLevel())) {
             buildShiftCipherPuzzle(puzzle);
         }
         else {
@@ -150,7 +223,7 @@ public class PuzzleService {
 
     private void buildRandomCipherPuzzle(Puzzle puzzle) {
         Map<String, Map<String, String>> puzzleWithHelp;
-        if (puzzle.getLevel().equals(Level.MEDIUM)) {
+        if (Level.MEDIUM.equals(puzzle.getLevel())) {
             puzzleWithHelp = cipherMaker.createRandomCipher(puzzle.getAnswer(),
                     HELPER_LETTER_NUMBER_MEDIUM);
         } else {

@@ -27,25 +27,25 @@ public class PuzzleController {
     }
 
     @GetMapping("/random")
-    public List<Puzzle> getUnsolvedPuzzleFromEachCategory(@RequestHeader("Authorization") String token) {
-        Member member = memberService.getMemberFromToken(token);
+    public List<Puzzle> getUnsolvedPuzzleFromEachCategory() {
+        Member member = memberService.getLoggedInMember();
         return puzzleService.getUnsolvedPuzzleFromEachCategory(member);
     }
 
-    @GetMapping("/member")
-    public List<Puzzle> getAllPuzzlesByMember(@RequestHeader("Authorization") String token) {
-        Member member = memberService.getMemberFromToken(token);
+    @GetMapping("/logged-in-member")
+    public List<Puzzle> getAllPuzzlesByLoggedInMember() {
+        Member member = memberService.getLoggedInMember();
         return puzzleService.getAllPuzzlesByMember(member);
+    }
+
+    @GetMapping("/member/{id}")
+    public List<Puzzle> getAllPuzzlesByMember(@PathVariable("id") Long id) {
+        return puzzleService.getAllPuzzlesByMember(id);
     }
 
     @GetMapping("/{category}")
     public List<Puzzle> getPuzzlesByCategory(@PathVariable("category") Category category) {
         return puzzleService.getAllPuzzlesByCategory(category);
-    }
-
-    @GetMapping("/all/{id}")
-    public Puzzle getPuzzle(@PathVariable("id") Long id) {
-        return puzzleService.getById(id);
     }
 
     @GetMapping("/sort/{criteria}")
@@ -59,10 +59,24 @@ public class PuzzleController {
         return puzzleService.getSortedPuzzles(category, criteria);
     }
 
+    @GetMapping("/all/{id}")
+    public Puzzle getPuzzle(@PathVariable("id") Long id) {
+        return puzzleService.getById(id);
+    }
+
     @PostMapping("/add")
-    public Puzzle addNewPuzzle(@RequestBody Puzzle puzzle,
-                               @RequestHeader("Authorization") String token) {
-        Member member = memberService.getMemberFromToken(token);
+    public Puzzle addNewPuzzle(@RequestBody Puzzle puzzle) {
+        Member member = memberService.getLoggedInMember();
         return puzzleService.addNewPuzzle(puzzle, member);
+    }
+
+    @PutMapping("/update/{id}")
+    public Puzzle updatePuzzle(@PathVariable("id") Long id, @RequestBody Puzzle updatedPuzzle) {
+        return puzzleService.updatePuzzle(id, updatedPuzzle);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deletePuzzle(@PathVariable("id") Long id) {
+        puzzleService.deletePuzzle(id);
     }
 }

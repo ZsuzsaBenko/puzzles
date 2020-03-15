@@ -1,5 +1,7 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.MemberNotFoundException;
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.PuzzleNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.Level;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,25 +36,35 @@ public class SolutionService {
         return solutionRepository.findAllByMemberOrderBySubmissionTimeDesc(member);
     }
 
-    public Solution saveSolution(Solution solution, Member member) {
-        Puzzle solvedPuzzle = puzzleRepository.findById(solution.getPuzzle().getId()).orElse(null);
+    public List<Solution> getAllSolutionsByMember(Long id) {
+        Optional<Member> requestedMember = memberRepository.findById(id);
+        if (requestedMember.isEmpty()) throw new MemberNotFoundException();
 
-        if (solvedPuzzle != null) {
-            solution.setPuzzle(solvedPuzzle);
-            solution.setMember(member);
-            solutionRepository.save(solution);
+        Member member = requestedMember.get();
+        log.info("All solutions by member " + member.getEmail() + " requested");
 
-            log.info("Member " + member.getEmail() + " saved solution for puzzle " + solvedPuzzle.getId() +
-                    "; seconds: " + solution.getSeconds() + ", rating: " + solution.getRating());
-
-            this.updateRating(solvedPuzzle);
-            this.updateScore(member, solvedPuzzle);
-            this.updateLevel(solvedPuzzle);
-
-            return solution;
-        }
-        return null;
+        return solutionRepository.findAllByMemberOrderBySubmissionTimeDesc(member);
     }
+
+    public Solution saveSolution(Solution solution, Member member) {
+        Optional<Puzzle> puzzle = puzzleRepository.findById(solution.getPuzzle().getId());
+
+        if (puzzle.isEmpty()) throw new PuzzleNotFoundException();
+
+        Puzzle solvedPuzzle = puzzle.get();
+        solution.setPuzzle(solvedPuzzle);
+        solution.setMember(member);
+        solutionRepository.save(solution);
+
+        log.info("Member " + member.getEmail() + " saved solution for puzzle " + solvedPuzzle.getId() +
+                "; seconds: " + solution.getSeconds() + ", rating: " + solution.getRating());
+
+        this.updateRating(solvedPuzzle);
+        this.updateScore(member, solvedPuzzle);
+        this.updateLevel(solvedPuzzle);
+
+        return solution;
+         }
 
     private void updateRating(Puzzle solvedPuzzle) {
         double prevRating = solvedPuzzle.getRating();
@@ -69,8 +82,7 @@ public class SolutionService {
         Level prevLevel = solvedPuzzle.getLevel();
         List<Integer> solutionTimes = solutionRepository.getSolutionTimes(solvedPuzzle);
         double levelAverage = solutionTimes.stream()
-                .map(time -> time > DIFFICULT_TIME_LIMIT ? 2 : time > MEDIUM_TIME_LIMIT ? 1 : 0)
-                .mapToInt(Integer::intValue)
+                .mapToInt(time -> time > DIFFICULT_TIME_LIMIT ? 2 : time > MEDIUM_TIME_LIMIT ? 1 : 0)
                 .average()
                 .orElse(0.0);
 
@@ -89,11 +101,11 @@ public class SolutionService {
     private void updateScore(Member member, Puzzle solvedPuzzle) {
         int prevScore = member.getScore();
         int maxScore = 0;
-        if (solvedPuzzle.getLevel().equals(Level.EASY)) {
+        if (Level.EASY.equals(solvedPuzzle.getLevel())) {
             maxScore = prevScore + EASY_SCORE;
-        } else if (solvedPuzzle.getLevel().equals(Level.MEDIUM)) {
+        } else if (Level.MEDIUM.equals(solvedPuzzle.getLevel())) {
             maxScore = prevScore + MEDIUM_SCORE;
-        } else if (solvedPuzzle.getLevel().equals(Level.DIFFICULT)) {
+        } else if (Level.DIFFICULT.equals(solvedPuzzle.getLevel())) {
             maxScore = prevScore + DIFFICULT_SCORE;
         }
 

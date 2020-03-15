@@ -1,11 +1,15 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.InvalidRegistrationException;
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.MemberNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
+import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
 import com.codecool.zsuzsi.puzzlesbackend.model.UserCredentials;
 import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
-import com.codecool.zsuzsi.puzzlesbackend.security.JwtTokenServices;
+import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,34 +25,28 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final MemberRepository memberRepository;
-    private final JwtTokenServices jwtTokenServices;
+    private final PuzzleRepository puzzleRepository;
 
     public Member register(UserCredentials data) {
-        Optional<Member> existingMember = memberRepository.findByEmail(data.getEmail());
+        this.validateData(data);
 
-        if (existingMember.isEmpty()) {
-            Member newMember = Member.builder()
-                    .username(data.getUsername())
-                    .email(data.getEmail())
-                    .password(passwordEncoder.encode(data.getPassword()))
-                    .score(0)
-                    .roles(Set.of("USER"))
-                    .build();
+        Member newMember = Member.builder()
+                .username(data.getUsername())
+                .email(data.getEmail())
+                .password(passwordEncoder.encode(data.getPassword()))
+                .score(0)
+                .roles(Set.of("USER"))
+                .build();
 
-            log.info("New registered member with username " + newMember.getUsername() +
-                    " and email " + newMember.getEmail());
+        log.info("New registered member with username " + newMember.getUsername() +
+                " and email " + newMember.getEmail());
 
-            return memberRepository.save(newMember);
-        } else {
-            log.info("Registration failed: email already exists");
-            return null;
-        }
+        return memberRepository.save(newMember);
     }
-    
-    public Member getMemberFromToken(String token) {
-        token = token.substring(7);
-        String email = jwtTokenServices.getEmailFromToken(token);
-        return memberRepository.findByEmail(email).orElse(null);
+
+    public Member getLoggedInMember() {
+        String email = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        return memberRepository.findByEmail(email).get();
     }
 
     public List<Member> getTopLeaderBoard() {
@@ -61,18 +59,62 @@ public class MemberService {
         return memberRepository.findAllByOrderByScoreDesc();
     }
 
-    public Member updateProfile(String token, UserCredentials data) {
-        Member loggedInMember = getMemberFromToken(token);
+    public List<Member> getAllMembers() {
+        return memberRepository.findAllByOrderByRegistrationDesc();
+    }
+
+    public Member updateProfile(UserCredentials data) {
+        Member loggedInMember = getLoggedInMember();
+        return updateMember(loggedInMember, data);
+    }
+
+    public Member updateProfile(Long id, UserCredentials data) {
+        Optional<Member> memberToUpdate = memberRepository.findById(id);
+        if (memberToUpdate.isEmpty()) throw new MemberNotFoundException();
+
+        return updateMember(memberToUpdate.get(), data);
+    }
+
+    public void deleteMember(Long id) {
+        log.info("Deletion of member with id " + id + " requested");
+        Optional<Member> memberToBeDeleted = memberRepository.findById(id);
+
+        if (memberToBeDeleted.isEmpty()) throw new MemberNotFoundException();
+
+        deleteMemberReferenceOfPuzzles(memberToBeDeleted.get());
+        memberRepository.delete(memberToBeDeleted.get());
+
+    }
+
+    private Member updateMember(Member member, UserCredentials data) {
         if (data.getUsername() != null) {
-            loggedInMember.setUsername(data.getUsername());
+            member.setUsername(data.getUsername());
         }
         if (data.getPassword() != null) {
-            loggedInMember.setPassword(passwordEncoder.encode(data.getPassword()));
+            member.setPassword(passwordEncoder.encode(data.getPassword()));
         }
-        memberRepository.save(loggedInMember);
+        memberRepository.save(member);
 
-        log.info("Member " + loggedInMember.getEmail() + "'s personal data updated");
+        log.info("Member " + member.getEmail() + "'s personal data updated");
 
-        return loggedInMember;
+        return member;
+    }
+
+    private void deleteMemberReferenceOfPuzzles(Member memberToBeDeleted) {
+        List<Puzzle> puzzlesOfMember = puzzleRepository.findAllByMember(memberToBeDeleted);
+        puzzlesOfMember.forEach(puzzle -> {
+            puzzle.setMember(null);
+            puzzleRepository.save(puzzle);
+        });
+    }
+
+    private void validateData(UserCredentials data) {
+        if (data.getUsername() == null ||
+                data.getEmail() == null ||
+                data.getPassword() == null ||
+                memberRepository.findByEmail(data.getEmail()).isPresent()) {
+            log.info("Registration failed: data is incomplete or email already exists");
+            throw new InvalidRegistrationException();
+        }
     }
 }

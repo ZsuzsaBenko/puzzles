@@ -1,6 +1,9 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.MemberNotFoundException;
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.PuzzleNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.*;
+import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.repository.SolutionRepository;
 import com.codecool.zsuzsi.puzzlesbackend.security.JwtTokenServices;
@@ -17,12 +20,10 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -38,6 +39,9 @@ public class PuzzleServiceTest {
 
     @MockBean
     private SolutionRepository solutionRepository;
+
+    @MockBean
+    private MemberRepository memberRepositrory;
 
     @Autowired
     private PuzzleService puzzleService;
@@ -74,6 +78,15 @@ public class PuzzleServiceTest {
     }
 
     @Test
+    public void testPuzzleDoesNotExist() {
+        Long id = 1L;
+        when(puzzleRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(PuzzleNotFoundException.class, () -> puzzleService.getById(id));
+        verify(puzzleRepository).findById(id);
+    }
+
+    @Test
     public void testGetAllPuzzles() {
         when(puzzleRepository.findAllByOrderBySubmissionTimeDesc()).thenReturn(puzzles);
 
@@ -96,13 +109,37 @@ public class PuzzleServiceTest {
 
     @Test
     public void testGetAllPuzzlesByMember() {
-        Member member = Member.builder().email("anna@email.hu").build();
+        Member member = Member.builder().email("email@email.hu").build();
         when(puzzleRepository.findAllByMemberOrderBySubmissionTimeDesc(member)).thenReturn(puzzles);
 
         List<Puzzle> result = puzzleService.getAllPuzzlesByMember(member);
 
         assertIterableEquals(puzzles, result);
         verify(puzzleRepository).findAllByMemberOrderBySubmissionTimeDesc(member);
+    }
+
+    @Test
+    public void testGetAllPuzzlesByMemberAsAdmin() {
+        Long id = 1L;
+        Member member = Member.builder().email("email@email.hu").build();
+
+        when(memberRepositrory.findById(id)).thenReturn(Optional.of(member));
+        when(puzzleRepository.findAllByMemberOrderBySubmissionTimeDesc(member)).thenReturn(puzzles);
+
+        List<Puzzle> result = puzzleService.getAllPuzzlesByMember(id);
+
+        assertIterableEquals(puzzles, result);
+        verify(memberRepositrory).findById(id);
+        verify(puzzleRepository).findAllByMemberOrderBySubmissionTimeDesc(member);
+    }
+
+    @Test
+    public void testGetAllPuzzlesByMemberAsAdminWithNonexistentMember() {
+        Long id = 1L;
+        when(memberRepositrory.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(MemberNotFoundException.class, () -> puzzleService.getAllPuzzlesByMember(id));
+        verify(memberRepositrory).findById(id);
     }
 
     @Test
@@ -378,6 +415,147 @@ public class PuzzleServiceTest {
         verify(puzzleRepository).save(newPuzzle);
     }
 
+    @Test
+    public void testUpdateNonexistentPuzzle() {
+        Long id = 1L;
+        when(puzzleRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(PuzzleNotFoundException.class, () -> puzzleService.updatePuzzle(id, puzzle1));
+        verify(puzzleRepository).findById(id);
+    }
+
+    @Test
+    public void testUpdateNormalPuzzle() {
+        Long id = 1L;
+        Puzzle updatePuzzle = Puzzle.builder().title("Updated Puzzle").category(Category.RIDDLE)
+                .instruction("instruction").puzzleItem("puzzle item").answer("answer").build();
+        Puzzle puzzleToUpdate = Puzzle.builder().title("Puzzle").category(Category.RIDDLE)
+                .instruction("abc").puzzleItem("abc").answer("abc").build();
+
+        when(puzzleRepository.findById(id)).thenReturn(Optional.of(puzzleToUpdate));
+
+        puzzleService.updatePuzzle(id, updatePuzzle);
+
+        assertEquals(updatePuzzle, puzzleToUpdate);
+        verify(puzzleRepository).findById(id);
+    }
+
+    @Test
+    public void testUpdatePicturePuzzle() {
+        Long id = 1L;
+        Puzzle updatePuzzle = Puzzle.builder().title("Updated Puzzle").category(Category.PICTURE_PUZZLE)
+                .instruction("instruction").puzzleItem("puzzle item").answer("answer").build();
+        Puzzle puzzleToUpdate = Puzzle.builder().title("Puzzle").category(Category.PICTURE_PUZZLE)
+                .instruction("abc").puzzleItem("abc").answer("abc").build();
+        Puzzle expectedPuzzle = Puzzle.builder().title("Updated Puzzle").category(Category.PICTURE_PUZZLE)
+                .instruction("instruction").puzzleItem("abc").answer("answer").build();
+
+        when(puzzleRepository.findById(id)).thenReturn(Optional.of(puzzleToUpdate));
+
+        puzzleService.updatePuzzle(id, updatePuzzle);
+
+        assertEquals(expectedPuzzle, puzzleToUpdate);
+        verify(puzzleRepository).findById(id);
+    }
+
+    @Test
+    public void testUpdateCipherPuzzle() {
+        Long id = 1L;
+        Puzzle updatePuzzle = Puzzle.builder().title("Updated Puzzle").category(Category.CIPHER)
+                .instruction("instruction").puzzleItem("puzzle item").answer("answer").build();
+        Puzzle puzzleToUpdate = Puzzle.builder().title("Puzzle").category(Category.CIPHER)
+                .instruction("abc").puzzleItem("abc").answer("abc").build();
+        Puzzle expectedPuzzle = Puzzle.builder().title("Updated Puzzle").category(Category.CIPHER)
+                .instruction("abc").puzzleItem("abc").answer("abc").build();
+
+        when(puzzleRepository.findById(id)).thenReturn(Optional.of(puzzleToUpdate));
+
+        puzzleService.updatePuzzle(id, updatePuzzle);
+
+        assertEquals(expectedPuzzle, puzzleToUpdate);
+        verify(puzzleRepository).findById(id);
+    }
+
+    @Test
+    public void testDeleteNonexistentPuzzle() {
+        Long id = 1L;
+        when(puzzleRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(PuzzleNotFoundException.class, () -> puzzleService.deletePuzzle(id));
+        verify(puzzleRepository).findById(id);
+    }
+
+    @Test
+    public void testDeleteEasyPuzzle() {
+        Long id = 1L;
+        List<Member> membersWhoSolvedPuzzle = Arrays.asList(
+                Member.builder().id(1L).score(30).build(),
+                Member.builder().id(2L).score(20).build(),
+                Member.builder().id(3L).score(10).build()
+        );
+
+        when(puzzleRepository.findById(id)).thenReturn(Optional.of(puzzle1));
+        when(solutionRepository.getMembersWhoSolvedPuzzle(puzzle1)).thenReturn(membersWhoSolvedPuzzle);
+        doNothing().when(puzzleRepository).delete(puzzle1);
+
+        puzzleService.deletePuzzle(id);
+
+        assertEquals(Integer.valueOf(20), membersWhoSolvedPuzzle.get(0).getScore());
+        assertEquals(Integer.valueOf(10), membersWhoSolvedPuzzle.get(1).getScore());
+        assertEquals(Integer.valueOf(0), membersWhoSolvedPuzzle.get(2).getScore());
+
+        verify(puzzleRepository).findById(id);
+        verify(solutionRepository).getMembersWhoSolvedPuzzle(puzzle1);
+        verify(puzzleRepository).delete(puzzle1);
+    }
+
+    @Test
+    public void testDeleteMediumPuzzle() {
+        Long id = 1L;
+        List<Member> membersWhoSolvedPuzzle = Arrays.asList(
+                Member.builder().id(1L).score(50).build(),
+                Member.builder().id(2L).score(40).build(),
+                Member.builder().id(3L).score(30).build()
+        );
+
+        when(puzzleRepository.findById(id)).thenReturn(Optional.of(puzzle2));
+        when(solutionRepository.getMembersWhoSolvedPuzzle(puzzle2)).thenReturn(membersWhoSolvedPuzzle);
+        doNothing().when(puzzleRepository).delete(puzzle2);
+
+        puzzleService.deletePuzzle(id);
+
+        assertEquals(Integer.valueOf(30), membersWhoSolvedPuzzle.get(0).getScore());
+        assertEquals(Integer.valueOf(20), membersWhoSolvedPuzzle.get(1).getScore());
+        assertEquals(Integer.valueOf(10), membersWhoSolvedPuzzle.get(2).getScore());
+
+        verify(puzzleRepository).findById(id);
+        verify(solutionRepository).getMembersWhoSolvedPuzzle(puzzle2);
+        verify(puzzleRepository).delete(puzzle2);
+    }
+
+    @Test
+    public void testDeleteDifficultPuzzle() {
+        Long id = 1L;
+        List<Member> membersWhoSolvedPuzzle = Arrays.asList(
+                Member.builder().id(1L).score(65).build(),
+                Member.builder().id(2L).score(60).build(),
+                Member.builder().id(3L).score(50).build()
+        );
+
+        when(puzzleRepository.findById(id)).thenReturn(Optional.of(puzzle3));
+        when(solutionRepository.getMembersWhoSolvedPuzzle(puzzle3)).thenReturn(membersWhoSolvedPuzzle);
+        doNothing().when(puzzleRepository).delete(puzzle3);
+
+        puzzleService.deletePuzzle(id);
+
+        assertEquals(Integer.valueOf(15), membersWhoSolvedPuzzle.get(0).getScore());
+        assertEquals(Integer.valueOf(10), membersWhoSolvedPuzzle.get(1).getScore());
+        assertEquals(Integer.valueOf(0), membersWhoSolvedPuzzle.get(2).getScore());
+
+        verify(puzzleRepository).findById(id);
+        verify(solutionRepository).getMembersWhoSolvedPuzzle(puzzle3);
+        verify(puzzleRepository).delete(puzzle3);
+    }
 
 }
 

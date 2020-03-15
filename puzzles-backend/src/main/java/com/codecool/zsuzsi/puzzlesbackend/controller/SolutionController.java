@@ -20,16 +20,20 @@ public class SolutionController {
     private final SolutionService solutionService;
     private final MemberService memberService;
 
-    @GetMapping("/member")
-    public List<Solution> getAllSolutionsByMember(@RequestHeader("Authorization") String token) {
-        Member member = memberService.getMemberFromToken(token);
+    @GetMapping("/logged-in-member")
+    public List<Solution> getAllSolutionsByLoggedInMember() {
+        Member member = memberService.getLoggedInMember();
         return solutionService.getAllSolutionsByMember(member);
     }
 
+    @GetMapping("/member/{id}")
+    public List<Solution> getAllSolutionsByMember(@PathVariable("id") Long id) {
+        return solutionService.getAllSolutionsByMember(id);
+    }
+
     @PostMapping("/save")
-    public Solution saveSolution(@RequestBody Solution solution,
-                                 @RequestHeader("Authorization") String token) {
-        Member member = memberService.getMemberFromToken(token);
+    public Solution saveSolution(@RequestBody Solution solution) {
+        Member member = memberService.getLoggedInMember();
         return solutionService.saveSolution(solution, member);
     }
 }

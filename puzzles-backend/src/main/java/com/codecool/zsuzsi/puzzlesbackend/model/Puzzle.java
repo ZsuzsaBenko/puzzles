@@ -47,12 +47,12 @@ public class Puzzle {
     @ManyToOne
     private Member member;
 
-    @OneToMany(mappedBy = "puzzle")
+    @OneToMany(mappedBy = "puzzle", cascade = CascadeType.REMOVE)
     @EqualsAndHashCode.Exclude
     @JsonBackReference(value = "comments")
     private Set<Comment> comments;
 
-    @OneToMany(mappedBy = "puzzle")
+    @OneToMany(mappedBy = "puzzle", cascade = CascadeType.REMOVE)
     @EqualsAndHashCode.Exclude
     @JsonBackReference(value = "solutions")
     private Set<Solution> solutions;

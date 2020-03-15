@@ -25,16 +25,30 @@ public class CommentController {
         return commentService.getAllCommentsByPuzzle(id);
     }
 
-    @GetMapping("/member")
-    public List<Comment> getLatestCommentsByMember(@RequestHeader("Authorization") String token) {
-        Member member = memberService.getMemberFromToken(token);
+    @GetMapping("/logged-in-member")
+    public List<Comment> getLatestCommentsByLoggedInMember() {
+        Member member = memberService.getLoggedInMember();
         return commentService.getLatestCommentsByMember(member);
     }
 
+    @GetMapping("/member/{id}")
+    public List<Comment> getAllCommentsByMember(@PathVariable("id") Long id) {
+        return commentService.getAllCommentsByMember(id);
+    }
+
     @PostMapping("/add")
-    public Comment addNewComment(@RequestBody Comment comment,
-                                 @RequestHeader("Authorization") String token) {
-        Member member = memberService.getMemberFromToken(token);
+    public Comment addNewComment(@RequestBody Comment comment) {
+        Member member = memberService.getLoggedInMember();
         return commentService.addNewComment(comment, member);
+    }
+
+    @PutMapping("/update/{id}")
+    public Comment updateComment(@PathVariable("id") Long id, @RequestBody Comment comment) {
+        return commentService.updateComment(id, comment);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteComment(@PathVariable("id") Long id) {
+        commentService.deleteComment(id);
     }
 }

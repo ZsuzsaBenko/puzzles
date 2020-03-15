@@ -20,8 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -52,7 +51,7 @@ class MemberControllerTest {
     @Test
     @WithMockUser
     public void testGetMyProfile() throws Exception {
-        when(memberService.getMemberFromToken(TOKEN)).thenReturn(member);
+        when(memberService.getLoggedInMember()).thenReturn(member);
 
         MvcResult mvcResult = mockMvc
                 .perform(
@@ -64,7 +63,7 @@ class MemberControllerTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(member), responseBody);
-        verify(memberService).getMemberFromToken(TOKEN);
+        verify(memberService).getLoggedInMember();
     }
 
     @Test
@@ -119,7 +118,7 @@ class MemberControllerTest {
         UserCredentials data = UserCredentials.builder().email("email@email.hu").password("password").build();
         String requestBody = objectMapper.writeValueAsString(data);
 
-        when(memberService.updateProfile(TOKEN, data)).thenReturn(member);
+        when(memberService.updateProfile(data)).thenReturn(member);
 
         MvcResult mvcResult = mockMvc
                 .perform(
@@ -133,6 +132,106 @@ class MemberControllerTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(member), responseBody);
-        verify(memberService).updateProfile(TOKEN, data);
+        verify(memberService).updateProfile(data);
+    }
+
+    @Test
+    @WithMockUser
+    public void testUpdateMemberWithNormalUser() throws Exception {
+        Long id = 1L;
+        mockMvc.perform(
+                        put(MAIN_URL + "/update/{id}", id)
+                                .header("Authorization", TOKEN)
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void testUpdateMemberWithAdminUser() throws Exception {
+        Long id = 1L;
+        UserCredentials data = UserCredentials.builder().email("email@email.hu").password("password").build();
+        String requestBody = objectMapper.writeValueAsString(data);
+
+        when(memberService.updateProfile(id, data)).thenReturn(member);
+
+        MvcResult mvcResult = mockMvc
+                .perform(
+                        put(MAIN_URL + "/update/{id}", id)
+                                .content(requestBody)
+                                .header("Authorization", TOKEN)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        assertEquals(objectMapper.writeValueAsString(member), responseBody);
+        verify(memberService).updateProfile(id, data);
+    }
+
+    @Test
+    @WithMockUser
+    public void testGetAllMembersWithNormalUser() throws Exception {
+        mockMvc.perform(
+                get(MAIN_URL + "/all-members")
+                        .header("Authorization", TOKEN)
+        )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void testGetAllMembersWithAdminUser() throws Exception {
+        List<Member> members = Arrays.asList(
+                Member.builder().username("User1").email("email@email.hu").build(),
+                Member.builder().username("User2").email("email@email.hu").build(),
+                Member.builder().username("User3").email("email@email.hu").build()
+        );
+        when(memberService.getAllMembers()).thenReturn(members);
+
+        MvcResult mvcResult = mockMvc.perform(
+                get(MAIN_URL + "/all-members")
+                        .header("Authorization", TOKEN)
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        assertEquals(objectMapper.writeValueAsString(members), responseBody);
+        verify(memberService).getAllMembers();
+    }
+
+
+    @Test
+    @WithMockUser
+    public void testDeleteMemberWithNormalUser() throws Exception {
+        Long id = 1L;
+        mockMvc.perform(
+                delete(MAIN_URL + "/delete/{id}", id)
+                        .header("Authorization", TOKEN)
+        )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void testDeleteMemberWithAdminUser() throws Exception {
+        Long id = 1L;
+        doNothing().when(memberService).deleteMember(id);
+
+        MvcResult mvcResult = mockMvc
+                .perform(
+                        delete(MAIN_URL + "/delete/{id}", id)
+                                .header("Authorization", TOKEN)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        assertTrue(responseBody.isEmpty());
+        verify(memberService).deleteMember(id);
+
     }
 }

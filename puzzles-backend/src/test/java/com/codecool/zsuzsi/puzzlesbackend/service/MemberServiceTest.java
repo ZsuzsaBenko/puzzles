@@ -1,9 +1,12 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.InvalidRegistrationException;
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.MemberNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
+import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
 import com.codecool.zsuzsi.puzzlesbackend.model.UserCredentials;
 import com.codecool.zsuzsi.puzzlesbackend.repository.MemberRepository;
-import com.codecool.zsuzsi.puzzlesbackend.security.JwtTokenServices;
+import com.codecool.zsuzsi.puzzlesbackend.repository.PuzzleRepository;
 import com.codecool.zsuzsi.puzzlesbackend.util.CipherMaker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +17,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
@@ -22,8 +26,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -35,7 +39,7 @@ public class MemberServiceTest {
     MemberRepository memberRepository;
 
     @MockBean
-    JwtTokenServices jwtTokenServices;
+    private PuzzleRepository puzzleRepository;
 
     @Autowired
     MemberService memberService;
@@ -68,7 +72,7 @@ public class MemberServiceTest {
                 .password(password)
                 .build();
 
-        assertNull(memberService.register(data));
+        assertThrows(InvalidRegistrationException.class, () -> memberService.register(data));
 
         verify(memberRepository).findByEmail(email);
     }
@@ -97,18 +101,14 @@ public class MemberServiceTest {
     }
 
     @Test
-    public void testGetMemberFromToken() {
-        String fullToken = "Bearer abcdef";
-        String token = "abcdef";
-        when(jwtTokenServices.getEmailFromToken(token)).thenReturn(email);
-        when(memberRepository.findByEmail(email)).thenReturn(Optional.of(registeredMember));
+    @WithMockUser
+    public void testGetLoggedInMember() {
+        when(memberRepository.findByEmail(anyString())).thenReturn(Optional.of(registeredMember));
 
-        Member result = memberService.getMemberFromToken(fullToken);
+        Member result = memberService.getLoggedInMember();
 
         assertEquals(registeredMember, result);
-
-        verify(jwtTokenServices).getEmailFromToken(token);
-        verify(memberRepository).findByEmail(email);
+        verify(memberRepository).findByEmail(anyString());
     }
 
     @Test
@@ -158,38 +158,118 @@ public class MemberServiceTest {
     }
 
     @Test
-    public void testUpdateUsername() {
-        String fullToken = "Bearer abcdef";
-        String token = "abcdef";
-        when(jwtTokenServices.getEmailFromToken(token)).thenReturn(email);
-        when(memberRepository.findByEmail(email)).thenReturn(Optional.of(registeredMember));
+    @WithMockUser
+    public void testUpdateOwnUsername() {
+        when(memberRepository.findByEmail(anyString())).thenReturn(Optional.of(registeredMember));
 
         String updatedName = "newName";
         UserCredentials data = UserCredentials.builder().username(updatedName).build();
 
-        Member result = memberService.updateProfile(fullToken, data);
+        Member result = memberService.updateProfile(data);
 
         assertEquals(updatedName, result.getUsername());
-
-        verify(jwtTokenServices).getEmailFromToken(token);
-        verify(memberRepository).findByEmail("email@email.hu");
+        verify(memberRepository).findByEmail(anyString());
     }
 
     @Test
-    public void testUpdatePassword() {
-        String fullToken = "Bearer abcdef";
-        String token = "abcdef";
-        when(jwtTokenServices.getEmailFromToken(token)).thenReturn(email);
-        when(memberRepository.findByEmail(email)).thenReturn(Optional.of(registeredMember));
+    @WithMockUser
+    public void testUpdateOwnPassword() {
+        when(memberRepository.findByEmail(anyString())).thenReturn(Optional.of(registeredMember));
 
         String updatedPassword = "newPassword";
         UserCredentials data = UserCredentials.builder().password(updatedPassword).build();
 
-        Member result = memberService.updateProfile(fullToken, data);
+        Member result = memberService.updateProfile(data);
 
         assertNotEquals(passwordEncoder.encode(password), result.getPassword());
+        verify(memberRepository).findByEmail(anyString());
+    }
 
-        verify(jwtTokenServices).getEmailFromToken(token);
-        verify(memberRepository).findByEmail(email);
+    @Test
+    public void testUpdateUsernameAsAdmin() {
+        Long id = 1L;
+        Member memberToUpdate= Member.builder().username("oldName").build();
+        when(memberRepository.findById(id)).thenReturn(Optional.of(memberToUpdate));
+
+        String updatedName = "newName";
+        UserCredentials data = UserCredentials.builder().username(updatedName).build();
+
+        Member result = memberService.updateProfile(id, data);
+
+        assertEquals(updatedName, result.getUsername());
+        verify(memberRepository).findById(id);
+    }
+
+    @Test
+    public void testUpdatePasswordAsAdmin() {
+        Long id = 1L;
+        Member memberToUpdate= Member.builder().password(password).build();
+        when(memberRepository.findById(id)).thenReturn(Optional.of(memberToUpdate));
+
+        String updatedPassword = "newPassword";
+        UserCredentials data = UserCredentials.builder().password(updatedPassword).build();
+
+        Member result = memberService.updateProfile(id, data);
+
+        assertNotEquals(passwordEncoder.encode(password), result.getPassword());
+        verify(memberRepository).findById(id);
+    }
+
+    @Test
+    public void testUpdateProfileAsAdminWithNonexistentMember() {
+        Long id = 1L;
+        UserCredentials data = UserCredentials.builder().username(username).password(password).build();
+
+        when(memberRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(MemberNotFoundException.class, () -> memberService.updateProfile(id, data));
+    }
+
+    @Test
+    public void testDeleteNonexistentMember() {
+        Long id = 1L;
+        when(memberRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(MemberNotFoundException.class, () -> memberService.deleteMember(id));
+        verify(memberRepository).findById(id);
+    }
+
+    @Test
+    public void testGetAllMembers() {
+        List<Member> expectedMembers = Arrays.asList(
+                Member.builder().username("User1").email("email@email.hu").build(),
+                Member.builder().username("User2").email("email@email.hu").build(),
+                Member.builder().username("User3").email("email@email.hu").build()
+        );
+        when(memberRepository.findAllByOrderByRegistrationDesc()).thenReturn(expectedMembers);
+
+        List<Member> result = memberService.getAllMembers();
+
+        assertIterableEquals(expectedMembers, result);
+        verify(memberRepository).findAllByOrderByRegistrationDesc();
+    }
+
+    @Test
+    public void testDeleteMember() {
+        Long id = 1L;
+        Member memberToDelete = Member.builder().id(id).email("test@test.hu").username("Test Member").build();
+        List<Puzzle> puzzlesOfMember = Arrays.asList(
+                Puzzle.builder().id(1L).member(memberToDelete).build(),
+                Puzzle.builder().id(2L).member(memberToDelete).build(),
+                Puzzle.builder().id(3L).member(memberToDelete).build());
+
+        when(memberRepository.findById(id)).thenReturn(Optional.of(memberToDelete));
+        when(puzzleRepository.findAllByMember(memberToDelete)).thenReturn(puzzlesOfMember);
+        doNothing().when(memberRepository).delete(memberToDelete);
+
+        memberService.deleteMember(id);
+
+        assertNull(puzzlesOfMember.get(0).getMember());
+        assertNull(puzzlesOfMember.get(1).getMember());
+        assertNull(puzzlesOfMember.get(2).getMember());
+
+        verify(memberRepository).findById(id);
+        verify(puzzleRepository).findAllByMember(memberToDelete);
+        verify(memberRepository).delete(memberToDelete);
     }
 }

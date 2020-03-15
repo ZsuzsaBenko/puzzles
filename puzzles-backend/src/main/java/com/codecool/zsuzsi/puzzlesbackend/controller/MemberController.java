@@ -28,14 +28,28 @@ public class MemberController {
         return memberService.getFullLeaderBoard();
     }
 
+    @GetMapping("/all-members")
+    public List<Member> getAllMembers() {
+        return memberService.getAllMembers();
+    }
+
     @GetMapping("/profile")
-    public Member getMyProfile(@RequestHeader("Authorization") String token) {
-        return memberService.getMemberFromToken(token);
+    public Member getLoggedInMemberProfile() {
+        return memberService.getLoggedInMember();
     }
 
     @PutMapping("/profile/update")
-    public Member updateProfile(@RequestHeader("Authorization") String token,
-                                @RequestBody UserCredentials data) {
-        return memberService.updateProfile(token, data);
+    public Member updateLoggedInMemberProfile(@RequestBody UserCredentials data) {
+        return memberService.updateProfile(data);
+    }
+
+    @PutMapping("/update/{id}")
+    public Member updateMember(@PathVariable("id") Long id, @RequestBody UserCredentials data) {
+        return memberService.updateProfile(id, data);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteMember(@PathVariable("id") Long id) {
+        memberService.deleteMember(id);
     }
 }

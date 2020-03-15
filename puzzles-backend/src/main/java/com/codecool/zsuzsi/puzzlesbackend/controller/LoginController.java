@@ -1,12 +1,12 @@
 package com.codecool.zsuzsi.puzzlesbackend.controller;
 
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.InvalidLoginException;
 import com.codecool.zsuzsi.puzzlesbackend.model.UserCredentials;
 import com.codecool.zsuzsi.puzzlesbackend.security.JwtTokenServices;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -49,7 +49,7 @@ public class LoginController {
             return ResponseEntity.ok(model);
 
         } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid email / password supplied.");
+            throw new InvalidLoginException();
         }
     }
 }
