@@ -43,7 +43,6 @@ public class LoginController {
 
             Map<Object, Object> model = new HashMap<>();
             model.put("email", email);
-            model.put("roles", roles);
             model.put("token", token);
 
             return ResponseEntity.ok(model);

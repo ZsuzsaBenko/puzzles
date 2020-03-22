@@ -179,6 +179,16 @@ public class PuzzleService {
         puzzleRepository.delete(puzzle);
     }
 
+    public Boolean checkAnswer(Long id, String answer) {
+        Optional<Puzzle> puzzle = puzzleRepository.findById(id);
+        if (puzzle.isEmpty()) throw new PuzzleNotFoundException();
+
+        String correctAnswer = puzzle.get().getAnswer().trim().toLowerCase();
+        answer = answer.trim().toLowerCase();
+
+        return correctAnswer.equals(answer);
+    }
+
     private void decreaseScore(Puzzle puzzle) {
         List<Member> membersWhoSolvedPuzzle = solutionRepository.getMembersWhoSolvedPuzzle(puzzle);
         int scoreValue = Level.EASY.equals(puzzle.getLevel()) ? EASY_SCORE :

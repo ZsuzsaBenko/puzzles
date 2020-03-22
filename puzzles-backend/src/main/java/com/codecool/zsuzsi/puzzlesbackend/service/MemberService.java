@@ -112,8 +112,9 @@ public class MemberService {
         if (data.getUsername() == null ||
                 data.getEmail() == null ||
                 data.getPassword() == null ||
-                memberRepository.findByEmail(data.getEmail()).isPresent()) {
-            log.info("Registration failed: data is incomplete or email already exists");
+                memberRepository.findByEmail(data.getEmail()).isPresent() ||
+                memberRepository.findByUsername(data.getUsername()).isPresent()) {
+            log.info("Registration failed: data is incomplete or user already exists");
             throw new InvalidRegistrationException();
         }
     }

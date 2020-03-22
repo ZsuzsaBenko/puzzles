@@ -2,12 +2,15 @@ package com.codecool.zsuzsi.puzzlesbackend.controller;
 
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.UserCredentials;
+import com.codecool.zsuzsi.puzzlesbackend.model.dto.MemberDto;
 import com.codecool.zsuzsi.puzzlesbackend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/members")
@@ -17,15 +20,16 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+    private final ModelMapper modelMapper;
 
     @GetMapping("/top-leaderboard")
-    public List<Member> getTopLeaderBoard() {
-        return memberService.getTopLeaderBoard();
+    public List<MemberDto> getTopLeaderBoard() {
+        return memberService.getTopLeaderBoard().stream().map(this::convertMember).collect(Collectors.toList());
     }
 
     @GetMapping("/full-leaderboard")
-    public List<Member> getFullLeaderBoard() {
-        return memberService.getFullLeaderBoard();
+    public List<MemberDto> getFullLeaderBoard() {
+        return memberService.getFullLeaderBoard().stream().map(this::convertMember).collect(Collectors.toList());
     }
 
     @GetMapping("/all-members")
@@ -52,4 +56,9 @@ public class MemberController {
     public void deleteMember(@PathVariable("id") Long id) {
         memberService.deleteMember(id);
     }
+
+    private MemberDto convertMember(Member member) {
+        return modelMapper.map(member, MemberDto.class);
+    }
+
 }
