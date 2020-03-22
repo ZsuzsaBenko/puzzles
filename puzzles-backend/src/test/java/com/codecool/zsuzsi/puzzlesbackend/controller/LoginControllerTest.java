@@ -55,7 +55,7 @@ class LoginControllerTest {
 
         ResponseEntity result = loginController.login(data);
 
-        assertEquals("{roles=[], email=email@email.hu, token=token}", result.getBody().toString());
+        assertEquals("{email=email@email.hu, token=token}", result.getBody().toString());
 
         verify(authentication).getAuthorities();
         verify(authenticationManager).authenticate(new UsernamePasswordAuthenticationToken(EMAIL, PASSWORD));

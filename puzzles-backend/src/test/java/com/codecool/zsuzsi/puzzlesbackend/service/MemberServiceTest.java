@@ -78,6 +78,21 @@ public class MemberServiceTest {
     }
 
     @Test
+    public void testRegistrationIfUsernameExists() {
+        when(memberRepository.findByUsername(username)).thenReturn(Optional.of(registeredMember));
+
+        UserCredentials data = UserCredentials.builder()
+                .username(username)
+                .email(email)
+                .password(password)
+                .build();
+
+        assertThrows(InvalidRegistrationException.class, () -> memberService.register(data));
+
+        verify(memberRepository).findByUsername(username);
+    }
+
+    @Test
     public void testSuccessfulRegistration() {
         when(memberRepository.findByEmail(email)).thenReturn(Optional.empty());
         when(memberRepository.save(any(Member.class))).thenReturn(registeredMember);

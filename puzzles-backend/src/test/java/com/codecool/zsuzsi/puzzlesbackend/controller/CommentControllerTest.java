@@ -2,6 +2,7 @@ package com.codecool.zsuzsi.puzzlesbackend.controller;
 
 import com.codecool.zsuzsi.puzzlesbackend.model.Comment;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
+import com.codecool.zsuzsi.puzzlesbackend.model.dto.CommentDto;
 import com.codecool.zsuzsi.puzzlesbackend.service.CommentService;
 import com.codecool.zsuzsi.puzzlesbackend.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,9 +20,9 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,16 +47,22 @@ class CommentControllerTest {
     private ObjectMapper objectMapper;
 
     private List<Comment> comments;
+    private List<CommentDto> commentDtos;
     private Member member;
 
     @BeforeEach
     public void init() {
-        comments = Arrays.asList(
-          Comment.builder().id(1L).message("comment1").build(),
-          Comment.builder().id(2L).message("comment2").build(),
-          Comment.builder().id(3L).message("comment3").build()
-        );
         member = Member.builder().email("email@email.hu").build();
+        comments = Arrays.asList(
+          Comment.builder().id(1L).message("comment1").member(member).build(),
+          Comment.builder().id(2L).message("comment2").member(member).build(),
+          Comment.builder().id(3L).message("comment3").member(member).build()
+        );
+        commentDtos = Arrays.asList(
+                CommentDto.builder().id(1L).message("comment1").build(),
+                CommentDto.builder().id(2L).message("comment2").build(),
+                CommentDto.builder().id(3L).message("comment3").build()
+        );
     }
 
     @Test
@@ -73,7 +80,7 @@ class CommentControllerTest {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(comments), responseBody);
+        assertEquals(objectMapper.writeValueAsString(commentDtos), responseBody);
         verify(commentService).getAllCommentsByPuzzle(id);
     }
 
@@ -92,7 +99,7 @@ class CommentControllerTest {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(comments), responseBody);
+        assertEquals(objectMapper.writeValueAsString(commentDtos), responseBody);
         verify(memberService).getLoggedInMember();
         verify(commentService).getLatestCommentsByMember(member);
     }
@@ -124,7 +131,7 @@ class CommentControllerTest {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(comments), responseBody);
+        assertEquals(objectMapper.writeValueAsString(commentDtos), responseBody);
         verify(commentService).getAllCommentsByMember(id);
 
     }
@@ -133,6 +140,8 @@ class CommentControllerTest {
     @WithMockUser
     public void testAddNewComment() throws Exception {
         Comment comment = comments.get(0);
+        CommentDto commentDto = commentDtos.get(0);
+
         when(memberService.getLoggedInMember()).thenReturn(member);
         when(commentService.addNewComment(comment, member)).thenReturn(comment);
         String requestBody = objectMapper.writeValueAsString(comment);
@@ -148,7 +157,7 @@ class CommentControllerTest {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(comment), responseBody);
+        assertEquals(objectMapper.writeValueAsString(commentDto), responseBody);
         verify(memberService).getLoggedInMember();
         verify(commentService).addNewComment(comment, member);
     }
@@ -159,6 +168,8 @@ class CommentControllerTest {
         Long id = 1L;
         Comment comment = comments.get(0);
         Comment updatedComment = comments.get(1);
+        CommentDto updatedCommentDto = commentDtos.get(1);
+
         when(commentService.updateComment(id, comment)).thenReturn(updatedComment);
         String requestBody = objectMapper.writeValueAsString(comment);
 
@@ -173,7 +184,7 @@ class CommentControllerTest {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(updatedComment), responseBody);
+        assertEquals(objectMapper.writeValueAsString(updatedCommentDto), responseBody);
         verify(commentService).updateComment(id, comment);
     }
 

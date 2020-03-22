@@ -4,6 +4,7 @@ import com.codecool.zsuzsi.puzzlesbackend.model.Category;
 import com.codecool.zsuzsi.puzzlesbackend.model.Level;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
+import com.codecool.zsuzsi.puzzlesbackend.model.dto.PuzzleDto;
 import com.codecool.zsuzsi.puzzlesbackend.service.MemberService;
 import com.codecool.zsuzsi.puzzlesbackend.service.PuzzleService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,10 +23,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -48,14 +49,22 @@ class PuzzleControllerTest {
     private ObjectMapper objectMapper;
 
     private List<Puzzle> puzzles;
+
+    private List<PuzzleDto> puzzleDtos;
+
     private Member member;
 
     @BeforeEach
     public void init() {
         puzzles = Arrays.asList(
-          Puzzle.builder().id(1L).title("puzzle1").category(Category.RIDDLE).level(Level.EASY).build(),
-          Puzzle.builder().id(2L).title("puzzle2").category(Category.MATH_PUZZLE).level(Level.MEDIUM).build(),
-          Puzzle.builder().id(3L).title("puzzle3").category(Category.CIPHER).level(Level.DIFFICULT).build()
+                Puzzle.builder().id(1L).title("puzzle1").category(Category.RIDDLE).level(Level.EASY).answer("Answer1").build(),
+                Puzzle.builder().id(2L).title("puzzle2").category(Category.MATH_PUZZLE).level(Level.MEDIUM).answer("Answer2").build(),
+                Puzzle.builder().id(3L).title("puzzle3").category(Category.CIPHER).level(Level.DIFFICULT).answer("Answer3").build()
+        );
+        puzzleDtos = Arrays.asList(
+                PuzzleDto.builder().id(1L).title("puzzle1").category(Category.RIDDLE).level(Level.EASY).build(),
+                PuzzleDto.builder().id(2L).title("puzzle2").category(Category.MATH_PUZZLE).level(Level.MEDIUM).build(),
+                PuzzleDto.builder().id(3L).title("puzzle3").category(Category.CIPHER).level(Level.DIFFICULT).build()
         );
 
         member = Member.builder().email("email@email.hu").build();
@@ -75,7 +84,7 @@ class PuzzleControllerTest {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(puzzles), responseBody);
+        assertEquals(objectMapper.writeValueAsString(puzzleDtos), responseBody);
         verify(puzzleService).getAllPuzzles();
     }
 
@@ -94,7 +103,7 @@ class PuzzleControllerTest {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(puzzles), responseBody);
+        assertEquals(objectMapper.writeValueAsString(puzzleDtos), responseBody);
         verify(memberService).getLoggedInMember();
         verify(puzzleService).getUnsolvedPuzzleFromEachCategory(member);
     }
@@ -114,14 +123,14 @@ class PuzzleControllerTest {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(puzzles), responseBody);
+        assertEquals(objectMapper.writeValueAsString(puzzleDtos), responseBody);
         verify(memberService).getLoggedInMember();
         verify(puzzleService).getAllPuzzlesByMember(member);
     }
 
     @Test
     @WithMockUser
-    public void testGetAllPuzzlesByMemberWithNormalUser() throws Exception {
+    public void testGetAllPuzzlesByAnyMemberWithNormalUser() throws Exception {
         Long id = 1L;
         mockMvc
                 .perform(
@@ -133,7 +142,7 @@ class PuzzleControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    public void testGetAllPuzzlesByMemberWithAdminUser() throws Exception {
+    public void testGetAllPuzzlesByAnyMemberWithAdminUser() throws Exception {
         Long id = 1L;
         when(puzzleService.getAllPuzzlesByMember(id)).thenReturn(puzzles);
 
@@ -165,7 +174,7 @@ class PuzzleControllerTest {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(puzzles), responseBody);
+        assertEquals(objectMapper.writeValueAsString(puzzleDtos), responseBody);
         verify(puzzleService).getAllPuzzlesByCategory(category);
     }
 
@@ -178,6 +187,37 @@ class PuzzleControllerTest {
         MvcResult mvcResult = mockMvc
                 .perform(
                         get(MAIN_URL + "/all/{id}", id)
+                                .header("Authorization", TOKEN)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        assertEquals(objectMapper.writeValueAsString(puzzleDtos.get(0)), responseBody);
+        verify(puzzleService).getById(id);
+    }
+
+    @Test
+    @WithMockUser
+    public void testGetPuzzleForAdminWithNormalUser() throws Exception {
+        Long id = 1L;
+        mockMvc
+                .perform(
+                        get(MAIN_URL + "/all/{id}/admin", id)
+                                .header("Authorization", TOKEN)
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void testGetPuzzleForAdminWithAdminUser() throws Exception {
+        Long id = 1L;
+        when(puzzleService.getById(id)).thenReturn(puzzles.get(0));
+
+        MvcResult mvcResult = mockMvc
+                .perform(
+                        get(MAIN_URL + "/all/{id}/admin", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
@@ -203,7 +243,7 @@ class PuzzleControllerTest {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(puzzles), responseBody);
+        assertEquals(objectMapper.writeValueAsString(puzzleDtos), responseBody);
         verify(puzzleService).getSortedPuzzles(criteria);
     }
 
@@ -223,7 +263,7 @@ class PuzzleControllerTest {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(puzzles), responseBody);
+        assertEquals(objectMapper.writeValueAsString(puzzleDtos), responseBody);
         verify(puzzleService).getSortedPuzzles(category, criteria);
     }
 
@@ -259,11 +299,11 @@ class PuzzleControllerTest {
         String requestBody = objectMapper.writeValueAsString(puzzles.get(0));
 
         mockMvc.perform(
-                        put(MAIN_URL + "/update/{id}", id)
-                                .content(requestBody)
-                                .header("Authorization", TOKEN)
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
+                put(MAIN_URL + "/update/{id}", id)
+                        .content(requestBody)
+                        .header("Authorization", TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+        )
                 .andExpect(status().isForbidden());
     }
 
@@ -277,11 +317,11 @@ class PuzzleControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                    put(MAIN_URL + "/update/{id}", id)
-                            .content(requestBody)
-                            .header("Authorization", TOKEN)
-                            .contentType(MediaType.APPLICATION_JSON)
-            )
+                        put(MAIN_URL + "/update/{id}", id)
+                                .content(requestBody)
+                                .header("Authorization", TOKEN)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
                 .andExpect(status().isOk())
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();

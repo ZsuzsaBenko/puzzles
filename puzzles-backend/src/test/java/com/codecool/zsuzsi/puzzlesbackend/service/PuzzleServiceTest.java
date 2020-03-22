@@ -557,5 +557,32 @@ public class PuzzleServiceTest {
         verify(puzzleRepository).delete(puzzle3);
     }
 
+    @Test
+    public void testCheckAnswerWithCorrectAnswer() {
+        Long id = 1L;
+        String answer = "good Solution ";
+        Puzzle puzzle = Puzzle.builder().answer("good solution").build();
+
+        when(puzzleRepository.findById(id)).thenReturn(Optional.of(puzzle));
+
+        Boolean result = puzzleService.checkAnswer(id, answer);
+
+        assertTrue(result);
+        verify(puzzleRepository).findById(id);
+    }
+
+    @Test
+    public void testCheckAnswerWithInCorrectAnswer() {
+        Long id = 1L;
+        String answer = "bad Solution ";
+        Puzzle puzzle = Puzzle.builder().answer("good solution").build();
+
+        when(puzzleRepository.findById(id)).thenReturn(Optional.of(puzzle));
+
+        Boolean result = puzzleService.checkAnswer(id, answer);
+
+        assertFalse(result);
+        verify(puzzleRepository).findById(id);
+    }
 }
 

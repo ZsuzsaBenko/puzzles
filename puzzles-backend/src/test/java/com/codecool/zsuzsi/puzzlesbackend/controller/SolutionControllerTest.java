@@ -2,6 +2,8 @@ package com.codecool.zsuzsi.puzzlesbackend.controller;
 
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.Solution;
+import com.codecool.zsuzsi.puzzlesbackend.model.dto.MemberDto;
+import com.codecool.zsuzsi.puzzlesbackend.model.dto.SolutionDto;
 import com.codecool.zsuzsi.puzzlesbackend.service.MemberService;
 import com.codecool.zsuzsi.puzzlesbackend.service.SolutionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,9 +51,12 @@ class SolutionControllerTest {
 
     private Member member;
 
+    private MemberDto memberDto;
+
     @BeforeEach
     public void init() {
-        member = Member.builder().email("email@email.hu").build();
+        member = Member.builder().email("email@email.hu").username("Username").build();
+        memberDto = MemberDto.builder().username("Username").build();
     }
 
     @Test
@@ -61,6 +66,12 @@ class SolutionControllerTest {
                 Solution.builder().id(1L).member(member).seconds(10).rating(3).build(),
                 Solution.builder().id(2L).member(member).seconds(20).rating(4).build(),
                 Solution.builder().id(3L).member(member).seconds(30).rating(5).build()
+        );
+
+        List<SolutionDto> solutionDtos = Arrays.asList(
+                SolutionDto.builder().id(1L).member(memberDto).seconds(10).rating(3).build(),
+                SolutionDto.builder().id(2L).member(memberDto).seconds(20).rating(4).build(),
+                SolutionDto.builder().id(3L).member(memberDto).seconds(30).rating(5).build()
         );
 
         when(memberService.getLoggedInMember()).thenReturn(member);
@@ -75,7 +86,7 @@ class SolutionControllerTest {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(solutions), responseBody);
+        assertEquals(objectMapper.writeValueAsString(solutionDtos), responseBody);
         verify(memberService).getLoggedInMember();
         verify(solutionService).getAllSolutionsByMember(member);
     }
@@ -122,6 +133,7 @@ class SolutionControllerTest {
     @WithMockUser
     public void testSaveSolution() throws Exception {
         Solution solution = Solution.builder().id(1L).member(member).seconds(10).rating(3).build();
+        SolutionDto solutionDto = SolutionDto.builder().id(1L).member(memberDto).seconds(10).rating(3).build();
 
         when(memberService.getLoggedInMember()).thenReturn(member);
         when(solutionService.saveSolution(solution, member)).thenReturn(solution);
@@ -138,7 +150,7 @@ class SolutionControllerTest {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(solution), responseBody);
+        assertEquals(objectMapper.writeValueAsString(solutionDto), responseBody);
         verify(memberService).getLoggedInMember();
         verify(solutionService).saveSolution(solution, member);
     }

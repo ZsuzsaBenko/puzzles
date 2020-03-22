@@ -2,6 +2,7 @@ package com.codecool.zsuzsi.puzzlesbackend.controller;
 
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.UserCredentials;
+import com.codecool.zsuzsi.puzzlesbackend.model.dto.MemberDto;
 import com.codecool.zsuzsi.puzzlesbackend.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,8 +44,22 @@ class MemberControllerTest {
 
     private Member member;
 
+    private List<Member> members;
+
+    private List<MemberDto> memberDtos;
+
     @BeforeEach
     public void init() {
+        members = Arrays.asList(
+                Member.builder().id(1L).email("email@email.hu").username("User1").build(),
+                Member.builder().id(2L).email("email@email.hu").username("User1").build(),
+                Member.builder().id(3L).email("email@email.hu").username("User1").build()
+        );
+        memberDtos = Arrays.asList(
+                MemberDto.builder().id(1L).username("User1").build(),
+                MemberDto.builder().id(2L).username("User1").build(),
+                MemberDto.builder().id(3L).username("User1").build()
+        );
         member = Member.builder().username("User").email("email@email.hu").build();
     }
 
@@ -69,12 +84,7 @@ class MemberControllerTest {
     @Test
     @WithMockUser
     public void testGetTopLeaderboard() throws Exception {
-        List<Member> leaderboard = Arrays.asList(
-                Member.builder().id(1L).email("email@email.hu").build(),
-                Member.builder().id(2L).email("email@email.hu").build(),
-                Member.builder().id(3L).email("email@email.hu").build()
-        );
-        when(memberService.getTopLeaderBoard()).thenReturn(leaderboard);
+        when(memberService.getTopLeaderBoard()).thenReturn(members);
 
         MvcResult mvcResult = mockMvc
                 .perform(
@@ -85,19 +95,14 @@ class MemberControllerTest {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(leaderboard), responseBody);
+        assertEquals(objectMapper.writeValueAsString(memberDtos), responseBody);
         verify(memberService).getTopLeaderBoard();
     }
 
     @Test
     @WithMockUser
     public void testGetFullLeaderboard() throws Exception {
-        List<Member> leaderboard = Arrays.asList(
-                Member.builder().id(1L).email("email@email.hu").build(),
-                Member.builder().id(2L).email("email@email.hu").build(),
-                Member.builder().id(3L).email("email@email.hu").build()
-        );
-        when(memberService.getFullLeaderBoard()).thenReturn(leaderboard);
+        when(memberService.getFullLeaderBoard()).thenReturn(members);
 
         MvcResult mvcResult = mockMvc
                 .perform(
@@ -108,7 +113,7 @@ class MemberControllerTest {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(leaderboard), responseBody);
+        assertEquals(objectMapper.writeValueAsString(memberDtos), responseBody);
         verify(memberService).getFullLeaderBoard();
     }
 
@@ -137,7 +142,7 @@ class MemberControllerTest {
 
     @Test
     @WithMockUser
-    public void testUpdateMemberWithNormalUser() throws Exception {
+    public void testUpdateAnyMemberWithNormalUser() throws Exception {
         Long id = 1L;
         mockMvc.perform(
                         put(MAIN_URL + "/update/{id}", id)
@@ -148,7 +153,7 @@ class MemberControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    public void testUpdateMemberWithAdminUser() throws Exception {
+    public void testUpdateAnyMemberWithAdminUser() throws Exception {
         Long id = 1L;
         UserCredentials data = UserCredentials.builder().email("email@email.hu").password("password").build();
         String requestBody = objectMapper.writeValueAsString(data);
@@ -183,11 +188,6 @@ class MemberControllerTest {
     @Test
     @WithMockUser(roles = {"ADMIN"})
     public void testGetAllMembersWithAdminUser() throws Exception {
-        List<Member> members = Arrays.asList(
-                Member.builder().username("User1").email("email@email.hu").build(),
-                Member.builder().username("User2").email("email@email.hu").build(),
-                Member.builder().username("User3").email("email@email.hu").build()
-        );
         when(memberService.getAllMembers()).thenReturn(members);
 
         MvcResult mvcResult = mockMvc.perform(
