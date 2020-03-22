@@ -52,6 +52,10 @@ public class SolutionService {
         if (puzzle.isEmpty()) throw new PuzzleNotFoundException();
 
         Puzzle solvedPuzzle = puzzle.get();
+        if (this.isPuzzleAlreadySolved(solvedPuzzle, member)) {
+            return solution;
+        }
+
         solution.setPuzzle(solvedPuzzle);
         solution.setMember(member);
         solutionRepository.save(solution);
@@ -64,7 +68,12 @@ public class SolutionService {
         this.updateLevel(solvedPuzzle);
 
         return solution;
-         }
+    }
+
+    private boolean isPuzzleAlreadySolved(Puzzle puzzle, Member member) {
+        List<Member> members = this.solutionRepository.getMembersWhoSolvedPuzzle(puzzle);
+        return members.contains(member);
+    }
 
     private void updateRating(Puzzle solvedPuzzle) {
         double prevRating = solvedPuzzle.getRating();

@@ -19,13 +19,13 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -93,6 +93,25 @@ class SolutionServiceTest {
     }
 
     @Test
+    public void testSaveSolutionWhenPuzzleIsAlreadySolvedByUser() {
+        Puzzle solvedPuzzle = Puzzle.builder().id(1L).title("puzzle").build();
+        Member member = Member.builder().email("email@email.hu").build();
+        Solution solution = Solution.builder().puzzle(solvedPuzzle).build();
+
+        when(puzzleRepository.findById(solution.getPuzzle().getId())).thenReturn(Optional.of(solvedPuzzle));
+        when(solutionRepository.getMembersWhoSolvedPuzzle(solvedPuzzle)).thenReturn(List.of(member));
+
+        Solution result = solutionService.saveSolution(solution, member);
+
+        assertEquals(solution, result);
+        verify(puzzleRepository).findById(solution.getPuzzle().getId());
+        verify(solutionRepository).getMembersWhoSolvedPuzzle(solvedPuzzle);
+        verifyNoMoreInteractions(puzzleRepository);
+        verifyNoMoreInteractions(solutionRepository);
+        verifyNoMoreInteractions(memberRepository);
+    }
+
+    @Test
     public void testSaveSolution() {
         /*
         EASY_SCORE = 10;
@@ -116,6 +135,7 @@ class SolutionServiceTest {
                 .seconds(solutionSeconds).rating(newRating).build();
 
         when(puzzleRepository.findById(solution.getPuzzle().getId())).thenReturn(Optional.of(solvedPuzzle));
+        when(solutionRepository.getMembersWhoSolvedPuzzle(solvedPuzzle)).thenReturn(new ArrayList<>());
         when(solutionRepository.getRatingAverage(solvedPuzzle)).thenReturn(expectedRating);
         when(solutionRepository.getSolutionTimes(solvedPuzzle)).thenReturn(solutionTimes);
 
@@ -131,7 +151,9 @@ class SolutionServiceTest {
         assertEquals(expectedScore, (int) member.getScore());
 
         verify(puzzleRepository).findById(solution.getPuzzle().getId());
+        verify(solutionRepository).getMembersWhoSolvedPuzzle(solvedPuzzle);
         verify(solutionRepository).getRatingAverage(solvedPuzzle);
         verify(solutionRepository).getSolutionTimes(solvedPuzzle);
+        verify(memberRepository).save(member);
     }
 }
