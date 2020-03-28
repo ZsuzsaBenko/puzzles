@@ -25,8 +25,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -153,5 +152,37 @@ class SolutionControllerTest {
         assertEquals(objectMapper.writeValueAsString(solutionDto), responseBody);
         verify(memberService).getLoggedInMember();
         verify(solutionService).saveSolution(solution, member);
+    }
+
+    @Test
+    @WithMockUser
+    public void testDeleteSolutionWithNormalUser() throws Exception {
+        Long id = 1L;
+
+        mockMvc
+                .perform(
+                        delete(MAIN_URL + "delete/{id}", id)
+                                .header("Authorization", TOKEN)
+                )
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    public void testDeleteSolutionWithAdminUser() throws Exception {
+        Long id = 1L;
+
+        MvcResult mvcResult = mockMvc
+                .perform(
+                        delete(MAIN_URL + "/delete/{id}", id)
+                                .header("Authorization", TOKEN)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+
+        assertTrue(responseBody.isEmpty());
+        verify(solutionService).deleteSolution(id);
     }
 }

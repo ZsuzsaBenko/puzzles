@@ -1,6 +1,7 @@
 package com.codecool.zsuzsi.puzzlesbackend.service;
 
 import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.MemberNotFoundException;
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.SolutionNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.Level;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
@@ -155,5 +156,140 @@ class SolutionServiceTest {
         verify(solutionRepository).getRatingAverage(solvedPuzzle);
         verify(solutionRepository).getSolutionTimes(solvedPuzzle);
         verify(memberRepository).save(member);
+    }
+
+    @Test
+    public void testDeleteSolutionWhenSolutionDoesNotExist() {
+        Long id = 1L;
+        when(solutionRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(SolutionNotFoundException.class, () -> solutionService.deleteSolution(id));
+        verify(solutionRepository).findById(id);
+    }
+
+    @Test
+    public void testDeleteSolutionWhenLevelIsChangedToMedium() {
+        double initialRating = 4;
+        double expectedRating = 5;
+        Level initialLevel = Level.EASY;
+        Level expectedLevel = Level.MEDIUM;
+        Puzzle solvedPuzzle = Puzzle.builder().id(1L).rating(initialRating).level(initialLevel).build();
+
+        int initialScore = 100;
+        int expectedScore = 90;
+        Member member = Member.builder().id(1L).email("email@email.hu").score(initialScore).build();
+
+        Long solutionId = 1L;
+        Solution solutionToDelete = Solution.builder().id(solutionId).member(member).puzzle(solvedPuzzle).build();
+        List<Integer> solutionTimes = Arrays.asList(150, 300);
+
+        when(solutionRepository.findById(solutionId)).thenReturn(Optional.of(solutionToDelete));
+        when(puzzleRepository.findById(solutionToDelete.getPuzzle().getId())).thenReturn(Optional.of(solvedPuzzle));
+        when(memberRepository.findById(member.getId())).thenReturn(Optional.of(member));
+        when(solutionRepository.getRatingAverage(solvedPuzzle)).thenReturn(expectedRating);
+        when(solutionRepository.getSolutionTimes(solvedPuzzle)).thenReturn(solutionTimes);
+
+        this.solutionService.deleteSolution(solutionId);
+
+        assertEquals(expectedRating, solvedPuzzle.getRating());
+        assertEquals(expectedScore, (int) member.getScore());
+        assertEquals(expectedLevel, solvedPuzzle.getLevel());
+
+        verify(solutionRepository).findById(solutionId);
+        verify(puzzleRepository).findById(solutionToDelete.getPuzzle().getId());
+        verify(solutionRepository).getRatingAverage(solvedPuzzle);
+        verify(memberRepository).findById(member.getId());
+        verify(solutionRepository).getSolutionTimes(solvedPuzzle);
+        verify(solutionRepository).delete(solutionToDelete);
+        verify(memberRepository).save(member);
+        verify(puzzleRepository, times(2)).save(solvedPuzzle);
+
+        verifyNoMoreInteractions(solutionRepository);
+        verifyNoMoreInteractions(memberRepository);
+        verifyNoMoreInteractions(puzzleRepository);
+    }
+
+    @Test
+    public void testDeleteSolutionWhenLevelIsChangedToEasy() {
+        double initialRating = 4;
+        double expectedRating = 5;
+        Level initialLevel = Level.MEDIUM;
+        Level expectedLevel = Level.EASY;
+        Puzzle solvedPuzzle = Puzzle.builder().id(1L).rating(initialRating).level(initialLevel).build();
+
+        int initialScore = 100;
+        int expectedScore = 80;
+        Member member = Member.builder().id(1L).email("email@email.hu").score(initialScore).build();
+
+        Long solutionId = 1L;
+        Solution solutionToDelete = Solution.builder().id(solutionId).member(member).puzzle(solvedPuzzle).build();
+        List<Integer> solutionTimes = Arrays.asList(50, 120);
+
+        when(solutionRepository.findById(solutionId)).thenReturn(Optional.of(solutionToDelete));
+        when(puzzleRepository.findById(solutionToDelete.getPuzzle().getId())).thenReturn(Optional.of(solvedPuzzle));
+        when(memberRepository.findById(member.getId())).thenReturn(Optional.of(member));
+        when(solutionRepository.getRatingAverage(solvedPuzzle)).thenReturn(expectedRating);
+        when(solutionRepository.getSolutionTimes(solvedPuzzle)).thenReturn(solutionTimes);
+
+        this.solutionService.deleteSolution(solutionId);
+
+        assertEquals(expectedRating, solvedPuzzle.getRating());
+        assertEquals(expectedScore, (int) member.getScore());
+        assertEquals(expectedLevel, solvedPuzzle.getLevel());
+
+        verify(solutionRepository).findById(solutionId);
+        verify(puzzleRepository).findById(solutionToDelete.getPuzzle().getId());
+        verify(solutionRepository).getRatingAverage(solvedPuzzle);
+        verify(memberRepository).findById(member.getId());
+        verify(solutionRepository).getSolutionTimes(solvedPuzzle);
+        verify(solutionRepository).delete(solutionToDelete);
+        verify(memberRepository).save(member);
+        verify(puzzleRepository, times(2)).save(solvedPuzzle);
+
+        verifyNoMoreInteractions(solutionRepository);
+        verifyNoMoreInteractions(memberRepository);
+        verifyNoMoreInteractions(puzzleRepository);
+    }
+
+    @Test
+    public void testDeleteSolutionWhenLevelIsChangedToDifficult() {
+        double initialRating = 4;
+        double expectedRating = 5;
+        Level initialLevel = Level.MEDIUM;
+        Level expectedLevel = Level.DIFFICULT;
+        Puzzle solvedPuzzle = Puzzle.builder().id(1L).rating(initialRating).level(initialLevel).build();
+
+        int initialScore = 100;
+        int expectedScore = 80;
+        Member member = Member.builder().id(1L).email("email@email.hu").score(initialScore).build();
+
+        Long solutionId = 1L;
+        Solution solutionToDelete = Solution.builder().id(solutionId).member(member).puzzle(solvedPuzzle).build();
+        List<Integer> solutionTimes = Arrays.asList(500, 280, 320);
+
+        when(solutionRepository.findById(solutionId)).thenReturn(Optional.of(solutionToDelete));
+        when(puzzleRepository.findById(solutionToDelete.getPuzzle().getId())).thenReturn(Optional.of(solvedPuzzle));
+        when(memberRepository.findById(member.getId())).thenReturn(Optional.of(member));
+        when(solutionRepository.getRatingAverage(solvedPuzzle)).thenReturn(expectedRating);
+        when(solutionRepository.getSolutionTimes(solvedPuzzle)).thenReturn(solutionTimes);
+
+        this.solutionService.deleteSolution(solutionId);
+
+        assertEquals(expectedRating, solvedPuzzle.getRating());
+        assertEquals(expectedScore, (int) member.getScore());
+        assertEquals(expectedLevel, solvedPuzzle.getLevel());
+
+        verify(solutionRepository).findById(solutionId);
+        verify(puzzleRepository).findById(solutionToDelete.getPuzzle().getId());
+        verify(solutionRepository).getRatingAverage(solvedPuzzle);
+        verify(memberRepository).findById(member.getId());
+        verify(solutionRepository).getSolutionTimes(solvedPuzzle);
+        verify(solutionRepository).delete(solutionToDelete);
+        verify(memberRepository).save(member);
+        verify(puzzleRepository, times(2)).save(solvedPuzzle);
+
+        verifyNoMoreInteractions(solutionRepository);
+        verifyNoMoreInteractions(memberRepository);
+        verifyNoMoreInteractions(puzzleRepository);
     }
 }

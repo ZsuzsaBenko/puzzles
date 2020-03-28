@@ -2,6 +2,7 @@ package com.codecool.zsuzsi.puzzlesbackend.service;
 
 import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.MemberNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.PuzzleNotFoundException;
+import com.codecool.zsuzsi.puzzlesbackend.exception.customexception.SolutionNotFoundException;
 import com.codecool.zsuzsi.puzzlesbackend.model.Level;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.Puzzle;
@@ -64,10 +65,29 @@ public class SolutionService {
                 "; seconds: " + solution.getSeconds() + ", rating: " + solution.getRating());
 
         this.updateRating(solvedPuzzle);
-        this.updateScore(member, solvedPuzzle);
+        this.updateScore(member, solvedPuzzle, true);
         this.updateLevel(solvedPuzzle);
 
         return solution;
+    }
+
+    public void deleteSolution(Long id) {
+        Optional<Solution> solution = solutionRepository.findById(id);
+        if (solution.isEmpty()) throw new SolutionNotFoundException();
+        Solution solutionToDelete = solution.get();
+        this.solutionRepository.delete(solutionToDelete);
+
+        Optional<Puzzle> puzzle = puzzleRepository.findById(solutionToDelete.getPuzzle().getId());
+        if (puzzle.isEmpty()) throw new PuzzleNotFoundException();
+        Puzzle puzzleToUpdate = puzzle.get();
+        this.updateRating(puzzleToUpdate);
+
+        Optional<Member> member = memberRepository.findById(solutionToDelete.getMember().getId());
+        if (member.isEmpty()) throw new MemberNotFoundException();
+        Member memberToModify = member.get();
+        this.updateScore(memberToModify, puzzleToUpdate, false);
+
+        this.updateLevel(puzzleToUpdate);
     }
 
     private boolean isPuzzleAlreadySolved(Puzzle puzzle, Member member) {
@@ -77,11 +97,9 @@ public class SolutionService {
 
     private void updateRating(Puzzle solvedPuzzle) {
         double prevRating = solvedPuzzle.getRating();
-        Double newRating = solutionRepository.getRatingAverage(solvedPuzzle);
+        double newRating = solutionRepository.getRatingAverage(solvedPuzzle);
 
-        if (newRating != null) {
-            solvedPuzzle.setRating(newRating);
-        }
+        solvedPuzzle.setRating(newRating);
         puzzleRepository.save(solvedPuzzle);
 
         log.info("Previous rating: " + prevRating + ", new rating: " + solvedPuzzle.getRating());
@@ -107,21 +125,39 @@ public class SolutionService {
         log.info("Previous level: " + prevLevel + ", new level: " + solvedPuzzle.getLevel());
     }
 
-    private void updateScore(Member member, Puzzle solvedPuzzle) {
+    private void updateScore(Member member, Puzzle solvedPuzzle, boolean increase) {
         int prevScore = member.getScore();
-        int maxScore = 0;
-        if (Level.EASY.equals(solvedPuzzle.getLevel())) {
-            maxScore = prevScore + EASY_SCORE;
-        } else if (Level.MEDIUM.equals(solvedPuzzle.getLevel())) {
-            maxScore = prevScore + MEDIUM_SCORE;
-        } else if (Level.DIFFICULT.equals(solvedPuzzle.getLevel())) {
-            maxScore = prevScore + DIFFICULT_SCORE;
-        }
+        int maxScore = increase ?
+                this.increaseScore(solvedPuzzle, prevScore) : this.decreaseScore(solvedPuzzle, prevScore);
 
         member.setScore(maxScore);
         memberRepository.save(member);
 
         log.info("Member " + member.getEmail() + "'s previous score: " + prevScore +
                 ", new score: " + member.getScore());
+    }
+
+    private int increaseScore(Puzzle solvedPuzzle, int prevScore) {
+        if (Level.EASY.equals(solvedPuzzle.getLevel())) {
+            return prevScore + EASY_SCORE;
+        } else if (Level.MEDIUM.equals(solvedPuzzle.getLevel())) {
+            return prevScore + MEDIUM_SCORE;
+        } else if (Level.DIFFICULT.equals(solvedPuzzle.getLevel())) {
+            return prevScore + DIFFICULT_SCORE;
+        } else {
+            return prevScore;
+        }
+    }
+
+    private int decreaseScore(Puzzle solvedPuzzle, int prevScore) {
+        if (Level.EASY.equals(solvedPuzzle.getLevel())) {
+            return prevScore - EASY_SCORE;
+        } else if (Level.MEDIUM.equals(solvedPuzzle.getLevel())) {
+            return prevScore - MEDIUM_SCORE;
+        } else if (Level.DIFFICULT.equals(solvedPuzzle.getLevel())) {
+            return prevScore - DIFFICULT_SCORE;
+        } else {
+            return prevScore;
+        }
     }
 }

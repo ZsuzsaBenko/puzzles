@@ -41,6 +41,11 @@ public class SolutionController {
         return convertSolution(solutionService.saveSolution(solution, member));
     }
 
+    @DeleteMapping("/delete/{id}")
+    public void deleteSolution(@PathVariable("id") Long id) {
+        solutionService.deleteSolution(id);
+    }
+
     private SolutionDto convertSolution(Solution solution) {
         return this.modelMapper.map(solution, SolutionDto.class);
     }
