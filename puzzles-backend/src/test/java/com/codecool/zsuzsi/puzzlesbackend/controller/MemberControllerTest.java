@@ -20,7 +20,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -70,7 +71,7 @@ class MemberControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        get(MAIN_URL + "/profile")
+                        get(MAIN_URL + "/logged-in")
                         .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
@@ -127,7 +128,7 @@ class MemberControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        put(MAIN_URL + "/profile/update")
+                        put(MAIN_URL + "/logged-in")
                                 .content(requestBody)
                                 .header("Authorization", TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -145,7 +146,7 @@ class MemberControllerTest {
     public void testUpdateAnyMemberWithNormalUser() throws Exception {
         Long id = 1L;
         mockMvc.perform(
-                        put(MAIN_URL + "/update/{id}", id)
+                        put(MAIN_URL + "/{member-id}", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isForbidden());
@@ -162,7 +163,7 @@ class MemberControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        put(MAIN_URL + "/update/{id}", id)
+                        put(MAIN_URL + "/{member-id}", id)
                                 .content(requestBody)
                                 .header("Authorization", TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -179,7 +180,7 @@ class MemberControllerTest {
     @WithMockUser
     public void testGetAllMembersWithNormalUser() throws Exception {
         mockMvc.perform(
-                get(MAIN_URL + "/all-members")
+                get(MAIN_URL + "/admin")
                         .header("Authorization", TOKEN)
         )
                 .andExpect(status().isForbidden());
@@ -191,7 +192,7 @@ class MemberControllerTest {
         when(memberService.getAllMembers()).thenReturn(members);
 
         MvcResult mvcResult = mockMvc.perform(
-                get(MAIN_URL + "/all-members")
+                get(MAIN_URL + "/admin")
                         .header("Authorization", TOKEN)
         )
                 .andExpect(status().isOk())
@@ -208,7 +209,7 @@ class MemberControllerTest {
     public void testDeleteMemberWithNormalUser() throws Exception {
         Long id = 1L;
         mockMvc.perform(
-                delete(MAIN_URL + "/delete/{id}", id)
+                delete(MAIN_URL + "/{member-id}", id)
                         .header("Authorization", TOKEN)
         )
                 .andExpect(status().isForbidden());
@@ -222,7 +223,7 @@ class MemberControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        delete(MAIN_URL + "/delete/{id}", id)
+                        delete(MAIN_URL + "/{member-id}", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())

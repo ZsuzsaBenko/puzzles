@@ -31,7 +31,7 @@ public class LoginController {
     private final JwtTokenServices jwtTokenServices;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody UserCredentials data) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody UserCredentials data) {
         log.info("Login attempt by: " + data.getEmail());
         try {
             String email = data.getEmail();
@@ -41,7 +41,7 @@ public class LoginController {
             List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
             String token = jwtTokenServices.createToken(email, roles);
 
-            Map<Object, Object> model = new HashMap<>();
+            Map<String, String> model = new HashMap<>();
             model.put("email", email);
             model.put("token", token);
 

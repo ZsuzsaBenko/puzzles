@@ -24,25 +24,25 @@ public class SolutionController {
     private final MemberService memberService;
     private final ModelMapper modelMapper;
 
-    @GetMapping("/logged-in-member")
+    @GetMapping("/member/logged-in")
     public List<SolutionDto> getAllSolutionsByLoggedInMember() {
         Member member = memberService.getLoggedInMember();
         return solutionService.getAllSolutionsByMember(member).stream().map(this::convertSolution).collect(Collectors.toList());
     }
 
-    @GetMapping("/member/{id}")
-    public List<Solution> getAllSolutionsByMember(@PathVariable("id") Long id) {
+    @GetMapping("/member/{member-id}")
+    public List<Solution> getAllSolutionsByMember(@PathVariable("member-id") Long id) {
         return solutionService.getAllSolutionsByMember(id);
     }
 
-    @PostMapping("/save")
+    @PostMapping()
     public SolutionDto saveSolution(@RequestBody Solution solution) {
         Member member = memberService.getLoggedInMember();
         return convertSolution(solutionService.saveSolution(solution, member));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteSolution(@PathVariable("id") Long id) {
+    @DeleteMapping("{solution-id}")
+    public void deleteSolution(@PathVariable("solution-id") Long id) {
         solutionService.deleteSolution(id);
     }
 

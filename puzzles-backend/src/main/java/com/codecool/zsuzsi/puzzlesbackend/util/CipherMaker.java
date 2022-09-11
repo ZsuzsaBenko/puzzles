@@ -54,7 +54,7 @@ public class CipherMaker {
         String result = "";
 
         for (int i = 0; i < text.length(); i++) {
-            if (ALPHABET.indexOf(String.valueOf(text.charAt(i))) > -1) {
+            if (ALPHABET.contains(String.valueOf(text.charAt(i)))) {
                 result = result.concat(encryptionKey.get(String.valueOf(text.charAt(i))));
             } else {
                 result = result.concat(String.valueOf(text.charAt(i)));

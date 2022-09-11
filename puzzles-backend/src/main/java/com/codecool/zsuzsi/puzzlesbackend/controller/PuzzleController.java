@@ -26,7 +26,7 @@ public class PuzzleController {
     private final MemberService memberService;
     private final ModelMapper modelMapper;
 
-    @GetMapping("/all")
+    @GetMapping()
     public List<PuzzleDto> getAllPuzzles() {
         return puzzleService.getAllPuzzles().stream().map(this::convertPuzzle).collect(Collectors.toList());
     }
@@ -37,18 +37,18 @@ public class PuzzleController {
         return puzzleService.getUnsolvedPuzzleFromEachCategory(member).stream().map(this::convertPuzzle).collect(Collectors.toList());
     }
 
-    @GetMapping("/logged-in-member")
+    @GetMapping("/member/logged-in")
     public List<PuzzleDto> getAllPuzzlesByLoggedInMember() {
         Member member = memberService.getLoggedInMember();
         return puzzleService.getAllPuzzlesByMember(member).stream().map(this::convertPuzzle).collect(Collectors.toList());
     }
 
-    @GetMapping("/member/{id}")
-    public List<Puzzle> getAllPuzzlesByMember(@PathVariable("id") Long id) {
+    @GetMapping("/member/{member-id}")
+    public List<Puzzle> getAllPuzzlesByMember(@PathVariable("member-id") Long id) {
         return puzzleService.getAllPuzzlesByMember(id);
     }
 
-    @GetMapping("/{category}")
+    @GetMapping("/category/{category}")
     public List<PuzzleDto> getPuzzlesByCategory(@PathVariable("category") Category category) {
         return puzzleService.getAllPuzzlesByCategory(category).stream().map(this::convertPuzzle).collect(Collectors.toList());
     }
@@ -64,34 +64,34 @@ public class PuzzleController {
         return puzzleService.getSortedPuzzles(category, criteria).stream().map(this::convertPuzzle).collect(Collectors.toList());
     }
 
-    @GetMapping("/all/{id}/admin")
-    public Puzzle getPuzzleForAdmin(@PathVariable("id") Long id) {
-        return puzzleService.getById(id);
-    }
-
-    @GetMapping("/all/{id}")
-    public PuzzleDto getPuzzle(@PathVariable("id") Long id) {
+    @GetMapping("/{puzzle-id}")
+    public PuzzleDto getPuzzle(@PathVariable("puzzle-id") Long id) {
         return this.convertPuzzle(puzzleService.getById(id));
     }
 
-    @PostMapping("/{id}/check")
-    public ResponseEntity<Boolean> checkAnswer(@PathVariable("id") Long id, @RequestBody String answer) {
-        return ResponseEntity.ok(puzzleService.checkAnswer(id, answer));
+    @GetMapping("/{puzzle-id}/admin")
+    public Puzzle getPuzzleForAdmin(@PathVariable("puzzle-id") Long id) {
+        return puzzleService.getById(id);
     }
 
-    @PostMapping("/add")
+    @PostMapping()
     public Puzzle addNewPuzzle(@RequestBody Puzzle puzzle) {
         Member member = memberService.getLoggedInMember();
         return puzzleService.addNewPuzzle(puzzle, member);
     }
 
-    @PutMapping("/update/{id}")
-    public Puzzle updatePuzzle(@PathVariable("id") Long id, @RequestBody Puzzle updatedPuzzle) {
+    @PostMapping("/{puzzle-id}")
+    public ResponseEntity<Boolean> checkAnswer(@PathVariable("puzzle-id") Long id, @RequestBody String answer) {
+        return ResponseEntity.ok(puzzleService.checkAnswer(id, answer));
+    }
+
+    @PutMapping("/{puzzle-id}")
+    public Puzzle updatePuzzle(@PathVariable("puzzle-id") Long id, @RequestBody Puzzle updatedPuzzle) {
         return puzzleService.updatePuzzle(id, updatedPuzzle);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deletePuzzle(@PathVariable("id") Long id) {
+    @DeleteMapping("/{puzzle-id}")
+    public void deletePuzzle(@PathVariable("puzzle-id") Long id) {
         puzzleService.deletePuzzle(id);
     }
 

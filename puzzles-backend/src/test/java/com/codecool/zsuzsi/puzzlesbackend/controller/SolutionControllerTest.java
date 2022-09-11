@@ -22,7 +22,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -78,7 +79,7 @@ class SolutionControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        get(MAIN_URL + "/logged-in-member")
+                        get(MAIN_URL + "/member/logged-in")
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
@@ -97,7 +98,7 @@ class SolutionControllerTest {
 
         mockMvc
                 .perform(
-                        get(MAIN_URL + "/member/{id}", id)
+                        get(MAIN_URL + "/member/{member-id}", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isForbidden());
@@ -117,7 +118,7 @@ class SolutionControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        get(MAIN_URL + "/member/{id}", id)
+                        get(MAIN_URL + "/member/{member-id}", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
@@ -140,7 +141,7 @@ class SolutionControllerTest {
         String requestBody = objectMapper.writeValueAsString(solution);
         MvcResult mvcResult = mockMvc
                 .perform(
-                        post(MAIN_URL + "/save")
+                        post(MAIN_URL)
                                 .content(requestBody)
                                 .header("Authorization", TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -161,7 +162,7 @@ class SolutionControllerTest {
 
         mockMvc
                 .perform(
-                        delete(MAIN_URL + "delete/{id}", id)
+                        delete(MAIN_URL + "{solution-id}", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isForbidden());
@@ -174,7 +175,7 @@ class SolutionControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        delete(MAIN_URL + "/delete/{id}", id)
+                        delete(MAIN_URL + "/{solution-id}", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())

@@ -46,7 +46,12 @@ public class MemberService {
 
     public Member getLoggedInMember() {
         String email = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        return memberRepository.findByEmail(email).get();
+        return memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+    }
+
+    public Member getMemberById(Long id) {
+        log.info("Member by id {} requested", id);
+        return memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
     }
 
     public List<Member> getTopLeaderBoard() {

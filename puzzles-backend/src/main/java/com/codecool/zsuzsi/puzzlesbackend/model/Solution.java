@@ -34,7 +34,4 @@ public class Solution {
     @ManyToOne
     private Member member;
 
-    @Transient
-    private Integer timeLevel;
-
 }

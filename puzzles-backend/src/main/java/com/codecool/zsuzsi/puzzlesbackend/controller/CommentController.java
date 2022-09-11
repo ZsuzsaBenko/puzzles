@@ -24,35 +24,35 @@ public class CommentController {
     private final MemberService memberService;
     private final ModelMapper modelMapper;
 
-    @GetMapping("/{puzzle-id}")
+    @GetMapping("/puzzle/{puzzle-id}")
     public List<CommentDto> getAllCommentsByPuzzle(@PathVariable("puzzle-id") Long id ) {
         return commentService.getAllCommentsByPuzzle(id).stream().map(this::convertComment).collect(Collectors.toList());
     }
 
-    @GetMapping("/logged-in-member")
+    @GetMapping("/member/logged-in")
     public List<CommentDto> getLatestCommentsByLoggedInMember() {
         Member member = memberService.getLoggedInMember();
         return commentService.getLatestCommentsByMember(member).stream().map(this::convertComment).collect(Collectors.toList());
     }
 
-    @GetMapping("/member/{id}")
-    public List<CommentDto> getAllCommentsByMember(@PathVariable("id") Long id) {
+    @GetMapping("/member/{member-id}")
+    public List<CommentDto> getAllCommentsByMember(@PathVariable("member-id") Long id) {
         return commentService.getAllCommentsByMember(id).stream().map(this::convertComment).collect(Collectors.toList());
     }
 
-    @PostMapping("/add")
+    @PostMapping()
     public CommentDto addNewComment(@RequestBody Comment comment) {
         Member member = memberService.getLoggedInMember();
         return this.convertComment(commentService.addNewComment(comment, member));
     }
 
-    @PutMapping("/update/{id}")
-    public CommentDto updateComment(@PathVariable("id") Long id, @RequestBody Comment comment) {
+    @PutMapping("/{comment-id}")
+    public CommentDto updateComment(@PathVariable("comment-id") Long id, @RequestBody Comment comment) {
         return convertComment(commentService.updateComment(id, comment));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteComment(@PathVariable("id") Long id) {
+    @DeleteMapping("/{comment-id}")
+    public void deleteComment(@PathVariable("comment-id") Long id) {
         commentService.deleteComment(id);
     }
 

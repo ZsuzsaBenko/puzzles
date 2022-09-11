@@ -32,28 +32,33 @@ public class MemberController {
         return memberService.getFullLeaderBoard().stream().map(this::convertMember).collect(Collectors.toList());
     }
 
-    @GetMapping("/all-members")
+    @GetMapping("/admin")
     public List<Member> getAllMembers() {
         return memberService.getAllMembers();
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/{member-id}")
+    public Member getMemberById(@PathVariable("member-id") Long id) {
+        return memberService.getMemberById(id);
+    }
+
+    @GetMapping("/logged-in")
     public Member getLoggedInMemberProfile() {
         return memberService.getLoggedInMember();
     }
 
-    @PutMapping("/profile/update")
+    @PutMapping("/logged-in")
     public Member updateLoggedInMemberProfile(@RequestBody UserCredentials data) {
         return memberService.updateProfile(data);
     }
 
-    @PutMapping("/update/{id}")
-    public Member updateMember(@PathVariable("id") Long id, @RequestBody UserCredentials data) {
+    @PutMapping("/{member-id}")
+    public Member updateMember(@PathVariable("member-id") Long id, @RequestBody UserCredentials data) {
         return memberService.updateProfile(id, data);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteMember(@PathVariable("id") Long id) {
+    @DeleteMapping("/{member-id}")
+    public void deleteMember(@PathVariable("member-id") Long id) {
         memberService.deleteMember(id);
     }
 

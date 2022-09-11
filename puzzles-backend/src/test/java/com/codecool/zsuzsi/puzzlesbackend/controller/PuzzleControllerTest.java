@@ -77,7 +77,7 @@ class PuzzleControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        get(MAIN_URL + "/all")
+                        get(MAIN_URL)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
@@ -116,7 +116,7 @@ class PuzzleControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        get(MAIN_URL + "/logged-in-member")
+                        get(MAIN_URL + "/member/logged-in")
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
@@ -134,7 +134,7 @@ class PuzzleControllerTest {
         Long id = 1L;
         mockMvc
                 .perform(
-                        get(MAIN_URL + "/member/{id}", id)
+                        get(MAIN_URL + "/member/{member-id}", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isForbidden());
@@ -148,7 +148,7 @@ class PuzzleControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        get(MAIN_URL + "/member/{id}", id)
+                        get(MAIN_URL + "/member/{member-id}", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
@@ -167,7 +167,7 @@ class PuzzleControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        get(MAIN_URL + "/{category}", category)
+                        get(MAIN_URL + "/category/{category}", category)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
@@ -186,7 +186,7 @@ class PuzzleControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        get(MAIN_URL + "/all/{id}", id)
+                        get(MAIN_URL + "/{puzzle-id}", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
@@ -203,7 +203,7 @@ class PuzzleControllerTest {
         Long id = 1L;
         mockMvc
                 .perform(
-                        get(MAIN_URL + "/all/{id}/admin", id)
+                        get(MAIN_URL + "/{puzzle-id}/admin", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isForbidden());
@@ -217,7 +217,7 @@ class PuzzleControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        get(MAIN_URL + "/all/{id}/admin", id)
+                        get(MAIN_URL + "/{puzzle-id}/admin", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
@@ -278,7 +278,7 @@ class PuzzleControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        post(MAIN_URL + "/add")
+                        post(MAIN_URL)
                                 .content(requestBody)
                                 .header("Authorization", TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -299,7 +299,7 @@ class PuzzleControllerTest {
         String requestBody = objectMapper.writeValueAsString(puzzles.get(0));
 
         mockMvc.perform(
-                put(MAIN_URL + "/update/{id}", id)
+                put(MAIN_URL + "/{puzzle-id}", id)
                         .content(requestBody)
                         .header("Authorization", TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -317,7 +317,7 @@ class PuzzleControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        put(MAIN_URL + "/update/{id}", id)
+                        put(MAIN_URL + "/{puzzle-id}", id)
                                 .content(requestBody)
                                 .header("Authorization", TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -335,7 +335,7 @@ class PuzzleControllerTest {
     public void testDeletePuzzleWithNormalUser() throws Exception {
         Long id = 1L;
         mockMvc.perform(
-                delete(MAIN_URL + "/delete/{id}", id)
+                delete(MAIN_URL + "/{puzzle-id}", id)
                         .header("Authorization", TOKEN)
         )
                 .andExpect(status().isForbidden());
@@ -349,7 +349,7 @@ class PuzzleControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        delete(MAIN_URL + "/delete/{id}", id)
+                        delete(MAIN_URL + "/{puzzle-id}", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())

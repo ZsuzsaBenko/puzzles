@@ -3,6 +3,7 @@ package com.codecool.zsuzsi.puzzlesbackend.controller;
 import com.codecool.zsuzsi.puzzlesbackend.model.Comment;
 import com.codecool.zsuzsi.puzzlesbackend.model.Member;
 import com.codecool.zsuzsi.puzzlesbackend.model.dto.CommentDto;
+import com.codecool.zsuzsi.puzzlesbackend.model.dto.MemberDto;
 import com.codecool.zsuzsi.puzzlesbackend.service.CommentService;
 import com.codecool.zsuzsi.puzzlesbackend.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,16 +53,17 @@ class CommentControllerTest {
 
     @BeforeEach
     public void init() {
-        member = Member.builder().email("email@email.hu").build();
+        member = Member.builder().email("email@email.hu").username("Username").build();
+        MemberDto memberDto = MemberDto.builder().username("Username").build();
         comments = Arrays.asList(
           Comment.builder().id(1L).message("comment1").member(member).build(),
           Comment.builder().id(2L).message("comment2").member(member).build(),
           Comment.builder().id(3L).message("comment3").member(member).build()
         );
         commentDtos = Arrays.asList(
-                CommentDto.builder().id(1L).message("comment1").build(),
-                CommentDto.builder().id(2L).message("comment2").build(),
-                CommentDto.builder().id(3L).message("comment3").build()
+                CommentDto.builder().id(1L).message("comment1").member(memberDto).build(),
+                CommentDto.builder().id(2L).message("comment2").member(memberDto).build(),
+                CommentDto.builder().id(3L).message("comment3").member(memberDto).build()
         );
     }
 
@@ -73,7 +75,7 @@ class CommentControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        get(MAIN_URL + "/{puzzle-id}", id)
+                        get(MAIN_URL + "/puzzle/{puzzle-id}", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
@@ -92,7 +94,7 @@ class CommentControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        get(MAIN_URL + "/logged-in-member")
+                        get(MAIN_URL + "/member/logged-in")
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
@@ -110,7 +112,7 @@ class CommentControllerTest {
         Long id = 1L;
 
         mockMvc.perform(
-                        get(MAIN_URL + "/member/{id}", id)
+                        get(MAIN_URL + "/member/{member-id}", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isForbidden());
@@ -124,7 +126,7 @@ class CommentControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        get(MAIN_URL + "/member/{id}", id)
+                        get(MAIN_URL + "/member/{member-id}", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isOk())
@@ -148,7 +150,7 @@ class CommentControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        post(MAIN_URL + "/add")
+                        post(MAIN_URL)
                                 .content(requestBody)
                                 .header("Authorization", TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -175,7 +177,7 @@ class CommentControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        put(MAIN_URL + "/update/{id}", id)
+                        put(MAIN_URL + "/{comment-id}", id)
                                 .content(requestBody)
                                 .header("Authorization", TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -193,7 +195,7 @@ class CommentControllerTest {
     public void testDeleteCommentWithNormalUser() throws Exception {
         Long id = 1L;
         mockMvc.perform(
-                        delete(MAIN_URL + "/delete/{id}", id)
+                        delete(MAIN_URL + "/{comment-id}", id)
                                 .header("Authorization", TOKEN)
                 )
                 .andExpect(status().isForbidden());
@@ -207,7 +209,7 @@ class CommentControllerTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                delete(MAIN_URL + "/delete/{id}", id)
+                delete(MAIN_URL + "/{comment-id}", id)
                         .header("Authorization", TOKEN)
         )
                 .andExpect(status().isOk())

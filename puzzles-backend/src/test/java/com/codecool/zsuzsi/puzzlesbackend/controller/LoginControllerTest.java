@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Collections;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
@@ -53,8 +54,9 @@ class LoginControllerTest {
                 .password(PASSWORD)
                 .build();
 
-        ResponseEntity result = loginController.login(data);
+        ResponseEntity<Map<String, String>> result = loginController.login(data);
 
+        assertNotNull(result.getBody());
         assertEquals("{email=email@email.hu, token=token}", result.getBody().toString());
 
         verify(authentication).getAuthorities();
